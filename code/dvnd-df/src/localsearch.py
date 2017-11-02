@@ -3,7 +3,7 @@ from copy import *
 from solution import Solution
 
 def bestImprovement(solution, oper, undooper=None, mini=True):
-	copia = Solution(solution.size, solution.route)
+	copia = copy(solution)
 	resp = None
 	while True:
 		resp = __bi(copia, oper, undooper)
@@ -13,8 +13,8 @@ def bestImprovement(solution, oper, undooper=None, mini=True):
 	return resp
 
 def __bi(solution, oper, undooper=None):
-	copia = Solution(solution.size, solution.route)
-	temp = Solution(solution.size, solution.route)
+	copia = copy(solution)
+	temp = copy(solution)
 	melhor = (copia, copia.value)
 	undooper = undooper if undooper != None else oper
 	for x in xrange(copia.size):

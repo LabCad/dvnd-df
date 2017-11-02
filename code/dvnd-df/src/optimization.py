@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import sys, os
+from include_lib import *
 
-if os.environ.has_key('DVND_HOME'):
-	sys.path.append(os.environ['DVND_HOME'])
-if os.environ.has_key('PYDF_HOME'):
-	sys.path.append(os.environ['PYDF_HOME'])
+include_dvnd()
+include_pydf()
+
 
 from pyDF import *
 
