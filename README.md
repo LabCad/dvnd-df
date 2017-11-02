@@ -10,3 +10,4 @@ https://github.com/tiagoaoa/Sucuri/blob/master/examples/optimizaiton.py
 https://bitbucket.org/flatlabs/sucuri-free
 
 
+https://github.com/igormcoelho/simple-pycuda
