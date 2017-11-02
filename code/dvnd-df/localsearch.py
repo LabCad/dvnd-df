@@ -1,12 +1,12 @@
 from copy import *
 from solution import Solution
 
-def bestImprovement(solution, oper, undooper=None):
+def bestImprovement(solution, oper, undooper=None, mini=True):
 	copia = Solution(solution.size, solution.route)
 	resp = None
 	while True:
 		resp = __bi(copia, oper, undooper)
-		if resp[1] <= 0:
+		if (mini and resp[1] <= 0) or (resp[1] >= 0):
 			break
 		copia = resp[0]
 	return resp
