@@ -7,14 +7,14 @@ class Solution(object):
 	def __init__(self, size, route=None):
 		self.__size = size
 		if route is None:
-			self.route = [x for x in xrange(size)]
+			self.__route = [x for x in xrange(size)]
 		else:
-			self.route = [x for x in route]
+			self.__route = [x for x in route]
 
 	def __eq__(self, other):
 		"""Define an equality test"""
 		if isinstance(other, self.__class__):
-			return self.__size == other.__size and self.route == other.route
+			return self.__size == other.__size and self.__route == other.__route
 		return False
 
 	def __ne__(self, other):
@@ -25,39 +25,43 @@ class Solution(object):
 		return self.value < other.value
 
 	def __str__(self):
-		return "{ size: %d, value: %s, route: %s }" % (self.__size, self.value, self.route)
+		return "{ size: %d, value: %s, route: %s }" % (self.__size, self.value, self.__route)
 
 	def __copy__(self):
-		return Solution(self.__size, self.route)
+		return Solution(self.__size, self.__route)
 
 	def __len__(self):
 		return self.__size
 
 	@property
 	def value(self):
-		return sum([self.route[i] * (i + 1) for i in xrange(self.__size)]) if self.__size > 0 else None
+		return sum([self.__route[i] * (i + 1) for i in xrange(self.__size)]) if self.__size > 0 else None
+
+	@property
+	def get_route(self):
+		return [x for x in self.__route]
 
 	def swap(self, x, y):
-		self.route[x], self.route[y] = self.route[y], self.route[x]
+		self.__route[x], self.__route[y] = self.__route[y], self.__route[x]
 		return self
 
 	def tow_opt(self, x, y):
 		for i in xrange((y - x) / 2 + 1):
-			self.route[x + i], self.route[y - i] = self.route[y - i], self.route[x + i]
+			self.__route[x + i], self.__route[y - i] = self.__route[y - i], self.__route[x + i]
 
 	def or_opt_k(self, x, y, k):
 		pass
 
 	def invert(self, x, y):
-		self.route[x], self.route[y] = self.route[y], self.route[x]
+		self.__route[x], self.__route[y] = self.__route[y], self.__route[x]
 		for i in xrange(1, (y - x) // 2 + 1):
-			self.route[x + i], self.route[y - i] = self.route[y - i], self.route[x + i]
+			self.__route[x + i], self.__route[y - i] = self.__route[y - i], self.__route[x + i]
 		return self
 
 	def rand(self):
 		for i in xrange(self.__size):
 			de = randint(0, self.__size - 1)
-			self.route[i], self.route[de] = self.route[de], self.route[i]
+			self.__route[i], self.__route[de] = self.__route[de], self.__route[i]
 		return self
 
 	def accept(self, mov):
