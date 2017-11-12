@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
+
 def include_dvnd():
 	dvnd_home_var_name = 'DVND_HOME'
 	if os.environ.has_key(dvnd_home_var_name):
 		sys.path.append(os.environ[dvnd_home_var_name])
+
 
 def include_pydf():
 	pydf_home_var_name = 'PYDF_HOME'

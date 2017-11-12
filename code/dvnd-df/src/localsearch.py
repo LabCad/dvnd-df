@@ -2,6 +2,7 @@
 from copy import *
 from solution import Solution
 
+
 def bestImprovement(solution, oper, undooper=None, mini=True):
 	copia = copy(solution)
 	resp = None
@@ -12,13 +13,14 @@ def bestImprovement(solution, oper, undooper=None, mini=True):
 		copia = resp[0]
 	return resp
 
+
 def __bi(solution, oper, undooper=None):
 	copia = copy(solution)
 	temp = copy(solution)
 	melhor = (copia, copia.value)
 	undooper = undooper if undooper != None else oper
-	for x in xrange(copia.size):
-		for y in xrange(x + 1, copia.size):
+	for x in xrange(len(copia)):
+		for y in xrange(x + 1, len(copia)):
 			#solution.swap(x, y)
 			oper(temp, x, y)
 			value = temp.value

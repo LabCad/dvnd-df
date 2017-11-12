@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from copy import *
 
+
 class SolutionMovement:
 	def __init__(self, sol, mov, imp):
 		self.sol = copy(sol)
 		self.mov = mov
 		self.imp = imp
 
-	def canMerge(self, other):
-		return self.sol == other.sol and self.mov.notConflict(other.mov)
+	def can_merge(self, other):
+		return self.sol == other.sol and self.mov.not_conflict(other.mov)
+
 
 class SolutionMovementCollection:
 	def __init__(self, sol):
@@ -19,9 +21,9 @@ class SolutionMovementCollection:
 
 	@property
 	def value(self):
-		return self.__solvalue + (self.__value if self.__value != None else sum([value for key, value in self.__movs.iteritems()]))
+		return self.__solvalue + (self.__value if self.__value is not None else sum([value for key, value in self.__movs.iteritems()]))
 
-	def canMerge(self, solmov):
+	def can_merge(self, solmov):
 		if self.__sol != solmov.sol:
 			return False
 		if solmov.mov in self.__movs:
@@ -33,6 +35,6 @@ class SolutionMovementCollection:
 		return True
 
 	def merge(self, solmov):
-		if self.canMerge(solmov):
+		if self.can_merge(solmov):
 			self.__movs[solmov.mov] = solmov.imp
 			self.__value = None

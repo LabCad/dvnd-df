@@ -11,7 +11,7 @@ class MovementTest(unittest.TestCase):
 	def test_create(self):
 		mov = Movement(MovementType.SWAP, 0, 1)
 
-		self.assertEquals(MovementType.SWAP, mov.type, "Tipo do movimento")
+		self.assertEquals(MovementType.SWAP, mov.movtype, "Tipo do movimento")
 		self.assertEquals(0, mov.x, "Inicio do movimento")
 		self.assertEquals(1, mov.y, "Fim do movimento")
 		self.assertIsNone(mov.k, "k não preenchido")

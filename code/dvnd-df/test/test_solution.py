@@ -12,7 +12,7 @@ class SolutionTest(unittest.TestCase):
 	def test_create(self):
 		tam = 5
 		sol = Solution(tam)
-		self.assertEquals(tam, sol.size, "Tamanho incorreto")
+		self.assertEquals(tam, len(sol), "Tamanho incorreto")
 		self.assertEquals([i for i in xrange(tam)], sol.route, "Solução inicial diferente do esperado")
 
 	def test_value(self):
