@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from include_lib import *
 
 include_dvnd()
@@ -7,18 +8,20 @@ include_pydf()
 
 from pyDF import *
 
+
 def op1(input1):
-#	print "Op 1"
+	print "Op 1"
 	return 9
 
+
 def op2(intput):
-#	print "Op 2"
+	print "Op 2"
 	return 3
 
-def op3(intput):
-#	print "Op 3"
-	return 2
 
+def op3(intput):
+	print "Op 3"
+	return 2
 
 
 def assist(args):
@@ -29,12 +32,11 @@ def assist(args):
 	else:
 		return False
 
+
 graph = DFGraph()
 
 ini = Feeder(-1) #-1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
 ini2 = Feeder(100) #100 is the initial solution
-
-
 
 heur1 = Node(op1, 1)
 heur2 = Node(op2, 1)
@@ -43,8 +45,8 @@ heur3 = Node(op3, 1)
 
 assist1 = FlipFlop(assist)
 
-for i in range(1,4):
-	graph.add(eval("heur%d" %i ))
+for i in range(1, 4):
+	graph.add(eval("heur%d" %i))
 graph.add(ini)
 graph.add(ini2)
 
@@ -58,6 +60,7 @@ assist1.add_edge(heur1, 0)
 assist1.add_edge(heur2, 0)
 assist1.add_edge(heur3, 0)
 assist1.add_edge(assist1, 0)
+
 ini.add_edge(heur1, 0)
 ini.add_edge(heur2, 0)
 ini.add_edge(heur3, 0)

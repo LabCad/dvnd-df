@@ -29,6 +29,7 @@ class SolutionMovementTest(unittest.TestCase):
 		solmov3 = SolutionMovement(sol, Movement(MovementType.SWAP, 1, 4), 50)
 		self.assertFalse(solmov1.canMerge(solmov3), "swap(0,1) e swap(1,4) tem conflito")
 
+
 class SolutionMovementCollectionTest(unittest.TestCase):
 	def test_create(self):
 		tam = 5
