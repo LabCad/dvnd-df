@@ -11,18 +11,18 @@ from pyDF import *
 
 def op1(arg):
 	print "Op 1 - ", arg[0] if len(arg) > 0 else ""
-	return 9
+	return arg[0]
 
 
 def op2(arg):
 	print "Op 2 - ", arg[0] if len(arg) > 0 else ""
-	return 3
+	return arg[0]
 
 
 def assist(args):
 	print "Solution %s" % args[0], args[1]
 
-	if args[1] < args[0] or args[0] is None:
+	if args[1] < args[0] or args[0].value is None:
 		return args[1]
 	else:
 		return False
@@ -31,7 +31,7 @@ def assist(args):
 graph = DFGraph()
 
 ini = Feeder(Solution(5, [1, 5, 4, 3, 2]))  # 100 is the initial solution
-ini2 = Feeder(Solution(5, [1, 2, 3, 4, 5]))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
+ini2 = Feeder(Solution(0))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
 
 heur1 = Node(op1, 1)
 heur2 = Node(op2, 1)

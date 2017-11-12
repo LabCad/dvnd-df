@@ -24,14 +24,14 @@ class Solution(object):
 		return self.value < other.value
 
 	def __str__(self):
-		return "{ size: %d, value: %d, route: %s }" % (self.__size, self.value, self.route)
+		return "{ size: %d, value: %s, route: %s }" % (self.__size, self.value, self.route)
 
 	def __copy__(self):
 		return Solution(self.__size, self.route)
 
 	@property
 	def value(self):
-		return sum([self.route[i] * (i + 1) for i in xrange(self.__size)])
+		return sum([self.route[i] * (i + 1) for i in xrange(self.__size)]) if self.size > 0 else None
 
 	@property
 	def size(self):
