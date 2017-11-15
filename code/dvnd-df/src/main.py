@@ -22,7 +22,7 @@ def op_param(inimov, arg):
 			actual_val = sol.value
 			if actual_val < best_move_value:
 				best_move_value = actual_val
-				best_move = Movement(mov.movtype, mov.x, mov.y)
+				best_move = Movement(mov.movtype, mov.x, mov.y, mov.k)
 			sol.accept(mov)
 
 	if best_move is not None:

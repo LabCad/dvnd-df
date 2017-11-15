@@ -53,12 +53,16 @@ class Solution(object):
 	def oropt_k(self, x, y, k):
 		if k < y - x:
 			temp = []
-			for i in xrange(x, min(self.__size, x + k)):
-				temp.append(self.__route[i])
-			for i in xrange(x, min(y + k, self.__size - k)):
-				self.__route[i] = self.__route[i + k]
-			for i in xrange(y, min(self.__size, y + len(temp))):
-				self.__route[i] = temp[i - y]
+			try:
+				pass
+				for i in xrange(x, min(self.__size, x + k)):
+					temp.append(self.__route[i])
+				for i in xrange(x, min(y + k, self.__size - k)):
+					self.__route[i] = self.__route[i + k]
+				for i in xrange(y, min(self.__size, y + len(temp))):
+					self.__route[i] = temp[i - y]
+			except:
+				print "oi"
 		return self
 
 	def invert(self, x, y):
