@@ -64,7 +64,9 @@ def assist(args):
 graph = DFGraph()
 
 emptySol = Solution(0)
-iniSol = Solution(10)
+# iniSol = Solution(10, [1, 0, 3, 2, 5, 8, 9, 6, 7, 4])
+iniSol = Solution(50)
+iniSol.rand()
 print "iniSol ", iniSol
 
 ini = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution

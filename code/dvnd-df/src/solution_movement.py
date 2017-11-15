@@ -26,8 +26,8 @@ class SolutionMovementCollection:
 		return self.value < other.value
 
 	def __str__(self):
-		return "{ solution: %s, movs: %s, value: %d%+d=%d }" % \
-			(self.__sol, [x for x in self.__movs], self.__solvalue or 0, self.__value, self.value or 0)
+		return "{ solution: %s, movs(%d): %s, value: %d%+d=%d }" % \
+			(self.__sol, len(self.__movs), ", ".join(["%s" % x for x in list(self.__movs.keys())]), self.__solvalue or 0, self.__value, self.value or 0)
 
 	@property
 	def value(self):
