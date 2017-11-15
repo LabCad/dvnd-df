@@ -55,7 +55,7 @@ class Solution(object):
 			temp = []
 			for i in xrange(x, min(self.__size, x + k)):
 				temp.append(self.__route[i])
-			for i in xrange(x, y):
+			for i in xrange(x, min(y + k, self.__size - k)):
 				self.__route[i] = self.__route[i + k]
 			for i in xrange(y, min(self.__size, y + len(temp))):
 				self.__route[i] = temp[i - y]
