@@ -11,30 +11,36 @@ from pyDF import *
 
 
 def op_param(inimov, arg):
-	sol = (arg[0]).gen_solution()
-	best_move = None
-	best_move_value = ini_sol_value = sol.value
+	solmovcol = deepcopy(arg[0])
+	sol = solmovcol.gen_solution()
+	ini_sol_value = sol.value
+	moves = []
 	mov = inimov
 	for i in xrange(len(sol)):
 		for j in xrange(i + 1, len(sol)):
 			mov.x, mov.y = i, j
 			sol.accept(mov)
 			actual_val = sol.value
-			if actual_val < best_move_value:
-				best_move_value = actual_val
-				best_move = Movement(mov.movtype, mov.x, mov.y, mov.k)
+			if actual_val < ini_sol_value:
+				moves.append((Movement(mov.movtype, mov.x, mov.y, mov.k), actual_val))
 			sol.accept(mov)
-
-	if best_move is not None:
-		solmov = SolutionMovement(sol, best_move, best_move_value - ini_sol_value)
-		if arg[0].can_merge(solmov):
-			arg[0].merge(solmov)
+	moves.sort(key=lambda ax: ax[1])
+	moves = [x[0] for x in moves]
+	unused = []
+	solmovcol_nu = deepcopy(arg[0])
+	for x in moves:
+		if solmovcol.can_merge(x):
+			solmovcol.merge(x)
 		else:
-			resp = SolutionMovementCollection(sol)
-			resp.merge(solmov)
-			return resp
+			unused.append(x)
+	for x in unused:
+		solmovcol_nu.merge(x)
 
-	return arg[0]
+	solmovcol_new = SolutionMovementCollection(sol)
+	for x in moves:
+		solmovcol_new.merge(x)
+
+	return min(solmovcol, solmovcol_nu, solmovcol_new)
 
 
 def op1(arg):
@@ -65,7 +71,7 @@ graph = DFGraph()
 
 emptySol = Solution(0)
 # iniSol = Solution(10, [1, 0, 3, 2, 5, 8, 9, 6, 7, 4])
-iniSol = Solution(50)
+iniSol = Solution(10)
 iniSol.rand()
 print "iniSol ", iniSol
 
