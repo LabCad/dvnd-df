@@ -10,11 +10,11 @@ include_pydf()
 from pyDF import *
 
 
-def op_param(movtype, arg):
+def op_param(inimov, arg):
 	sol = (arg[0]).gen_solution()
 	best_move = None
 	best_move_value = ini_sol_value = sol.value
-	mov = Movement(movtype)
+	mov = inimov
 	for i in xrange(len(sol)):
 		for j in xrange(i + 1, len(sol)):
 			mov.x, mov.y = i, j
@@ -38,11 +38,15 @@ def op_param(movtype, arg):
 
 
 def op1(arg):
-	return op_param(MovementType.SWAP, arg)
+	return op_param(Movement(MovementType.SWAP), arg)
 
 
 def op2(arg):
-	return op_param(MovementType.TWO_OPT, arg)
+	return op_param(Movement(MovementType.TWO_OPT), arg)
+
+
+def op3(arg):
+	return op_param(Movement(MovementType.OR_OPT_K, 0, 0, 2), arg)
 
 
 def assist(args):
@@ -66,7 +70,7 @@ print "iniSol ", iniSol
 ini = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
 ini2 = Feeder(SolutionMovementCollection(emptySol))  # 100 is the initial solution
 
-heurSize = 2
+heurSize = 3
 
 heur = [Node(eval("op%d" % i), 1) for i in xrange(1, heurSize + 1)]
 

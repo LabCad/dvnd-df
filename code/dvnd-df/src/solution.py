@@ -45,12 +45,21 @@ class Solution(object):
 		self.__route[x], self.__route[y] = self.__route[y], self.__route[x]
 		return self
 
-	def tow_opt(self, x, y):
+	def two_opt(self, x, y):
 		for i in xrange((y - x) / 2 + 1):
 			self.__route[x + i], self.__route[y - i] = self.__route[y - i], self.__route[x + i]
+		return self
 
-	def or_opt_k(self, x, y, k):
-		pass
+	def oropt_k(self, x, y, k):
+		if k < y - x:
+			temp = []
+			for i in xrange(x, min(self.__size, x + k)):
+				temp.append(self.__route[i])
+			for i in xrange(x, y):
+				self.__route[i] = self.__route[i + k]
+			for i in xrange(y, min(self.__size, y + len(temp))):
+				self.__route[i] = temp[i - y]
+		return self
 
 	def invert(self, x, y):
 		self.__route[x], self.__route[y] = self.__route[y], self.__route[x]
@@ -68,7 +77,7 @@ class Solution(object):
 		if mov.movtype == MovementType.SWAP:
 			self.swap(mov.x, mov.y)
 		elif mov.movtype == MovementType.TWO_OPT:
-			self.tow_opt(mov.x, mov.y)
+			self.two_opt(mov.x, mov.y)
 		elif mov.movtype == MovementType.OR_OPT_K:
-			self.or_opt_k(mov.x, mov.y, mov.k)
+			self.oropt_k(mov.x, mov.y, mov.k)
 		return self
