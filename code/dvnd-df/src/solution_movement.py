@@ -29,6 +29,9 @@ class SolutionMovementCollection:
 		return "{ solution: %s, movs(%d): %s, value: %d%+d=%d }" % \
 			(self.__sol, len(self.__movs), ", ".join(["%s" % x for x in list(self.__movs.keys())]), self.__solvalue or 0, self.__value, self.value or 0)
 
+	def __len__(self):
+		return len(self.__sol)
+
 	@property
 	def value(self):
 		return (self.__solvalue + self.__value) if self.__solvalue is not None else None

@@ -56,12 +56,17 @@ def op3(arg):
 
 
 def assist(args):
-	# print "Solution %s - %s" % (args[0], args[1])
-	# print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
+	print "Solution %s - %s" % (args[0], args[1])
+	print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
 
-	if args[0].value is None or args[1] < args[0]:
+	assert(len(args[1]) > 0)
+
+	if len(args[0]) == 0 or (args[0].value is None) or args[1] < args[0]:
 		print "sol mov %s - %s" % (args[1], args[1].gen_solution())
-		return deepcopy(args[1])
+
+		x = deepcopy(args[1])
+		assert(len(x) == len(args[1]))
+		return x
 	else:
 		# print "Parou2 ", args[0], args[1]
 		return False
@@ -75,7 +80,7 @@ iniSol = Solution(4)
 iniSol.rand()
 print "iniSol ", iniSol
 
-ini = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
+ini  = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
 ini2 = Feeder(SolutionMovementCollection(emptySol))  # 100 is the initial solution
 
 heurSize = 1
