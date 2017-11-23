@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
 from include_lib import *
@@ -8,7 +9,6 @@ include_dvnd()
 include_pydf()
 
 from pyDF import *
-
 
 def op_param(inimov, arg):
 	solmovcol = deepcopy(arg[0])
@@ -71,14 +71,14 @@ graph = DFGraph()
 
 emptySol = Solution(0)
 # iniSol = Solution(10, [1, 0, 3, 2, 5, 8, 9, 6, 7, 4])
-iniSol = Solution(10)
+iniSol = Solution(4)
 iniSol.rand()
 print "iniSol ", iniSol
 
 ini = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
 ini2 = Feeder(SolutionMovementCollection(emptySol))  # 100 is the initial solution
 
-heurSize = 3
+heurSize = 1
 
 heur = [Node(eval("op%d" % i), 1) for i in xrange(1, heurSize + 1)]
 
@@ -106,5 +106,9 @@ ini2.add_edge(assist1, 1)
 
 # print len(ini.inport)
 
-sched = Scheduler(graph, 5, mpi_enabled=False)
+sched = Scheduler(graph, 3, mpi_enabled=False)
+
+print("OI2")
+
 sched.start()
+

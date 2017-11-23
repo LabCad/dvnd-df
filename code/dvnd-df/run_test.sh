@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-export DVND_HOME=~/git/dvnd-df/code/dvnd-df/src
-export PYDF_HOME=~/git/dvnd-df/code/
+export DVND_HOME=`cd src && pwd`
+export PYDF_HOME=`cd .. && pwd`
 
 cd test
-python -m unittest discover
+python2 -m unittest discover

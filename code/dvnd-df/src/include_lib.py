@@ -9,8 +9,9 @@ def include_dvnd():
 
 
 def include_pydf():
+	print("INCLUDE_PYDF....")
 	pydf_home_var_name = 'PYDF_HOME'
-	pydf_home_value = '/home/rodolfo/git/dvnd-df/code/'
+	pydf_home_value = '/home/imcoelho/git-reps/dvnd-df/code/dvnd-df'
 	if os.environ.has_key(pydf_home_var_name):
 		sys.path.append(os.environ[pydf_home_var_name])
 	else:
