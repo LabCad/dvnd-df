@@ -59,7 +59,9 @@ def assist(args):
 	print "Solution %s - %s" % (args[0], args[1])
 	print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
 
-	assert(len(args[1]) > 0)
+	# assert(len(args[1]) > 0)
+	if len(args[0]) == 0 or len(args[1]) == 0:
+		return False
 
 	if len(args[0]) == 0 or (args[0].value is None) or args[1] < args[0]:
 		print "sol mov %s - %s" % (args[1], args[1].gen_solution())
