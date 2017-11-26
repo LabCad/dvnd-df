@@ -10,6 +10,7 @@ include_pydf()
 
 from pyDF import *
 
+
 def op_param(inimov, arg):
 	solmovcol = deepcopy(arg[0])
 	sol = solmovcol.gen_solution()
@@ -56,8 +57,8 @@ def op3(arg):
 
 
 def assist(args):
-	print "Solution %s - %s" % (args[0], args[1])
-	print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
+	# print "Solution %s - %s" % (args[0], args[1])
+	# print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
 
 	# assert(len(args[1]) > 0)
 	if len(args[0]) == 0 or len(args[1]) == 0:
@@ -115,7 +116,7 @@ ini2.add_edge(assist1, 1)
 
 sched = Scheduler(graph, 3, mpi_enabled=False)
 
-print("OI2")
+# print("OI2")
 
 sched.start()
 
