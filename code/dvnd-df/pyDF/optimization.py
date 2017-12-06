@@ -9,19 +9,19 @@ include_pydf()
 from pyDF import *
 
 
-def op1(input1):
-	print "Op 1"
-	return 9
+def op1(intput):
+	print "Op 1", intput
+	return max(10, intput[0] - 1) if intput[0] > 0 else intput[0]
 
 
 def op2(intput):
-	print "Op 2"
-	return 3
+	print "Op 2", intput
+	return max(10, intput[0] - 2) if intput[0] > 0 else intput[0]
 
 
 def op3(intput):
-	print "Op 3"
-	return 2
+	print "Op 3", intput
+	return max(10, intput[0] - 3) if intput[0] > 0 else intput[0]
 
 
 def assist(args):

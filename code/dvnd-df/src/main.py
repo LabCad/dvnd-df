@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 from include_lib import *
@@ -9,6 +9,7 @@ include_dvnd()
 include_pydf()
 
 from pyDF import *
+
 
 def op_param(inimov, arg):
 	solmovcol = deepcopy(arg[0])
@@ -56,8 +57,8 @@ def op3(arg):
 
 
 def assist(args):
-	print "Solution %s - %s" % (args[0], args[1])
-	print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
+	# print "Solution %s - %s" % (args[0], args[1])
+	# print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
 
 	# assert(len(args[1]) > 0)
 	if len(args[0]) == 0 or len(args[1]) == 0:
@@ -82,7 +83,7 @@ iniSol = Solution(4)
 iniSol.rand()
 print "iniSol ", iniSol
 
-ini  = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
+ini = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
 ini2 = Feeder(SolutionMovementCollection(emptySol))  # 100 is the initial solution
 
 heurSize = 1
@@ -115,7 +116,7 @@ ini2.add_edge(assist1, 1)
 
 sched = Scheduler(graph, 3, mpi_enabled=False)
 
-print("OI2")
+# print("OI2")
 
 sched.start()
 
