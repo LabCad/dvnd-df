@@ -29,6 +29,9 @@ class OptMessage:
 		self.__source = source
 		self.__target = target
 		self.__not_improved = not_improved
+		initialSolution = 10
+		self.solvalue = [[initialSolution - 2, initialSolution - 3, initialSolution - 4],
+			[initialSolution - 1, initialSolution - 4, initialSolution - 5]]
 
 	def __getitem__(self, item):
 		return self.__solmap[item]
@@ -57,3 +60,13 @@ class OptMessage:
 
 	def set_target(self, idx, val=True):
 		self.__target[idx] = val
+
+	def set_not_improved(self, idx, val=True):
+		self.__not_improved[idx] = val
+
+	def __contains__(self, item):
+		return item in self.__solmap
+
+	def __str__(self):
+		return "sol: {}, s: {}, t: {}, ni: {}".format(self.__solmap, self.__source,
+			self.__target, self.__not_improved)
