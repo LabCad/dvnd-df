@@ -47,12 +47,12 @@ def manager(args):
 
 def oper_n(args, oper_idx):
 	atual = args[0]
-	antes = atual[oper_idx]
+	# antes = atual[oper_idx]
 	atual.source = oper_idx
 	solvalue = atual.solvalue
-	str_antes = "oper{} - sv: {}".format(oper_idx, solvalue)
+	# str_antes = "oper{} - sv: {}".format(oper_idx, solvalue)
 	atual[oper_idx] = solvalue[oper_idx].pop(0) if len(solvalue[oper_idx]) > 0 else atual[oper_idx]
-	print "{} - {}, antes: {}, best: {}".format(str_antes, solvalue, antes, atual[oper_idx])
+	# print "{} - {}, antes: {}, best: {}".format(str_antes, solvalue, antes, atual[oper_idx])
 	return atual
 
 

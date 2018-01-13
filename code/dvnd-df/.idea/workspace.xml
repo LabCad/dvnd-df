@@ -17,8 +17,8 @@
       <file leaf-file-name="optobj.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/optobj.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="34" column="158" lean-forward="false" selection-start-line="34" selection-start-column="158" selection-end-line="34" selection-end-column="158" />
+            <state relative-caret-position="277">
+              <caret line="35" column="179" lean-forward="false" selection-start-line="35" selection-start-column="179" selection-end-line="35" selection-end-column="179" />
               <folding />
             </state>
           </provider>
@@ -27,8 +27,8 @@
       <file leaf-file-name="other.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/other.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="50" column="4" lean-forward="true" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
+            <state relative-caret-position="594">
+              <caret line="50" column="4" lean-forward="false" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
               <folding>
                 <element signature="e#43#68#0" expanded="true" />
               </folding>
@@ -822,8 +822,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/other.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="50" column="4" lean-forward="true" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
+        <state relative-caret-position="594">
+          <caret line="50" column="4" lean-forward="false" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
           <folding>
             <element signature="e#43#68#0" expanded="true" />
           </folding>
@@ -832,8 +832,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/optobj.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="34" column="158" lean-forward="false" selection-start-line="34" selection-start-column="158" selection-end-line="34" selection-end-column="158" />
+        <state relative-caret-position="277">
+          <caret line="35" column="179" lean-forward="false" selection-start-line="35" selection-start-column="179" selection-end-line="35" selection-end-column="179" />
           <folding />
         </state>
       </provider>

@@ -32,8 +32,8 @@ class OptMessage:
 		initialSolution = 10
 		self.solvalue = \
 		[
-			[initialSolution - 2, initialSolution - 3, initialSolution - 4, initialSolution - 5, initialSolution - 6, initialSolution - 7, initialSolution - 8],
-			[initialSolution - 1, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 7, initialSolution - 0, initialSolution - 9]
+			[initialSolution - 2, initialSolution - 3, initialSolution - 4, initialSolution - 5, initialSolution - 6, initialSolution - 7, initialSolution - 8, initialSolution - 8],
+			[initialSolution - 1, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 9, initialSolution - 8]
 			# [initialSolution - 1, initialSolution - 4, initialSolution - 5, initialSolution - 5, initialSolution - 5, initialSolution - 5]
 		]
 
