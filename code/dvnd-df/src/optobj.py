@@ -30,8 +30,12 @@ class OptMessage:
 		self.__target = target
 		self.__not_improved = not_improved
 		initialSolution = 10
-		self.solvalue = [[initialSolution - 2, initialSolution - 3, initialSolution - 4],
-			[initialSolution - 1, initialSolution - 4, initialSolution - 5]]
+		self.solvalue = \
+		[
+			[initialSolution - 2, initialSolution - 3, initialSolution - 4, initialSolution - 5, initialSolution - 6, initialSolution - 7, initialSolution - 8],
+			[initialSolution - 1, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 7, initialSolution - 0, initialSolution - 9]
+			# [initialSolution - 1, initialSolution - 4, initialSolution - 5, initialSolution - 5, initialSolution - 5, initialSolution - 5]
+		]
 
 	def __getitem__(self, item):
 		return self.__solmap[item]
@@ -70,3 +74,6 @@ class OptMessage:
 	def __str__(self):
 		return "sol: {}, s: {}, t: {}, ni: {}".format(self.__solmap, self.__source,
 			self.__target, self.__not_improved)
+
+	def get_not_improveds(self):
+		return [x for x in xrange(len(self.__not_improved)) if self.__not_improved[x]]
