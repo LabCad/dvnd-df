@@ -4,10 +4,11 @@ from movement import *
 
 
 class Solution(object):
-	def __init__(self, size, route=None):
-		self.__size = size
+	def __init__(self, solinfo, route=None):
+		self.__solinfo = solinfo
+		self.__size = len(solinfo)
 		if route is None:
-			self.__route = [x for x in xrange(size)]
+			self.__route = [x for x in xrange(self.__size)]
 		else:
 			self.__route = [x for x in route]
 
@@ -35,11 +36,20 @@ class Solution(object):
 
 	@property
 	def value(self):
-		return sum([self.__route[i] * (i + 1) for i in xrange(self.__size)]) if self.__size > 0 else None
+		dist = [0 for x in xrange(self.__len__())]
+		dist[0] = self.__solinfo.get_distance(self.__route[0], self.__route[1])
+		for i in xrange(1, self.__len__()):
+			dist[i] = dist[i - 1] + self.__solinfo.get_distance(self.__route[i], self.__route[(i + 1) % self.__len__()])
+
+		return sum(dist)
 
 	@property
 	def get_route(self):
 		return [x for x in self.__route]
+
+	def set_route(self, route):
+		for i in xrange(len(route)):
+			self.__route[i] = route[i]
 
 	def swap(self, x, y):
 		self.__route[x], self.__route[y] = self.__route[y], self.__route[x]
@@ -53,16 +63,12 @@ class Solution(object):
 	def oropt_k(self, x, y, k):
 		if k < y - x:
 			temp = []
-			try:
-				pass
-				for i in xrange(x, min(self.__size, x + k)):
-					temp.append(self.__route[i])
-				for i in xrange(x, min(y + k, self.__size - k)):
-					self.__route[i] = self.__route[i + k]
-				for i in xrange(y, min(self.__size, y + len(temp))):
-					self.__route[i] = temp[i - y]
-			except:
-				print "oi"
+			for i in xrange(x, min(self.__size, x + k)):
+				temp.append(self.__route[i])
+			for i in xrange(x, min(y + k, self.__size - k)):
+				self.__route[i] = self.__route[i + k]
+			for i in xrange(y, min(self.__size, y + len(temp))):
+				self.__route[i] = temp[i - y]
 		return self
 
 	def invert(self, x, y):

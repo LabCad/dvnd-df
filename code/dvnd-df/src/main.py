@@ -1,122 +1,57 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-from include_lib import *
-from solution import *
-from solution_movement import *
-
-include_dvnd()
-include_pydf()
-
-from pyDF import *
+from copy import deepcopy
+from dataflow_opt import *
+from movement import *
+from solution import Solution
+from solution_info import *
 
 
-def op_param(inimov, arg):
-	solmovcol = deepcopy(arg[0])
-	sol = solmovcol.gen_solution()
-	ini_sol_value = sol.value
-	moves = []
+def neigh_mov(args, inimov):
+	atual = args[0]
+	# antes = atual[oper_idx]
+	# str_antes = "oper{} - sv: {}".format(oper_idx, solvalue)
+
+	# movs = {0: MovementType.SWAP, 1: MovementType.TWO_OPT, 2: MovementType.OR_OPT_K}
+	# movtype = movs[oper_idx]
+	movsinv = {MovementType.SWAP: 0, MovementType.TWO_OPT: 1, MovementType.OR_OPT_K: 2}
+	oper_idx = movsinv[inimov.movtype]
+	atual.source = oper_idx
+	sol = atual[oper_idx]
+	best_val = sol.value
+	best_sol = deepcopy(sol)
+	sol_copy = deepcopy(sol)
 	mov = inimov
 	for i in xrange(len(sol)):
 		for j in xrange(i + 1, len(sol)):
 			mov.x, mov.y = i, j
-			sol.accept(mov)
-			actual_val = sol.value
-			if actual_val < ini_sol_value:
-				moves.append((Movement(mov.movtype, mov.x, mov.y, mov.k), actual_val))
-			sol.accept(mov)
-	moves.sort(key=lambda ax: ax[1])
-	moves = [x[0] for x in moves]
-	unused = []
-	solmovcol_nu = deepcopy(arg[0])
-	for x in moves:
-		if solmovcol.can_merge(x):
-			solmovcol.merge(x)
-		else:
-			unused.append(x)
-	for x in unused:
-		solmovcol_nu.merge(x)
+			# TODO Melhorar implementação com desfazer movimento
+			sol_copy.set_route(sol.get_route)
+			sol_copy.accept(mov)
+			sol_val = sol_copy.value
+			if sol_val < best_val:
+				best_val = sol_val
+				best_sol.set_route(sol_copy.get_route)
 
-	solmovcol_new = SolutionMovementCollection(sol)
-	for x in moves:
-		solmovcol_new.merge(x)
+	atual[oper_idx] = best_sol
+	# print "{}:{}-{}".format(oper_idx, sol, best_sol)
 
-	return min(solmovcol, solmovcol_nu, solmovcol_new)
+	return atual
 
 
-def op1(arg):
-	return op_param(Movement(MovementType.SWAP), arg)
+def print_final_solution(args):
+	print "Fim - best: {}".format(args[0].get_best())
 
 
-def op2(arg):
-	return op_param(Movement(MovementType.TWO_OPT), arg)
+sol_info = SolutionInfoEuclidianPosition(
+	[(0, 0), (20, 0), (10, 0), (50,  0), (100, 0), (30, 0), (40, 0), (5, 0), (110, 0), (60, 0), (-10, 0)])
+ini_solution = Solution(sol_info)
 
+solver = DataFlowOpt()
+solver.run(2, ini_solution,
+	[lambda x, y=mv: neigh_mov(x, y) for mv in [Movement(MovementType.SWAP), Movement(MovementType.TWO_OPT)]],
+	print_final_solution)
 
-def op3(arg):
-	return op_param(Movement(MovementType.OR_OPT_K, 0, 0, 2), arg)
-
-
-def assist(args):
-	# print "Solution %s - %s" % (args[0], args[1])
-	# print "final %s - %s" % (args[0].gen_solution(), args[1].gen_solution())
-
-	# assert(len(args[1]) > 0)
-	if len(args[0]) == 0 or len(args[1]) == 0:
-		return False
-
-	if len(args[0]) == 0 or (args[0].value is None) or args[1] < args[0]:
-		print "sol mov %s - %s" % (args[1], args[1].gen_solution())
-
-		x = deepcopy(args[1])
-		assert(len(x) == len(args[1]))
-		return x
-	else:
-		# print "Parou2 ", args[0], args[1]
-		return False
-
-
-graph = DFGraph()
-
-emptySol = Solution(0)
-# iniSol = Solution(10, [1, 0, 3, 2, 5, 8, 9, 6, 7, 4])
-iniSol = Solution(4)
-iniSol.rand()
-print "iniSol ", iniSol
-
-ini = Feeder(SolutionMovementCollection(iniSol))  # -1 is the initial value of the first input of the FliFlop node, to force it propagate the initial solution
-ini2 = Feeder(SolutionMovementCollection(emptySol))  # 100 is the initial solution
-
-heurSize = 1
-
-heur = [Node(eval("op%d" % i), 1) for i in xrange(1, heurSize + 1)]
-
-assist1 = FlipFlop(assist)
-
-for h in heur:
-	graph.add(h)
-graph.add(ini)
-graph.add(ini2)
-
-graph.add(assist1)
-
-for h in heur:
-	h.add_edge(assist1, 1)
-
-for h in heur:
-	assist1.add_edge(h, 0)
-assist1.add_edge(assist1, 0)
-
-for h in heur:
-	ini.add_edge(h, 0)
-
-ini.add_edge(assist1, 0)
-ini2.add_edge(assist1, 1)
-
-# print len(ini.inport)
-
-sched = Scheduler(graph, 3, mpi_enabled=False)
-
-# print("OI2")
-
-sched.start()
-
+print "solinfo->", sol_info
+print "sol->", ini_solution
+print "sol->", Solution(sol_info, [10, 0, 7, 2, 1, 5, 6, 3, 9, 4, 8])

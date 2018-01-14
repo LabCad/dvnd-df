@@ -29,13 +29,6 @@ class OptMessage:
 		self.__source = source
 		self.__target = target
 		self.__not_improved = not_improved
-		initialSolution = 10
-		self.solvalue = \
-		[
-			[initialSolution - 2, initialSolution - 3, initialSolution - 4, initialSolution - 5, initialSolution - 6, initialSolution - 7, initialSolution - 8, initialSolution - 8],
-			[initialSolution - 1, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 0, initialSolution - 9, initialSolution - 8]
-			# [initialSolution - 1, initialSolution - 4, initialSolution - 5, initialSolution - 5, initialSolution - 5, initialSolution - 5]
-		]
 
 	def __getitem__(self, item):
 		return self.__solmap[item]
@@ -43,8 +36,8 @@ class OptMessage:
 	def __setitem__(self, item, val):
 		self.__solmap[item] = val
 
-	def get_best(self):
-		return min(self.__solmap.values())
+	def get_best(self, maximize=False):
+		return min(self.__solmap.values()) if not maximize else max(self.__solmap.values())
 
 	@property
 	def source(self):
