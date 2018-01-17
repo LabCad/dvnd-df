@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from pydf import *
+from include_lib import *
+include_dvnd()
+include_pydf()
+from pyDF import *
 
 
 class DecisionNode(Node):

@@ -1,13 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
-from include_lib import *
 from optobj import *
-from pyDF import Feeder
-
-
+from include_lib import *
 include_dvnd()
 include_pydf()
+from pyDF import Feeder
 
 
 class DataFlowOpt(object):

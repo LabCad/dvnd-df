@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 class MovementType:
 	SWAP = 1
 	TWO_OPT = 2
