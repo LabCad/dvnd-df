@@ -40,7 +40,8 @@ class SimplePyCuda:
 	def malloc(self, nbytes):
 		return self.lib.cudappMalloc(nbytes)
 	# pycuda compatible version
-	def mem_alloc(self, nbytes): 	        
+
+	def mem_alloc(self, nbytes):
 		return self.malloc(nbytes)
 
 	def free(self, gpu_pointer):
@@ -52,29 +53,36 @@ class SimplePyCuda:
 	def memcpy_htod(self, d, h, nbytes):
 		return self.lib.cudappMemcpyHostToDevice(d,h,nbytes)
 	# pycuda compatible version
+
 	def memcpy_htod(self, gpu_pointer, cpu):
 		self.lib.cudappMemcpyHostToDevice(gpu_pointer, ctypes.c_void_p(cpu.ctypes.data), cpu.nbytes)		
 
 	def memcpy_dtoh(self, h, d, nbytes):
 		return self.lib.cudappMemcpyDeviceToHost(h,d,nbytes)
 	# pycuda compatible version
+
 	def memcpy_dtoh(self, cpu, gpu_pointer):
 		self.lib.cudappMemcpyDeviceToHost(ctypes.c_void_p(cpu.ctypes.data), gpu_pointer, cpu.nbytes)		
 
-
 	def eventCreate(self):
 		return	self.lib.cudappEventCreate()
+
 	def eventDestroy(self, event):
 		self.lib.cudappEventDestroy(event)
+
 	def eventSynchronize(self, event):
 		self.lib.cudappEventSynchronize(event)
+
 	def eventRecord(self, event, stream=0):
 		self.lib.cudappEventRecord(event, stream)
+
 	def eventElapsedTime(self, event1, event2):
 		return self.lib.cudappEventElapsedTime(event1, event2)
 
+
 class grid(Structure):
 	_fields_ = [("x", c_int),("y", c_int)]
+
 
 class block(Structure):
 	_fields_ = [("x", c_int),("y", c_int), ("z", c_int)]
@@ -85,14 +93,15 @@ class SimpleSourceModule:
 		self.code = kernelcode
 		self.nvcc = nvcc
 		self.options = options
-	def get_function(self, function_name_input):	
-		if re.match("[_A-Za-z][_a-zA-Z0-9]*$",function_name_input) == None:
-			print "ERROR: kernel name is not valid '",function_name_input,"'"
-			assert(False)
-		function_name = re.match("[_A-Za-z][_a-zA-Z0-9]*$",function_name_input).group(0)
+
+	def get_function(self, function_name_input):
+		if re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input) is None:
+			print "ERROR: kernel name is not valid '", function_name_input, "'"
+			assert False
+		function_name = re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input).group(0)
 		id_global = self.code.find('__global__')
 		before = self.code[:id_global]
-		after  = self.code[id_global:]
+		after = self.code[id_global:]
 		splitcode = after.split('\n', 1)
 		kernel_signature = splitcode[0]
 		klist = kernel_signature.split()
@@ -101,8 +110,8 @@ class SimpleSourceModule:
 		assert klist[2] == function_name
 		assert klist[3] == "("
 		assert klist[len(klist)-1] == ")"
-		cufile = "__simplepycuda_kernel_"+function_name+".cu"
-		loadkernelpath = "./__simplepycuda_kernel_"+function_name+".so"
+		cufile = "__simplepycuda_kernel_" + function_name + ".cu"
+		loadkernelpath = "./__simplepycuda_kernel_" + function_name + ".so"
 		if os.path.isfile(loadkernelpath):
 			kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
 			# TODO: add argtypes here in function kernel_loader!
@@ -110,14 +119,14 @@ class SimpleSourceModule:
 			return kernelfunction.kernel_loader
 		
 		f = open(cufile, "w")
-		f.write(before);
-		f.write("\n\n");
+		f.write(before)
+		f.write("\n\n")
 		f.write("struct simplepycuda_grid { int x,y; };\n\n")
 		f.write("struct simplepycuda_block { int x,y,z; };\n\n")
 		f.write("__global__ void kernel_")
-		f.write(function_name);
-		f.write("( ");
-		i = 4;
+		f.write(function_name)
+		f.write("( ")
+		i = 4
 		while i < len(klist)-1:
 			f.write(klist[i]) #variable type
 			f.write(" ")
@@ -146,7 +155,7 @@ class SimpleSourceModule:
 		f.write("\tkernel_")
 		f.write(function_name)
 		f.write("<<<mygrid, myblock, shared, cudaStream_t(stream)>>>( ")
-		i = 4;
+		i = 4
 		while i < len(klist)-1:
 			f.write(klist[i+1]) #variable name
 			if i+2 < len(klist)-1:
@@ -164,12 +173,11 @@ class SimpleSourceModule:
 		f.write("\n\n//")
 		f.write(compilecommand)
 		f.write("\n")
-		f.close();
+		f.close()
 		oscode = os.system(compilecommand)
 		if oscode != 0:
 			print "ERROR: compile error for kernel! view log file for more information!"
-			assert(False)
-
+			assert False
 
 		kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
 		# TODO: add argtypes here in function kernel_loader!
@@ -197,11 +205,9 @@ class SimpleSourceModule:
 			print "variable name: ", klist[i+1]
 			if klist[i+1][0] == "*":
 				print "ERROR: pointers should be put together with TYPES, not variables.. please follow C++ style :)"
-				assert(false)
+				assert False
 			if i+2 < len(klist)-1:
 				assert klist[i+2] == ","
 			i += 3
 		print "Kernel parameters seem ok :)"
 		return None
-
-
