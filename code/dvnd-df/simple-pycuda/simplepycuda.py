@@ -7,9 +7,10 @@ import os
 import os.path
 import re
 
+
 class SimplePyCuda:
-	def __init__(self):
-		self.lib = ctypes.cdll.LoadLibrary('./cudapp.so')
+	def __init__(self, path="./"):
+		self.lib = ctypes.cdll.LoadLibrary(path + 'cudapp.so')
 		self.lib.cudappMemcpyHostToDevice.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong]
 		self.lib.cudappMemcpyDeviceToHost.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong]
 		#
@@ -95,6 +96,7 @@ class SimpleSourceModule:
 		self.options = options
 
 	def get_function(self, function_name_input):
+		func_rexp = re.compile("[\s\S]*__global__\s*([a-z_]*)\s*\((.*)\)", re.IGNORECASE)
 		if re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input) is None:
 			print "ERROR: kernel name is not valid '", function_name_input, "'"
 			assert False
@@ -116,7 +118,9 @@ class SimpleSourceModule:
 			kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
 			# TODO: add argtypes here in function kernel_loader!
 			# kernelfunction.kernel_loader.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
-			return kernelfunction.kernel_loader
+			func_resp = kernelfunction.kernel_loader
+			func_resp.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
+			return func_resp
 		
 		f = open(cufile, "w")
 		f.write(before)
@@ -181,8 +185,9 @@ class SimpleSourceModule:
 
 		kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
 		# TODO: add argtypes here in function kernel_loader!
-		# kernelfunction.kernel_loader.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
-		return kernelfunction.kernel_loader
+		func_resp = kernelfunction.kernel_loader
+		func_resp.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
+		return func_resp
 
 	def get_function_debug(self, function_name):
 		print "Will debug kernel function call for '", function_name, "'! This is a development-only feature!"

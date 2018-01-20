@@ -23,6 +23,7 @@ def classicExample(cuda):
 	""")
 	func = mod.get_function("doublify")
 	# TODO: this next line will be made automatically in get_function method... just need a few more time :)
+	func.argtypes[0] = ctypes.c_void_p
 	func.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
 	func(a_gpu, grid(1,1), block(4,4,1), 0, 0)
 	cuda.memcpy_dtoh(a, a_gpu)
@@ -31,8 +32,9 @@ def classicExample(cuda):
 	cuda.free(a_gpu) # this is not necessary in PyCUDA
 	print "Finished"
 
+
 def main():
-	cuda = SimplePyCuda()
+	cuda = SimplePyCuda("../simple-pycuda/")
 
 	classicExample(cuda)
 	return 0
