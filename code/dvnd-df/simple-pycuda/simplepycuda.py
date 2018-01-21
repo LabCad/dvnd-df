@@ -82,11 +82,50 @@ class SimplePyCuda:
 
 
 class grid(Structure):
-	_fields_ = [("x", c_int),("y", c_int)]
+	_fields_ = [("x", c_int), ("y", c_int)]
 
 
 class block(Structure):
-	_fields_ = [("x", c_int),("y", c_int), ("z", c_int)]
+	_fields_ = [("x", c_int), ("y", c_int), ("z", c_int)]
+
+
+class FunctionToCall:
+	def __init__(self, func, grid=grid(1, 1), block=block(4, 4, 1), sharedsize=0, streamid=0):
+		self.__func = func
+		self.__grid = grid
+		self.__block = block
+		self.__sharedsize = sharedsize
+		self.__streamid = streamid
+		self.set_arguments([ctypes.c_void_p])
+
+	def __call__(self, *args, **kwargs):
+		return self.__func(*(args + (self.__grid, self.__block, self.__sharedsize, self.__streamid)), **kwargs)
+
+	@property
+	def sharedsize(self):
+		return self.__sharedsize
+
+	@property
+	def streamid(self):
+		return self.__streamid
+
+	@property
+	def block(self):
+		return self.__block
+
+	@property
+	def grid(self):
+		return self.__grid
+
+	@property
+	def argtypes(self):
+		return self.__func.argtypes
+
+	def set_arguments(self, arglist):
+		if self.__func.argtypes is None or len(self.__func.argtypes) != 4:
+			self.__func.argtypes = arglist + [grid, block, ctypes.c_ulong, ctypes.c_ulong]
+		elif len(self.__func.argtypes) == 4:
+			self.__func.argtypes = arglist + self.__func.argtypes
 
 
 class SimpleSourceModule:
@@ -95,8 +134,71 @@ class SimpleSourceModule:
 		self.nvcc = nvcc
 		self.options = options
 
-	def get_function(self, function_name_input):
-		func_rexp = re.compile("[\s\S]*__global__\s*([a-z_]*)\s*\((.*)\)", re.IGNORECASE)
+	@staticmethod
+	def __gen_cufile(function_name, before, klist, splitcode, compilecommand):
+		with open("__simplepycuda_kernel_" + function_name + ".cu", "w") as f:
+			f.write(before)
+			f.write("\n\n")
+			f.write("struct simplepycuda_grid { int x,y; };\n\n")
+			f.write("struct simplepycuda_block { int x,y,z; };\n\n")
+			f.write("__global__ void kernel_")
+			f.write(function_name)
+			f.write("( ")
+
+			# i = 4
+			# while i < len(klist) - 1:
+			for i in xrange(4, len(klist) - 1, 2):
+				f.write(klist[i])  # variable type
+				f.write(" ")
+				f.write(klist[i + 1])  # variable name
+				if i + 2 < len(klist) - 1:
+					f.write(" , ")
+
+			f.write(" )\n")
+			f.write(splitcode[1])
+			f.write("\nextern \"C\" void ")
+			f.write("kernel_loader")
+			# f.write(function_name)
+			f.write("( ")
+
+			# while i < len(klist) - 1:
+			for i in xrange(4, len(klist) - 1, 2):
+				f.write(klist[i])  # variable type
+				f.write(" ")
+				f.write(klist[i + 1])  # variable name
+				if i + 2 < len(klist) - 1:
+					f.write(" , ")
+
+			f.write(" , simplepycuda_grid g, simplepycuda_block b, size_t shared, size_t stream) {\n")
+			f.write(
+				"//\tprintf(\"lets go! grid(%d,%d) block(%d,%d,%d) shared=%lu stream=%lu\\n\",g.x,g.y,b.x,b.y,b.z,shared,stream);\n")
+			f.write("\tdim3 mygrid;  mygrid.x = g.x;  mygrid.y = g.y;\n")
+			f.write("\tdim3 myblock; myblock.x = b.x; myblock.y = b.y; myblock.z = b.z;\n")
+			f.write("\tkernel_")
+			f.write(function_name)
+			f.write("<<<mygrid, myblock, shared, cudaStream_t(stream)>>>( ")
+			# while i < len(klist) - 1:
+			for i in xrange(4, len(klist) - 1, 2):
+				f.write(klist[i + 1])  # variable name
+				if i + 2 < len(klist) - 1:
+					f.write(" , ")
+
+			f.write(");\n")
+			f.write("cudaDeviceSynchronize();\n");
+			f.write("//\tprintf(\"finished kernel!\");\n")
+			f.write("}\n")
+			f.write("\n\n//")
+			f.write(compilecommand)
+			f.write("\n")
+
+	@staticmethod
+	def __get_os_function(loadkernelpath):
+		kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
+		# TODO: add argtypes here in function kernel_loader!
+		# kernelfunction.kernel_loader.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
+		return FunctionToCall(kernelfunction.kernel_loader)
+
+	def get_function(self, function_name_input, cache_function=True):
 		if re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input) is None:
 			print "ERROR: kernel name is not valid '", function_name_input, "'"
 			assert False
@@ -106,93 +208,44 @@ class SimpleSourceModule:
 		after = self.code[id_global:]
 		splitcode = after.split('\n', 1)
 		kernel_signature = splitcode[0]
-		klist = kernel_signature.split()
+		fn = re.compile('.*(__global__)\s*(void)\s*(\S*)\s*\(')
+		ftok = fn.match(kernel_signature)
+		klist = [ftok.group(1), ftok.group(2), ftok.group(3), '(', ')']
+		params_rexp = re.compile('.*\((.*)\)')
+		rem_ast = re.compile('\s*\*\s*')
+		# Removendo espaco antes do *
+		func_param_str = rem_ast.sub('* ', params_rexp.match(kernel_signature).group(1)).split(',')
+		func_params = [item for sublist in [param.split() for param in func_param_str] for item in sublist]
+		klist = klist[:4] + func_params + [klist[-1]]
 		assert klist[0] == "__global__"
 		assert klist[1] == "void"
 		assert klist[2] == function_name
 		assert klist[3] == "("
 		assert klist[len(klist)-1] == ")"
-		cufile = "__simplepycuda_kernel_" + function_name + ".cu"
+		# cufile = "__simplepycuda_kernel_" + function_name + ".cu"
 		loadkernelpath = "./__simplepycuda_kernel_" + function_name + ".so"
-		if os.path.isfile(loadkernelpath):
-			kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
-			# TODO: add argtypes here in function kernel_loader!
-			# kernelfunction.kernel_loader.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
-			func_resp = kernelfunction.kernel_loader
-			func_resp.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
-			return func_resp
-		
-		f = open(cufile, "w")
-		f.write(before)
-		f.write("\n\n")
-		f.write("struct simplepycuda_grid { int x,y; };\n\n")
-		f.write("struct simplepycuda_block { int x,y,z; };\n\n")
-		f.write("__global__ void kernel_")
-		f.write(function_name)
-		f.write("( ")
-		i = 4
-		while i < len(klist)-1:
-			f.write(klist[i]) #variable type
-			f.write(" ")
-			f.write(klist[i+1]) #variable name
-			if i+2 < len(klist)-1:
-				f.write(" , ")
-			i += 3
-		f.write(" )\n")
-		f.write(splitcode[1])
-		f.write("\nextern \"C\" void ")
-		f.write("kernel_loader")
-		#f.write(function_name)
-		f.write("( ")
-		i = 4;
-		while i < len(klist)-1:
-			f.write(klist[i]) #variable type
-			f.write(" ")
-			f.write(klist[i+1]) #variable name
-			if i+2 < len(klist)-1:
-				f.write(" , ")
-			i += 3
-		f.write(" , simplepycuda_grid g, simplepycuda_block b, size_t shared, size_t stream) {\n")
-		f.write("//\tprintf(\"lets go! grid(%d,%d) block(%d,%d,%d) shared=%lu stream=%lu\\n\",g.x,g.y,b.x,b.y,b.z,shared,stream);\n")
-		f.write("\tdim3 mygrid;  mygrid.x = g.x;  mygrid.y = g.y;\n")
-		f.write("\tdim3 myblock; myblock.x = b.x; myblock.y = b.y; myblock.z = b.z;\n")
-		f.write("\tkernel_")
-		f.write(function_name)
-		f.write("<<<mygrid, myblock, shared, cudaStream_t(stream)>>>( ")
-		i = 4
-		while i < len(klist)-1:
-			f.write(klist[i+1]) #variable name
-			if i+2 < len(klist)-1:
-				f.write(" , ")
-			i += 3
-		f.write(");\n")
-		f.write("cudaDeviceSynchronize();\n");
-		f.write("//\tprintf(\"finished kernel!\");\n")
-		f.write("}\n")
+		if cache_function and os.path.isfile(loadkernelpath):
+			return SimpleSourceModule.__get_os_function(loadkernelpath)
+
 		compilecommand = self.nvcc
 		compilecommand = compilecommand+" --shared __simplepycuda_kernel_"+function_name+".cu "
 		for option in self.options:
 			compilecommand = compilecommand+" "+option+" "
 		compilecommand = compilecommand+" -o __simplepycuda_kernel_"+function_name+".so --compiler-options -fPIC 2> __simplepycuda_kernel_"+function_name+".log"
-		f.write("\n\n//")
-		f.write(compilecommand)
-		f.write("\n")
-		f.close()
+
+		SimpleSourceModule.__gen_cufile(function_name, before, klist, splitcode, compilecommand)
+
 		oscode = os.system(compilecommand)
 		if oscode != 0:
 			print "ERROR: compile error for kernel! view log file for more information!"
 			assert False
 
-		kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
-		# TODO: add argtypes here in function kernel_loader!
-		func_resp = kernelfunction.kernel_loader
-		func_resp.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
-		return func_resp
+		return SimpleSourceModule.__get_os_function(loadkernelpath)
 
 	def get_function_debug(self, function_name):
 		print "Will debug kernel function call for '", function_name, "'! This is a development-only feature!"
 		print self.code
-		print "function_name =",function_name
+		print "function_name =", function_name
 		kernel_signature = self.code.split('\n', 1)[0]
 		print "header: ", kernel_signature
 		print "WARNING: spaces must be provided in order to properly tokenize!"
