@@ -81,22 +81,22 @@ class SimplePyCuda:
 		return self.lib.cudappEventElapsedTime(event1, event2)
 
 
-class grid(Structure):
+class Grid(Structure):
 	_fields_ = [("x", c_int), ("y", c_int)]
 
 
-class block(Structure):
+class Block(Structure):
 	_fields_ = [("x", c_int), ("y", c_int), ("z", c_int)]
 
 
 class FunctionToCall:
-	def __init__(self, func, grid=grid(1, 1), block=block(4, 4, 1), sharedsize=0, streamid=0):
+	def __init__(self, func, func_params, _grid=(1, 1), _block=(4, 4, 1), sharedsize=0, streamid=0):
 		self.__func = func
-		self.__grid = grid
-		self.__block = block
+		self.__grid = Grid(_grid[0], _grid[1])
+		self.__block = Block(_block[0], _block[1], _block[2])
 		self.__sharedsize = sharedsize
 		self.__streamid = streamid
-		self.set_arguments([ctypes.c_void_p])
+		self.set_arguments(self.__get_param_type(func_params))
 
 	def __call__(self, *args, **kwargs):
 		return self.__func(*(args + (self.__grid, self.__block, self.__sharedsize, self.__streamid)), **kwargs)
@@ -121,9 +121,38 @@ class FunctionToCall:
 	def argtypes(self):
 		return self.__func.argtypes
 
+	def __get_param_type(self, func_params):
+		rem_spc = re.compile('\s+')
+		resp = []
+		name_param =\
+			{
+				'bool': ctypes.c_bool,
+				'char': ctypes.c_char,
+				'short': ctypes.c_short,
+				'unsigned short': ctypes.c_ushort,
+				'int': ctypes.c_int,
+				'unsigned int': ctypes.c_uint,
+				'long': ctypes.c_long,
+				'unsigned long': ctypes.c_ulong,
+				'long long': ctypes.c_longlong,
+				'unsigned long long': ctypes.c_ulonglong,
+				'float': ctypes.c_float,
+				'double': ctypes.c_double,
+				'long double': ctypes.c_longdouble
+			}
+		for i in xrange(0, len(func_params), 2):
+			param_type = rem_spc.sub(' ', func_params[i])
+			if param_type in name_param:
+				resp.append(name_param[param_type])
+			elif '*' in param_type:
+				resp.append(ctypes.c_void_p)
+			else:
+				raise ValueError("Type '{}' not found, of list {}".format(param_type, func_params))
+		return resp
+
 	def set_arguments(self, arglist):
 		if self.__func.argtypes is None or len(self.__func.argtypes) != 4:
-			self.__func.argtypes = arglist + [grid, block, ctypes.c_ulong, ctypes.c_ulong]
+			self.__func.argtypes = arglist + [Grid, Block, ctypes.c_ulong, ctypes.c_ulong]
 		elif len(self.__func.argtypes) == 4:
 			self.__func.argtypes = arglist + self.__func.argtypes
 
@@ -170,8 +199,7 @@ class SimpleSourceModule:
 					f.write(" , ")
 
 			f.write(" , simplepycuda_grid g, simplepycuda_block b, size_t shared, size_t stream) {\n")
-			f.write(
-				"//\tprintf(\"lets go! grid(%d,%d) block(%d,%d,%d) shared=%lu stream=%lu\\n\",g.x,g.y,b.x,b.y,b.z,shared,stream);\n")
+			# f.write("//\tprintf(\"lets go! grid(%d,%d) block(%d,%d,%d) shared=%lu stream=%lu\\n\",g.x,g.y,b.x,b.y,b.z,shared,stream);\n")
 			f.write("\tdim3 mygrid;  mygrid.x = g.x;  mygrid.y = g.y;\n")
 			f.write("\tdim3 myblock; myblock.x = b.x; myblock.y = b.y; myblock.z = b.z;\n")
 			f.write("\tkernel_")
@@ -185,18 +213,18 @@ class SimpleSourceModule:
 
 			f.write(");\n")
 			f.write("cudaDeviceSynchronize();\n");
-			f.write("//\tprintf(\"finished kernel!\");\n")
+			# f.write("//\tprintf(\"finished kernel!\");\n")
 			f.write("}\n")
 			f.write("\n\n//")
 			f.write(compilecommand)
 			f.write("\n")
 
 	@staticmethod
-	def __get_os_function(loadkernelpath):
+	def __get_os_function(loadkernelpath, func_params):
 		kernelfunction = ctypes.cdll.LoadLibrary(loadkernelpath)
 		# TODO: add argtypes here in function kernel_loader!
 		# kernelfunction.kernel_loader.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
-		return FunctionToCall(kernelfunction.kernel_loader)
+		return FunctionToCall(kernelfunction.kernel_loader, func_params)
 
 	def get_function(self, function_name_input, cache_function=True):
 		if re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input) is None:
@@ -240,7 +268,7 @@ class SimpleSourceModule:
 			print "ERROR: compile error for kernel! view log file for more information!"
 			assert False
 
-		return SimpleSourceModule.__get_os_function(loadkernelpath)
+		return SimpleSourceModule.__get_os_function(loadkernelpath, func_params)
 
 	def get_function_debug(self, function_name):
 		print "Will debug kernel function call for '", function_name, "'! This is a development-only feature!"
