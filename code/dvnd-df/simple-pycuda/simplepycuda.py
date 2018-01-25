@@ -10,7 +10,11 @@ import re
 
 class SimplePyCuda:
 	def __init__(self, path="./"):
-		self.lib = ctypes.cdll.LoadLibrary(path + 'cudapp.so')
+		cudaappfile = 'cudapp'
+		if not os.path.isfile(path + cudaappfile + '.so'):
+			SimpleSourceModule.compile_files('nvcc', [path + cudaappfile + '.cu'], [])
+
+		self.lib = ctypes.cdll.LoadLibrary(path + cudaappfile + '.so')
 		self.lib.cudappMemcpyHostToDevice.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong]
 		self.lib.cudappMemcpyDeviceToHost.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_ulong]
 		#
@@ -66,7 +70,7 @@ class SimplePyCuda:
 		self.lib.cudappMemcpyDeviceToHost(ctypes.c_void_p(cpu.ctypes.data), gpu_pointer, cpu.nbytes)		
 
 	def eventCreate(self):
-		return	self.lib.cudappEventCreate()
+		return self.lib.cudappEventCreate()
 
 	def eventDestroy(self, event):
 		self.lib.cudappEventDestroy(event)
@@ -164,7 +168,7 @@ class SimpleSourceModule:
 		self.options = options
 
 	@staticmethod
-	def __gen_cufile(function_name, before, klist, splitcode, compilecommand):
+	def __gen_cufile(function_name, before, klist, splitcode, nvcc, options):
 		with open("__simplepycuda_kernel_" + function_name + ".cu", "w") as f:
 			f.write(before)
 			f.write("\n\n")
@@ -216,6 +220,8 @@ class SimpleSourceModule:
 			# f.write("//\tprintf(\"finished kernel!\");\n")
 			f.write("}\n")
 			f.write("\n\n//")
+			compilecommand = SimpleSourceModule.__get_compile_command(nvcc,
+				SimpleSourceModule.__get_file_name(function_name) + ".cu", options)
 			f.write(compilecommand)
 			f.write("\n")
 
@@ -226,12 +232,38 @@ class SimpleSourceModule:
 		# kernelfunction.kernel_loader.argtypes = [ctypes.c_void_p, grid, block, ctypes.c_ulong, ctypes.c_ulong]
 		return FunctionToCall(kernelfunction.kernel_loader, func_params)
 
+	@staticmethod
+	def __get_file_name(function_name):
+		return "__simplepycuda_kernel_" + function_name
+
+	@staticmethod
+	def __get_compile_command(nvcc, filename, options, objectname=None):
+		objectname = objectname or filename
+		if objectname.lower().endswith(".cu"):
+			objectname = objectname[:-3]
+		if objectname.lower().endswith(".cpp"):
+			objectname = objectname[:-4]
+
+		compilecommand = "{} --shared {}".format(nvcc, filename)
+		compilecommand = "{} {}".format(compilecommand, " ".join(options))
+		return "{} -o {}.so --compiler-options -fPIC 2> {}.log".format(compilecommand, objectname, objectname)
+
+	@staticmethod
+	def compile_files(nvcc, files, options, objectname=None):
+		objectname = objectname or files[0]
+		compilecommand = SimpleSourceModule.__get_compile_command(nvcc, " ".join(files), options, objectname)
+		oscode = os.system(compilecommand)
+		if oscode != 0:
+			print "ERROR: compile error for kernel! view log file for more information!"
+			assert False
+
 	def get_function(self, function_name_input, cache_function=True):
 		if re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input) is None:
 			print "ERROR: kernel name is not valid '", function_name_input, "'"
 			assert False
 		function_name = re.match("[_A-Za-z][_a-zA-Z0-9]*$", function_name_input).group(0)
-		id_global = self.code.find('__global__')
+		globalword = '__global__'
+		id_global = self.code.find(globalword)
 		before = self.code[:id_global]
 		after = self.code[id_global:]
 		splitcode = after.split('\n', 1)
@@ -245,28 +277,20 @@ class SimpleSourceModule:
 		func_param_str = rem_ast.sub('* ', params_rexp.match(kernel_signature).group(1)).split(',')
 		func_params = [item for sublist in [param.split() for param in func_param_str] for item in sublist]
 		klist = klist[:4] + func_params + [klist[-1]]
-		assert klist[0] == "__global__"
+		assert klist[0] == globalword
 		assert klist[1] == "void"
 		assert klist[2] == function_name
 		assert klist[3] == "("
 		assert klist[len(klist)-1] == ")"
 		# cufile = "__simplepycuda_kernel_" + function_name + ".cu"
-		loadkernelpath = "./__simplepycuda_kernel_" + function_name + ".so"
+		loadkernelpath = "./" + SimpleSourceModule.__get_file_name(function_name) + ".so"
 		if cache_function and os.path.isfile(loadkernelpath):
 			return SimpleSourceModule.__get_os_function(loadkernelpath)
 
-		compilecommand = self.nvcc
-		compilecommand = compilecommand+" --shared __simplepycuda_kernel_"+function_name+".cu "
-		for option in self.options:
-			compilecommand = compilecommand+" "+option+" "
-		compilecommand = compilecommand+" -o __simplepycuda_kernel_"+function_name+".so --compiler-options -fPIC 2> __simplepycuda_kernel_"+function_name+".log"
+		SimpleSourceModule.__gen_cufile(function_name, before, klist, splitcode, self.nvcc, self.options)
 
-		SimpleSourceModule.__gen_cufile(function_name, before, klist, splitcode, compilecommand)
-
-		oscode = os.system(compilecommand)
-		if oscode != 0:
-			print "ERROR: compile error for kernel! view log file for more information!"
-			assert False
+		SimpleSourceModule.compile_files(self.nvcc,
+			[SimpleSourceModule.__get_file_name(function_name) + ".cu"], self.options)
 
 		return SimpleSourceModule.__get_os_function(loadkernelpath, func_params)
 
