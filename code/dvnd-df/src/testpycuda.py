@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import ctypes
 import numpy
 import time
 from include_lib import *
@@ -56,34 +55,4 @@ def main():
 	return 0
 
 
-# main()
-
-
-def best_neighbor(file, solint, neighborhood):
-	mylibname = 'wamca2016lib'
-	if not os.path.isfile(mylibname + '.so'):
-		SimpleSourceModule.compile_files('nvcc',
-			["~/git/wamca2016/source/*.cu", "~/git/wamca2016/source/*.cpp"], [], mylibname)
-
-	mylib = ctypes.cdll.LoadLibrary(mylibname + '.so')
-	array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
-	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int]
-	# ctypes.POINTER(c_int)
-	mylib.bestNeighbor.restype = ctypes.c_voidp
-	csolint = numpy.array(solint, dtype=ctypes.c_int)
-	mylib.bestNeighbor(file, csolint, len(solint), neighborhood)
-	solint = list(csolint)
-	# solint = list(numpy.ctypeslib.as_array(csolint, shape=(len(solint),)))
-
-	return solint
-
-
-intance_path = "~/git/wamca2016/instances/"
-solution_instance_file = [
-	"01_berlin52.tsp", "02_kroD100.tsp",
-	"03_pr226.tsp", "04_lin318.tsp",
-	"05_TRP-S500-R1.tsp", "06_d657.tsp",
-	"07_rat784.tsp", "08_TRP-S1000-R1.tsp"
-]
-solint = [x for x in xrange(10)]
-print "{} - {}".format(solint, best_neighbor(intance_path + solution_instance_file[4], solint, 1))
+main()

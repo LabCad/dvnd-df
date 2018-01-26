@@ -5,6 +5,7 @@ from dataflow_opt import *
 from movement import *
 from solution import Solution
 from solution_info import *
+from wraper_wamca2016 import *
 
 
 def neigh_mov(args, inimov):
@@ -55,3 +56,13 @@ solver.run(2, ini_solution,
 print "solinfo->", sol_info
 print "sol->", ini_solution
 print "sol->", Solution(sol_info, [10, 0, 7, 2, 1, 5, 6, 3, 9, 4, 8])
+
+intance_path = "~/git/wamca2016/instances/"
+solution_instance_file = [
+	"01_berlin52.tsp", "02_kroD100.tsp",
+	"03_pr226.tsp", "04_lin318.tsp",
+	"05_TRP-S500-R1.tsp", "06_d657.tsp",
+	"07_rat784.tsp", "08_TRP-S1000-R1.tsp"
+]
+solint = [x for x in xrange(10)]
+print "{} - {}".format(solint, best_neighbor(intance_path + solution_instance_file[4], solint, 1))
