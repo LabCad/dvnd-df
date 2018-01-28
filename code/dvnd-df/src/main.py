@@ -8,6 +8,21 @@ from solution_info import *
 from wraper_wamca2016 import *
 
 
+class SolutionVectorValue:
+	def __init__(self, vector, value):
+		self.vector = vector
+		self.value = value
+
+	def __lt__(self, other):
+		return self.value < other.value
+
+	def __len__(self):
+		return len(self.vector)
+
+	def __str__(self):
+		return "{}-{}".format(self.value, self.vector)
+
+
 def neigh_mov(args, inimov):
 	atual = args[0]
 	# antes = atual[oper_idx]
@@ -40,29 +55,37 @@ def neigh_mov(args, inimov):
 	return atual
 
 
+def neigh_gpu(args, file, inimov):
+	atual = args[0]
+	solution = atual[inimov]
+	resp = best_neighbor(file, solution.vector, inimov)
+	return SolutionVectorValue(resp[0], resp[1])
+
+
 def print_final_solution(args):
 	print "Fim - best: {}".format(args[0].get_best())
 
 
-sol_info = SolutionInfoEuclidianPosition(
-	[(0, 0), (20, 0), (10, 0), (50,  0), (100, 0), (30, 0), (40, 0), (5, 0), (110, 0), (60, 0), (-10, 0)])
-ini_solution = Solution(sol_info)
+sol_info = wamca_solution_instance_file[0]
+solint = [x for x in xrange(sol_info[1])]
+
+file_name = wamca_intance_path + sol_info[0]
+resp = best_neighbor(file_name, solint, 1, True)
+ini_solution = SolutionVectorValue(solint, resp[1])
+
+# ini_solution.vector = list(reversed(ini_solution.vector))
+# resp2 = neigh_gpu([ini_solution], file_name, 0)
+# print "resp", resp
+# print "resp2", resp2
+neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(1)]
+# neigh_op = [lambda ab, y=mv: neigh_mov(ab, y) for mv in [Movement(MovementType.SWAP), Movement(MovementType.TWO_OPT)]]
 
 solver = DataFlowOpt()
-solver.run(2, ini_solution,
-	[lambda x, y=mv: neigh_mov(x, y) for mv in [Movement(MovementType.SWAP), Movement(MovementType.TWO_OPT)]],
-	print_final_solution)
+solver.run(2, ini_solution, neigh_op, print_final_solution)
 
-print "solinfo->", sol_info
-print "sol->", ini_solution
-print "sol->", Solution(sol_info, [10, 0, 7, 2, 1, 5, 6, 3, 9, 4, 8])
+# print "solinfo->", sol_info
+# print "sol->", ini_solution
+# print "sol->", Solution(sol_info, [10, 0, 7, 2, 1, 5, 6, 3, 9, 4, 8])
 
-intance_path = "~/git/wamca2016/instances/"
-solution_instance_file = [
-	"01_berlin52.tsp", "02_kroD100.tsp",
-	"03_pr226.tsp", "04_lin318.tsp",
-	"05_TRP-S500-R1.tsp", "06_d657.tsp",
-	"07_rat784.tsp", "08_TRP-S1000-R1.tsp"
-]
-solint = [x for x in xrange(10)]
-print "{} - {}".format(solint, best_neighbor(intance_path + solution_instance_file[4], solint, 1))
+# resp = best_neighbor(wamca_intance_path + sol_info[0], solint, 1)
+# print "oi {} - {}".format(resp[1], resp[0])

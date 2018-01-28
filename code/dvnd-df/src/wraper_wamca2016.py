@@ -8,7 +8,7 @@ include_simple_pycuda()
 from simplepycuda import SimplePyCuda, SimpleSourceModule, Grid, Block
 
 
-def best_neighbor(file, solint, neighborhood):
+def best_neighbor(file, solint, neighborhood, justcalc=False):
 	mylibname = 'wamca2016lib'
 	if not os.path.isfile(mylibname + '.so'):
 		SimpleSourceModule.compile_files('nvcc',
@@ -16,12 +16,24 @@ def best_neighbor(file, solint, neighborhood):
 
 	mylib = ctypes.cdll.LoadLibrary(mylibname + '.so')
 	array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
-	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int]
+	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool]
 	# ctypes.POINTER(c_int)
-	mylib.bestNeighbor.restype = ctypes.c_voidp
+	mylib.bestNeighbor.restype = ctypes.c_uint
 	csolint = numpy.array(solint, dtype=ctypes.c_int)
-	mylib.bestNeighbor(file, csolint, len(solint), neighborhood)
+	resp = mylib.bestNeighbor(file, csolint, len(solint), neighborhood, justcalc)
 	solint = list(csolint)
 	# solint = list(numpy.ctypeslib.as_array(csolint, shape=(len(solint),)))
 
-	return solint#, resp
+	return solint, resp
+
+wamca_intance_path = "/home/rodolfo/git/wamca2016/instances/"
+wamca_solution_instance_file = [
+	("01_berlin52.tsp", 52),
+	("02_kroD100.tsp", 100),
+	("03_pr226.tsp", 226),
+	("04_lin318.tsp", 318),
+	("05_TRP-S500-R1.tsp", 501),
+	("06_d657.tsp", 657),
+	("07_rat784.tsp", 783),
+	("08_TRP-S1000-R1.tsp", 1001)
+]
