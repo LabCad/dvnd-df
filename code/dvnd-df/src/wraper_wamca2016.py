@@ -8,11 +8,14 @@ include_simple_pycuda()
 from simplepycuda import SimplePyCuda, SimpleSourceModule, Grid, Block
 
 
+wamca2016path = "/home/rodolfo/git/wamca2016/"
+
+
 def best_neighbor(file, solint, neighborhood, justcalc=False):
 	mylibname = 'wamca2016lib'
 	if not os.path.isfile(mylibname + '.so'):
 		SimpleSourceModule.compile_files('nvcc',
-			["~/git/wamca2016/source/*.cu", "~/git/wamca2016/source/*.cpp"], [], mylibname)
+			[wamca2016path + "source/*.cu", "source/*.cpp"], [], mylibname)
 
 	mylib = ctypes.cdll.LoadLibrary(mylibname + '.so')
 	array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
@@ -26,7 +29,8 @@ def best_neighbor(file, solint, neighborhood, justcalc=False):
 
 	return solint, resp
 
-wamca_intance_path = "/home/rodolfo/git/wamca2016/instances/"
+
+wamca_intance_path = wamca2016path + "instances/"
 wamca_solution_instance_file = [
 	("01_berlin52.tsp", 52),
 	("02_kroD100.tsp", 100),
