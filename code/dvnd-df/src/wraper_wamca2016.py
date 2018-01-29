@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
 import ctypes
 import numpy
 import os
@@ -10,8 +9,14 @@ from simplepycuda import SimplePyCuda, SimpleSourceModule, Grid, Block
 
 
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
+# wamca2016path = "/home/rodolfo/git/wamca2016/"
 wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 print "WAMCAPATH:"+wamca2016path
+
+
+def calculate_value(file, solint):
+	# TODO Implementar
+	pass
 
 
 def best_neighbor(file, solint, neighborhood, justcalc=False):

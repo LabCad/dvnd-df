@@ -57,6 +57,7 @@ def neigh_mov(args, inimov):
 
 def neigh_gpu(args, file, inimov):
 	atual = args[0]
+	atual.source = inimov
 	solution = atual[inimov]
 	resp = best_neighbor(file, solution.vector, inimov)
 	atual[inimov] = SolutionVectorValue(resp[0], resp[1])
@@ -75,16 +76,15 @@ resp = best_neighbor(file_name, solint, 1, True)
 ini_solution = SolutionVectorValue(solint, resp[1])
 
 # ini_solution.vector = list(reversed(ini_solution.vector))
-# resp2 = neigh_gpu([ini_solution], file_name, 0)
-# print "resp", resp
-# print "resp2", resp2
-neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(4)]
+# resp2 = neigh_gpu([{0: ini_solution}], file_name, 0)
+# print "resp2: {}".format(resp2[0])
+neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(3)]
 # neigh_op = [lambda ab, y=mv: neigh_mov(ab, y) for mv in [Movement(MovementType.SWAP), Movement(MovementType.TWO_OPT)]]
 
 print "Início: {}".format(ini_solution)
 
 solver = DataFlowOpt()
-solver.run(2, ini_solution, neigh_op, print_final_solution)
+solver.run(4, ini_solution, neigh_op, print_final_solution)
 
 # print "solinfo->", sol_info
 # print "sol->", ini_solution

@@ -1,1 +1,3 @@
-code/dvnd-df/.idea/workspace.xml
+*.log
+*.so
+*.pyc

@@ -39,6 +39,9 @@ class DataFlowOpt(object):
 
 		# print "Manager - s:{}, antes: {}, best: {}, atual: {} - {}, m2: !{}!".format(
 		# 	atual.source, melhor_ini, melhor.get_best(), atualValue, ini_str, melhor)
+
+		# TODO Remover
+		print "melhor valor: ", best_sol.value
 		return melhor
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
