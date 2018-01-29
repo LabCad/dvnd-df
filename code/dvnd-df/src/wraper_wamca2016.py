@@ -15,7 +15,7 @@ def best_neighbor(file, solint, neighborhood, justcalc=False):
 	mylibname = 'wamca2016lib'
 	if not os.path.isfile(mylibname + '.so'):
 		SimpleSourceModule.compile_files('nvcc',
-			[wamca2016path + "source/*.cu", "source/*.cpp"], [], mylibname)
+			[wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], [], mylibname)
 
 	mylib = ctypes.cdll.LoadLibrary(mylibname + '.so')
 	array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
