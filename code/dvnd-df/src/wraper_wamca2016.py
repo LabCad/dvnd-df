@@ -3,12 +3,15 @@
 
 import ctypes
 import numpy
+import os
 from include_lib import *
 include_simple_pycuda()
 from simplepycuda import SimplePyCuda, SimpleSourceModule, Grid, Block
 
 
-wamca2016path = "/home/rodolfo/git/wamca2016/"
+# os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
+wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
+print "WAMCAPATH:"+wamca2016path
 
 
 def best_neighbor(file, solint, neighborhood, justcalc=False):

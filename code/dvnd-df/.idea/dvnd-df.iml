@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/simple-pycuda" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/pyDF" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 2.7.12 (/usr/bin/python2.7)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
