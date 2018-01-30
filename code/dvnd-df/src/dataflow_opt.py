@@ -41,7 +41,7 @@ class DataFlowOpt(object):
 		# 	atual.source, melhor_ini, melhor.get_best(), atualValue, ini_str, melhor)
 
 		# TODO Remover
-		print "melhor valor: ", best_sol.value
+		# print "melhor valor: ", best_sol.value
 		return melhor
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):

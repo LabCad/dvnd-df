@@ -65,11 +65,14 @@ def neigh_gpu(args, file, inimov):
 
 
 def print_final_solution(args):
+	print [args[0][i].value for i in xrange(3)]
 	print "Fim - best: {}".format(args[0].get_best())
 
 
 sol_info = wamca_solution_instance_file[0]
 solint = [x for x in xrange(sol_info[1])]
+#147511
+# solint = [0, 43, 33, 36, 47, 23, 4, 5, 14, 37, 39, 38, 35, 34, 48, 31, 21, 17, 30, 22, 19, 49, 15, 28, 29, 1, 6, 41, 20, 16, 2, 44, 18, 40, 7, 8, 9, 42, 3, 45, 24, 11, 27, 26, 25, 46, 13, 12, 50, 32, 10, 51]
 
 file_name = wamca_intance_path + sol_info[0]
 resp = best_neighbor(file_name, solint, 1, True)
@@ -83,8 +86,11 @@ neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(3)]
 
 print "Início: {}".format(ini_solution)
 
-solver = DataFlowOpt()
-solver.run(4, ini_solution, neigh_op, print_final_solution)
+mpi_enabled = "-mpi" in sys.argv
+workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 4)
+
+solver = DataFlowOpt(False, mpi_enabled)
+solver.run(workers, ini_solution, neigh_op, print_final_solution)
 
 # print "solinfo->", sol_info
 # print "sol->", ini_solution

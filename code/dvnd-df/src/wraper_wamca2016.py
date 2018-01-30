@@ -22,8 +22,10 @@ def calculate_value(file, solint):
 def best_neighbor(file, solint, neighborhood, justcalc=False):
 	mylibname = 'wamca2016lib'
 	if not os.path.isfile(mylibname + '.so'):
+		print "Creating file: ", mylibname + '.so'
 		SimpleSourceModule.compile_files('nvcc',
 			[wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], [], mylibname)
+		print "Creating file: ", mylibname + '.so', " created"
 
 	mylib = ctypes.cdll.LoadLibrary(mylibname + '.so')
 	array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
