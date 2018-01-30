@@ -69,7 +69,8 @@ def print_final_solution(args):
 	print "Fim - best: {}".format(args[0].get_best())
 
 
-sol_info = wamca_solution_instance_file[0]
+solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
+sol_info = wamca_solution_instance_file[solution_index]
 solint = [x for x in xrange(sol_info[1])]
 #147511
 # solint = [0, 43, 33, 36, 47, 23, 4, 5, 14, 37, 39, 38, 35, 34, 48, 31, 21, 17, 30, 22, 19, 49, 15, 28, 29, 1, 6, 41, 20, 16, 2, 44, 18, 40, 7, 8, 9, 42, 3, 45, 24, 11, 27, 26, 25, 46, 13, 12, 50, 32, 10, 51]
