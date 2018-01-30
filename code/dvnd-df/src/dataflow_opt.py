@@ -12,9 +12,17 @@ class DataFlowOpt(object):
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 
+	@staticmethod
+	def __neighborhood(func, args, inimov):
+		atual = args[0]
+		atual.source = inimov
+		atual[inimov] = func(atual[inimov])
+		return atual
+
 	def __manager(self, args):
 		atual = args[0]
 		melhor = args[1]
+		imprimir = "---------------------------- {} {}".format(atual.source, melhor.strsimple())
 		# melhor.solvalue[atual.source] = atual.solvalue[atual.source]
 		# ini_str = "sv: {}, m: !{}!".format(atual.solvalue, melhor)
 
@@ -42,19 +50,22 @@ class DataFlowOpt(object):
 
 		# TODO Remover
 		# print "melhor valor: ", best_sol.value
+		imprimir = "{} {} ----------------------------".format(imprimir, melhor.strsimple())
+		print imprimir
 		return melhor
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
 		graph = DFGraph()
 
-		fimNode = DecisionNode(result_callback, 1, lambda x: x[0].no_improvement())
+		numberOfOpers = len(oper_funtions)
+		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(numberOfOpers)]), 1,
+			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
 		manNode = DecisionNode(self.__manager, 2)
 		graph.add(manNode)
 		manNode.add_edge(manNode, 1)
 		manNode.add_edge(fimNode, 0)
-		numberOfOpers = len(oper_funtions)
 
 		iniManNode = Feeder(OptMessage({x: initial_solution for x in xrange(numberOfOpers)}, numberOfOpers,
 			[False for y in xrange(numberOfOpers)], [False for i in xrange(numberOfOpers)]))
@@ -63,8 +74,8 @@ class DataFlowOpt(object):
 
 		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(numberOfOpers)]
 		oper_keep_going = [lambda a, b: True for y in xrange(numberOfOpers)]
-		operNode = [DecisionNode(oper_funtions[i], 1, oper_should_run[i], oper_keep_going[i])
-			for i in xrange(numberOfOpers)]
+		operNode = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowOpt.__neighborhood(fnc, arg, it),
+			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(numberOfOpers)]
 		for x in operNode:
 			graph.add(x)
 			manNode.add_edge(x, 0)
