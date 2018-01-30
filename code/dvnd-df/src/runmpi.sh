@@ -1,2 +1,3 @@
-mpirun --hostfile host_gpu python main.py -mpi -n 4 -in 7
+#mpirun --hostfile host_gpu optirun python main.py -mpi -n 1 -in 1
+mpirun -np 1 optirun python main.py -mpi -in 1
 
