@@ -22,7 +22,7 @@ class DataFlowOpt(object):
 	def __manager(self, args):
 		atual = args[0]
 		melhor = args[1]
-		imprimir = "---------------------------- {} {}".format(atual.source, melhor.strsimple())
+		# imprimir = "---------------------------- {} {}".format(atual.source, melhor.strsimple())
 		# melhor.solvalue[atual.source] = atual.solvalue[atual.source]
 		# ini_str = "sv: {}, m: !{}!".format(atual.solvalue, melhor)
 
@@ -49,9 +49,7 @@ class DataFlowOpt(object):
 		# 	atual.source, melhor_ini, melhor.get_best(), atualValue, ini_str, melhor)
 
 		# TODO Remover
-		# print "melhor valor: ", best_sol.value
-		imprimir = "{} {} ----------------------------".format(imprimir, melhor.strsimple())
-		print imprimir
+		# print "{} {} ----------------------------".format(imprimir, melhor.strsimple())
 		return melhor
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):

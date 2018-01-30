@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
-os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
-os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
+# os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
+os.environ['PYDF_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df"
+# os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
+os.environ['SIMPLE_PYCUDA_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda"
 
 from copy import deepcopy
 from dataflow_opt import *
@@ -74,6 +76,7 @@ sol_info = wamca_solution_instance_file[solution_index]
 solint = [x for x in xrange(sol_info[1])]
 #147511
 # solint = [0, 43, 33, 36, 47, 23, 4, 5, 14, 37, 39, 38, 35, 34, 48, 31, 21, 17, 30, 22, 19, 49, 15, 28, 29, 1, 6, 41, 20, 16, 2, 44, 18, 40, 7, 8, 9, 42, 3, 45, 24, 11, 27, 26, 25, 46, 13, 12, 50, 32, 10, 51]
+solint = [0, 21, 31, 48, 35, 34, 33, 43, 45, 47, 23, 5, 14, 4, 37, 39, 36, 38, 44, 18, 40, 7, 8, 9, 42, 3, 24, 27, 26, 25, 12, 13, 46, 15, 49, 19, 22, 30, 17, 2, 16, 6, 1, 41, 20, 29, 28, 11, 32, 50, 10, 51]
 
 file_name = wamca_intance_path + sol_info[0]
 resp = best_neighbor(file_name, solint, 1, True)
