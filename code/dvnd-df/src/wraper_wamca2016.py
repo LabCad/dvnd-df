@@ -9,8 +9,8 @@ from simplepycuda import SimplePyCuda, SimpleSourceModule, Grid, Block
 
 
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
-# wamca2016path = "/home/rodolfo/git/wamca2016/"
-wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
+wamca2016path = "/home/imcoelho/Rodolfo/wamca2016/"
+# wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 print "WAMCAPATH:"+wamca2016path
 
 
@@ -19,15 +19,17 @@ def calculate_value(file, solint):
 	pass
 
 
+localpath = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
+
 def best_neighbor(file, solint, neighborhood, justcalc=False):
 	mylibname = 'wamca2016lib'
-	if not os.path.isfile(mylibname + '.so'):
+	if not os.path.isfile(localpath + mylibname + '.so'):
 		print "Creating file: ", mylibname + '.so'
 		SimpleSourceModule.compile_files('nvcc',
-			[wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], [], mylibname)
+			[wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], [], localpath + mylibname)
 		print "Creating file: ", mylibname + '.so', " created"
 
-	mylib = ctypes.cdll.LoadLibrary(mylibname + '.so')
+	mylib = ctypes.cdll.LoadLibrary(localpath + mylibname + '.so')
 	array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
 	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool]
 	# ctypes.POINTER(c_int)
