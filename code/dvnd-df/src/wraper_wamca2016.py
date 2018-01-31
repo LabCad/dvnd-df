@@ -9,8 +9,8 @@ from simplepycuda import SimplePyCuda, SimpleSourceModule, Grid, Block
 
 
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
-wamca2016path = "/home/imcoelho/Rodolfo/wamca2016/"
-# wamca2016path = "/home/rodolfo/git/wamca2016/"
+# wamca2016path = "/home/imcoelho/Rodolfo/wamca2016/"
+wamca2016path = "/home/rodolfo/git/wamca2016/"
 # wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 print "WAMCAPATH:"+wamca2016path
 
@@ -20,8 +20,8 @@ def calculate_value(file, solint):
 	pass
 
 
-localpath = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
-# localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
+# localpath = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
+localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 
 
 def best_neighbor(file, solint, neighborhood, justcalc=False):

@@ -1,0 +1,80 @@
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+Início: 8670796-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99]
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+I am the master. There are 1 mpi processes. (hostname = rodolfo-not)
+Roots [<pyDF.nodes.Feeder instance at 0x7f29f84ee128>, <pyDF.nodes.Feeder instance at 0x7f29f84ee7a0>, <pyDF.nodes.Feeder instance at 0x7f29f84ee878>, <pyDF.nodes.Feeder instance at 0x7f29f84ee998>, <pyDF.nodes.Feeder instance at 0x7f29f84eeb48>, <pyDF.nodes.Feeder instance at 0x7f29f84eecf8>]
+Starting 0
+Starting 1
+Starting 2
+Starting 3
+Main loop
+I am worker 3
+I am worker 2
+I am worker 1
+I am worker 0
+GPU0
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+GPU0
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+GPU0
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+GPU0
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+Kernel INIT: 2OPT TOTAL:0
+Kernel INIT: OROPT1 TOTAL:0
+Kernel INIT: OROPT2 TOTAL:0
+Kernel INIT: OROPT3 TOTAL:0
+GPU0, initializing 0 tkernels
+GPU0, initializing 5 kernels
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+Kernel INIT: 2OPT TOTAL:0
+Kernel INIT: OROPT1 TOTAL:0
+Kernel INIT: OROPT2 TOTAL:0
+Kernel INIT: OROPT3 TOTAL:0
+GPU0, initializing 0 tkernels
+Kernel INIT: SWAP TOTAL:0
+Kernel INIT: 2OPT TOTAL:0
+Kernel INIT: OROPT1 TOTAL:0
+Kernel INIT: OROPT2 TOTAL:0
+Kernel INIT: OROPT3 TOTAL:0
+GPU0, initializing 0 tkernels
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+Kernel INIT: 2OPT TOTAL:0
+Kernel INIT: OROPT1 TOTAL:0
+Kernel INIT: OROPT2 TOTAL:0
+Kernel INIT: OROPT3 TOTAL:0
+GPU0, initializing 0 tkernels
+[1040328L, 1040328L, 1040328L, 1040328L, 1040328L]
+Fim time: 2.64715790749s - best: 1040328-[0, 49, 93, 16, 89, 97, 48, 69, 88, 41, 22, 7, 51, 65, 37, 33, 80, 26, 23, 87, 12, 78, 40, 83, 14, 90, 53, 62, 15, 95, 85, 64, 77, 30, 98, 44, 32, 67, 13, 81, 46, 11, 27, 20, 55, 94, 25, 86, 54, 8, 9, 19, 24, 17, 5, 39, 82, 2, 58, 84, 63, 76, 42, 3, 43, 59, 52, 4, 61, 36, 50, 18, 91, 47, 1, 99, 29, 34, 92, 70, 38, 72, 68, 45, 60, 73, 6, 74, 66, 35, 28, 57, 21, 96, 31, 10, 75, 79, 71, 56]
+Waiting [1, 2, 0, 3]
+Terminating workers True 0 0
+MPI TERMINATING

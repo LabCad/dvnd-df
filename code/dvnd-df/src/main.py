@@ -1,10 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import time
 import os
-os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
-# os.environ['PYDF_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df"
-os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
-# os.environ['SIMPLE_PYCUDA_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda"
+# os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
+os.environ['PYDF_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df"
+# os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
+os.environ['SIMPLE_PYCUDA_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda"
 
 from copy import deepcopy
 from dataflow_opt import *
@@ -66,9 +67,14 @@ def neigh_gpu(solution, file, inimov):
 	return SolutionVectorValue(resp[0], resp[1])
 
 
+start_time = time.time()
+
+
 def print_final_solution(args):
+	end_time = time.time()
+	# end_time = start_time = 0
 	print [x.value for x in args]
-	print "Fim - best: {}".format(min(args))
+	print "Fim time: {}s - best: {}".format(end_time - start_time, min(args))
 
 
 solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
@@ -95,6 +101,7 @@ mpi_enabled = "-mpi" in sys.argv
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 4)
 
 solver = DataFlowOpt(False, mpi_enabled)
+start_time = time.time()
 solver.run(workers, ini_solution, neigh_op, print_final_solution)
 
 # print "solinfo->", sol_info
