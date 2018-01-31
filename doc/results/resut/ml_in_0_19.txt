@@ -1,0 +1,2044 @@
+WAMCAPATH:/home/imcoelho/Rodolfo/wamca2016/
+Início: 558778-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+WAMCAPATH:/home/imcoelho/Rodolfo/wamca2016/
+Início: 558778-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+Setting feeder affinity
+I am the master. There are 2 mpi processes. (hostname = gpu01)
+Roots [<pyDF.nodes.Feeder instance at 0x7f6ab3dbfb90>, <pyDF.nodes.Feeder instance at 0x7f6ab3dbfef0>, <pyDF.nodes.Feeder instance at 0x7f6ab3dce098>, <pyDF.nodes.Feeder instance at 0x7f6ab3dce248>]
+Starting 0
+I am a slave. (hostname = gpu02)
+Starting 1
+Starting 2
+Starting 3
+I am worker 0
+Main loop
+I am worker 1
+Roots [<pyDF.nodes.Feeder instance at 0x7f4c67b9e680>, <pyDF.nodes.Feeder instance at 0x7f4c67b9e9e0>, <pyDF.nodes.Feeder instance at 0x7f4c67b9eab8>, <pyDF.nodes.Feeder instance at 0x7f4c67b9eb48>]
+Starting 4
+Starting 5
+I am worker 2
+I am worker 3
+Starting 6
+I am worker 4
+Starting 7
+I am worker 5
+I am worker 6
+I am worker 7
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+GPU0
+GPU0
+GPU0
+set seed 500
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+set seed 500
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=4 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=1
+MLKernel id=1 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=2 TOTAL=0
+MLKernel id=2 TOTAL=1
+MLKernel id=3 TOTAL=0
+MLKernel id=1 TOTAL=1
+MLKernel id=4 TOTAL=0
+MLKernel id=3 TOTAL=1
+MLKernel id=0 TOTAL=1
+MLKernel id=4 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=4 TOTAL=1
+MLKernel id=1 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=4 TOTAL=1
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0450000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.4590000 ms
+partial GPU-GPU improvement=-186438 count=8 moveCount=32618
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0990000 ms
+partial GPU-GPU improvement=-117590 count=1 moveCount=32618
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0230000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.1090000 ms
+partial GPU-GPU improvement=-95939 count=2 moveCount=32618
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0420000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.4490000 ms
+partial GPU-GPU improvement=-186438 count=8 moveCount=32618
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0400000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.4400000 ms
+partial GPU-GPU improvement=-186438 count=8 moveCount=32618
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1000000 ms
+partial GPU-GPU improvement=-117590 count=1 moveCount=32618
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+GPU0
+GPU0
+GPU0
+set seed 500
+set seed 500
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=4 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=4 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=1 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=1 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=4 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=4 TOTAL=1
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=1 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=4 TOTAL=1
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc40 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0570000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.4810000 ms
+partial GPU-GPU improvement=-66324 count=4 moveCount=32588
+initializing kernel 1 with &kernel:0x2fdcd50 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0230000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1020000 ms
+partial GPU-GPU improvement=-35040 count=1 moveCount=32588
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+GPU0
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=1 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=4 TOTAL=1
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdbd00 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0550000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.4720000 ms
+partial GPU-GPU improvement=-66608 count=5 moveCount=32588
+initializing kernel 1 with &kernel:0x2fdbe10 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0230000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1020000 ms
+partial GPU-GPU improvement=-50937 count=2 moveCount=32588
+initializing kernel 2 with &kernel:0x2fdbf20 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.1140000 ms
+partial GPU-GPU improvement=-37921 count=2 moveCount=32588
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdc570 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0570000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.5300000 ms
+partial GPU-GPU improvement=-47305 count=4 moveCount=32588
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+GPU0
+set seed 500
+MLKernel id=0 TOTAL=0
+MLKernel id=1 TOTAL=0
+MLKernel id=2 TOTAL=0
+MLKernel id=3 TOTAL=0
+MLKernel id=4 TOTAL=0
+MLKernel id=0 TOTAL=1
+MLKernel id=1 TOTAL=1
+MLKernel id=2 TOTAL=1
+MLKernel id=3 TOTAL=1
+MLKernel id=4 TOTAL=1
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.6200000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1450000 ms
+partial GPU-GPU improvement=-26772 count=3 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0450000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1290000 ms
+partial GPU-GPU improvement=-14011 count=5 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0430000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1190000 ms
+partial GPU-GPU improvement=-5321 count=3 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0390000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1020000 ms
+partial GPU-GPU improvement=-1462 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.4370000 ms
+partial GPU-GPU improvement=-72588 count=6 moveCount=32618
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0230000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0980000 ms
+partial GPU-GPU improvement=-72083 count=1 moveCount=32618
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0360000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1050000 ms
+partial GPU-GPU improvement=-1713 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0340000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=-1713 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1010000 ms
+partial GPU-GPU improvement=-65032 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdc570 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0530000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1400000 ms
+partial GPU-GPU improvement=-3082 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU0, initializing 5 kernels
+Kernel INIT: SWAP TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20000
+Kernel INIT: 2OPT TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20200
+Kernel INIT: OROPT1 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20400
+Kernel INIT: OROPT2 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20600
+Kernel INIT: OROPT3 TOTAL:0
+graph resize to 53
+transBuffer size424
+transBuffer Pointer 0x203a20800
+GPU0, initializing 5 tkernels
+Kernel INIT: SWAP TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b20000
+Kernel INIT: 2OPT TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b25800
+Kernel INIT: OROPT1 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b2b000
+Kernel INIT: OROPT2 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b30800
+Kernel INIT: OROPT3 TOTAL:1
+graph resize to 53
+transBuffer size22472
+transBuffer Pointer 0x203b36000
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc70 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0670000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.7360000 ms
+partial GPU-GPU improvement=-59874 count=6 moveCount=32588
+initializing kernel 1 with &kernel:0x2fdcd80 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0250000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1040000 ms
+partial GPU-GPU improvement=-47733 count=2 moveCount=32588
+initializing kernel 2 with &kernel:0x2fdce90 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0250000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.1130000 ms
+partial GPU-GPU improvement=-35471 count=2 moveCount=32588
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0950000 ms
+partial GPU-GPU improvement=-10121 count=3 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0210000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0990000 ms
+partial GPU-GPU improvement=-30827 count=4 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdbd00 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0400000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1170000 ms
+partial GPU-GPU improvement=-10121 count=3 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc40 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0490000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1320000 ms
+partial GPU-GPU improvement=-10981 count=2 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdcd50 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0240000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0970000 ms
+partial GPU-GPU improvement=-12495 count=3 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+GPU ok!
+partial GPU-GPU time 0.0920000 ms
+partial GPU-GPU improvement=-10981 count=2 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0900000 ms
+partial GPU-GPU improvement=-12495 count=3 moveCount=32764
+initializing kernel 2 with &kernel:0x24e1070 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+GPU ok!
+partial GPU-GPU time 0.1010000 ms
+partial GPU-GPU improvement=-13961 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0350000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1070000 ms
+partial GPU-GPU improvement=-10981 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0340000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=-9672 count=2 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0200000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0900000 ms
+partial GPU-GPU improvement=-12282 count=4 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1020000 ms
+partial GPU-GPU improvement=-2690 count=4 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0af0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0230000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1000000 ms
+partial GPU-GPU improvement=-13763 count=4 moveCount=32764
+initializing kernel 2 with &kernel:0x24e0c00 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0250000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0990000 ms
+partial GPU-GPU improvement=-7491 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0320000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0910000 ms
+partial GPU-GPU improvement=-2690 count=4 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc40 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0420000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1110000 ms
+partial GPU-GPU improvement=-2690 count=4 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdcd50 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0270000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1120000 ms
+partial GPU-GPU improvement=-13763 count=4 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc70 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+RAND_SEED	: 500
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+partial GPU-GPU time 0.1020000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU improvement=-7238 count=3 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+partial GPU-GPU time 0.0960000 ms
+partial GPU-GPU improvement=-7238 count=3 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1000000 ms
+partial GPU-GPU improvement=-10089 count=3 moveCount=32764
+initializing kernel 2 with &kernel:0x24e1070 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0220000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.1000000 ms
+partial GPU-GPU improvement=-6325 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0340000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0970000 ms
+partial GPU-GPU improvement=-9973 count=2 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1000000 ms
+partial GPU-GPU improvement=-15010 count=3 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc70 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0380000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0980000 ms
+partial GPU-GPU improvement=-9973 count=2 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdcd80 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0230000 ms
+GPU ok!
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1010000 ms
+partial GPU-GPU improvement=-15010 count=3 moveCount=32767
+initializing kernel 2 with &kernel:0x2fdce90 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.1020000 ms
+partial GPU-GPU improvement=-8969 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdbd00 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1160000 ms
+partial GPU-GPU improvement=-9973 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0920000 ms
+partial GPU-GPU improvement=-7795 count=3 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0210000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=-7663 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0340000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=-9596 count=2 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0210000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-6558 count=3 moveCount=32764
+initializing kernel 2 with &kernel:0x24e1070 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0990000 ms
+partial GPU-GPU improvement=-11697 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdc570 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0420000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1090000 ms
+partial GPU-GPU improvement=-9596 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0380000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=-9596 count=2 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0870000 ms
+partial GPU-GPU improvement=-6558 count=3 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0950000 ms
+partial GPU-GPU improvement=-5315 count=2 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0210000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=-3539 count=2 moveCount=32764
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0980000 ms
+partial GPU-GPU improvement=-10106 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc70 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0380000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1080000 ms
+partial GPU-GPU improvement=-865 count=1 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-865 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0af0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=-1352 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-865 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0870000 ms
+partial GPU-GPU improvement=-1352 count=2 moveCount=32764
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.1010000 ms
+partial GPU-GPU improvement=-7212 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0920000 ms
+partial GPU-GPU improvement=-460 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdc570 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1000000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdc680 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0240000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-1376 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0910000 ms
+partial GPU-GPU improvement=-2546 count=3 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0870000 ms
+partial GPU-GPU improvement=-3490 count=2 moveCount=32764
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0230000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-7224 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0340000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0920000 ms
+partial GPU-GPU improvement=-2546 count=3 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0320000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-2546 count=3 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0af0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=-3490 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdbd00 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0420000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1080000 ms
+partial GPU-GPU improvement=-3917 count=1 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdbe10 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0240000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0950000 ms
+partial GPU-GPU improvement=-7234 count=2 moveCount=32767
+initializing kernel 2 with &kernel:0x2fdbf20 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0300000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0960000 ms
+partial GPU-GPU improvement=-6955 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc40 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1150000 ms
+partial GPU-GPU improvement=-3378 count=2 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0340000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-1191 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0870000 ms
+partial GPU-GPU improvement=-2386 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0920000 ms
+partial GPU-GPU improvement=-1191 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-2386 count=2 moveCount=32764
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0890000 ms
+partial GPU-GPU improvement=-5506 count=2 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e09e0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-677 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-677 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=-2694 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-677 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-2694 count=1 moveCount=32764
+initializing kernel 2 with &kernel:0x24e1070 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0230000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=-425 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0390000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0320000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0210000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=-3108 count=2 moveCount=32764
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-2017 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+GPU ok!
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0920000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+GPU ok!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0230000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0890000 ms
+partial GPU-GPU improvement=-2017 count=1 moveCount=32764
+initializing kernel 2 with &kernel:0x24e1070 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0230000 ms
+kernel 2 moveElems=50!
+GPU ok!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-2017 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdc570 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0390000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1070000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdc680 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0240000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1020000 ms
+partial GPU-GPU improvement=-2017 count=1 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0320000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0960000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+initializing kernel 1 with &kernel:0x24e0f60 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0860000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc40 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+GPU ok!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0380000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1090000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdbd00 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0990000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdbe10 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0220000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0900000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32767
+initializing kernel 2 with &kernel:0x2fdbf20 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0240000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-78 count=1 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e07a0 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0940000 ms
+partial GPU-GPU improvement=-526 count=1 moveCount=32764
+initializing kernel 1 with &kernel:0x24e08b0 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0210000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0870000 ms
+partial GPU-GPU improvement=-576 count=2 moveCount=32764
+initializing kernel 2 with &kernel:0x24e09c0 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+kernel time 0.0230000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0880000 ms
+partial GPU-GPU improvement=-1828 count=1 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdc570 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0380000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0980000 ms
+partial GPU-GPU improvement=-526 count=1 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdcc70 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0390000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.1220000 ms
+partial GPU-GPU improvement=-29029 count=2 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdcd80 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0240000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.1060000 ms
+partial GPU-GPU improvement=-29856 count=1 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x2fdbd00 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0370000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0950000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32767
+initializing kernel 1 with &kernel:0x2fdbe10 2OPT TOTAL=0
+&h_moves=0x203a20200
+launching kernel k=1 2OPT!
+kernel moveElems=27!
+kernel time 0.0300000 ms
+kernel 2 moveElems=27!
+partial GPU-GPU time 0.0890000 ms
+partial GPU-GPU improvement=-1400 count=1 moveCount=32767
+initializing kernel 2 with &kernel:0x2fdbf20 OROPT1 TOTAL=0
+&h_moves=0x203a20400
+launching kernel k=2 OROPT1!
+kernel moveElems=50!
+GPU ok!
+kernel time 0.0230000 ms
+kernel 2 moveElems=50!
+partial GPU-GPU time 0.0930000 ms
+partial GPU-GPU improvement=-1400 count=1 moveCount=32767
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+GPU ok!
+RAND_SEED	: 500
+BEGIN PARTIAL - GPU-XPU
+initializing kernel 0 with &kernel:0x24e0e50 SWAP TOTAL=0
+&h_moves=0x203a20000
+launching kernel k=0 SWAP!
+kernel moveElems=26!
+Calling kernel SWAP
+Kernel SWAP	grid(1,26,1)	blck(53,1,1)	shared=1060 (1 KB)	size=53
+adsData=0x704c60000
+kernel time 0.0330000 ms
+kernel 2 moveElems=26!
+partial GPU-GPU time 0.0970000 ms
+partial GPU-GPU improvement=0 count=0 moveCount=32764
+END PARTIAL - GPU-XPU
+-----------------------------------------
+finished successfully
+[142826L, 142826L, 142826L]
+Fim - best: 142826-[0, 48, 34, 35, 38, 39, 37, 14, 5, 4, 23, 47, 36, 33, 43, 45, 15, 49, 19, 22, 20, 17, 30, 21, 31, 44, 18, 40, 7, 8, 9, 42, 3, 24, 11, 27, 25, 26, 12, 13, 46, 28, 29, 41, 1, 6, 16, 2, 32, 50, 10, 51]
+Waiting [1, 3, 2, 0, 7, 4, 6, 5]
+Terminating workers True 0 0
+MPI TERMINATING
+MPI received termination.
+Terminating workers False 0 4
