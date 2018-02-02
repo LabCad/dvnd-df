@@ -3,8 +3,13 @@
 import os
 import random
 import time
-os.environ['PYDF_HOME'] = "/home/imcoelho/git-reps/dvnd-df/code/dvnd-df"
-os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/git-reps/dvnd-df/code/dvnd-df/simple-pycuda"
+
+# os.environ['PYDF_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df"
+# os.environ['PYDF_HOME'] = "/home/imcoelho/git-reps/dvnd-df/code/dvnd-df"
+os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
+# os.environ['SIMPLE_PYCUDA_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda"
+# os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/git-reps/dvnd-df/code/dvnd-df/simple-pycuda"
+os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
 
 from copy import deepcopy
 from movement import *
