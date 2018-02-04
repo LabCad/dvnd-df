@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import random
 from optobj import *
 from include_lib import *
 include_dvnd()
@@ -7,7 +8,48 @@ include_pydf()
 from pyDF import Feeder
 
 
-class DataFlowOpt(object):
+class DataFlowVND(object):
+	def __init__(self, maximize=False, mpi_enabled=False, is_rvnd=False):
+		self.__maximize = maximize
+		self.__mpi_enabled = mpi_enabled
+		self.__is_rvnd = is_rvnd
+
+	@staticmethod
+	def __neighborhood(func, args, maximize):
+		resp = func(args[0][0])
+		return [resp, resp < args[0][0] if not maximize else args[0][0] < resp]
+
+	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
+		graph = DFGraph()
+
+		iniNode = Feeder([initial_solution, True])
+		graph.add(iniNode)
+
+		fimNode = DecisionNode(lambda y: result_callback([y[0][0]]), 1, lambda a: not a[0][1])
+		graph.add(fimNode)
+
+		if self.__is_rvnd:
+			oper_funtions = [x for x in oper_funtions]
+			random.shuffle(oper_funtions)
+
+		numberOfOpers = len(oper_funtions)
+		operNode = [DecisionNode(lambda arg, idx=x: DataFlowVND.__neighborhood(oper_funtions[idx], arg, self.__maximize), 1,
+			lambda a, y=x: a[0][1] if y == 0 else (not a[0][1])) for x in xrange(numberOfOpers)]
+
+		for operIt in operNode:
+			graph.add(operIt)
+			operIt.add_edge(operNode[0], 0)
+
+		for x in xrange(numberOfOpers - 1):
+			operNode[x].add_edge(operNode[x + 1], 0)
+
+		iniNode.add_edge(operNode[0], 0)
+		operNode[numberOfOpers - 1].add_edge(fimNode, 0)
+
+		Scheduler(graph, number_of_workers, mpi_enabled=self.__mpi_enabled).start()
+
+
+class DataFlowDVND(object):
 	def __init__(self, maximize=False, mpi_enabled=False):
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
@@ -28,7 +70,7 @@ class DataFlowOpt(object):
 		# atualValue = atual[atual.source]
 
 		if (not self.__maximize and atual[atual.source] < melhor[atual.source]) \
-				or (self.__maximize and atual[atual.source] > melhor[atual.source]):
+				or (self.__maximize and melhor[atual.source] < atual[atual.source]):
 			melhor[atual.source] = atual[atual.source]
 			melhor.set_target(atual.source)
 		else:
@@ -47,7 +89,7 @@ class DataFlowOpt(object):
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
 		graph = DFGraph()
 
-		# Nó finalCria n
+		# Nó final Cria n
 		numberOfOpers = len(oper_funtions)
 		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(numberOfOpers)]), 1,
 			lambda x: x[0].no_improvement())
@@ -68,7 +110,7 @@ class DataFlowOpt(object):
 		# Nós de operações
 		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(numberOfOpers)]
 		oper_keep_going = [lambda a, b: True for y in xrange(numberOfOpers)]
-		operNode = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowOpt.__neighborhood(fnc, arg, it),
+		operNode = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowDVND.__neighborhood(fnc, arg, it),
 			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(numberOfOpers)]
 		for x in operNode:
 			graph.add(x)
