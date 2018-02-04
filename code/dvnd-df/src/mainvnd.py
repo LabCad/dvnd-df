@@ -30,6 +30,7 @@ class SolutionVectorValue:
 	def __str__(self):
 		return "{}-{}".format(self.value, self.vector)
 
+
 def neigh_gpu(args, file, inimov):
 	atual = args[0]
 	atual.source = inimov

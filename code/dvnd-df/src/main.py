@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 import time
 import os
+from copy import deepcopy
 # os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
 os.environ['PYDF_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df"
 # os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
 os.environ['SIMPLE_PYCUDA_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda"
 
-from copy import deepcopy
 from dataflow_opt import *
 from movement import *
 from solution import Solution
@@ -72,7 +72,6 @@ start_time = time.time()
 
 def print_final_solution(args):
 	end_time = time.time()
-	# end_time = start_time = 0
 	print [x.value for x in args]
 	print "Fim time: {}s - best: {}".format(end_time - start_time, min(args))
 
@@ -80,10 +79,6 @@ def print_final_solution(args):
 solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
 sol_info = wamca_solution_instance_file[solution_index]
 solint = [x for x in xrange(sol_info[1])]
-#147511
-# solint = [0, 43, 33, 36, 47, 23, 4, 5, 14, 37, 39, 38, 35, 34, 48, 31, 21, 17, 30, 22, 19, 49, 15, 28, 29, 1, 6, 41, 20, 16, 2, 44, 18, 40, 7, 8, 9, 42, 3, 45, 24, 11, 27, 26, 25, 46, 13, 12, 50, 32, 10, 51]
-# 142803
-# solint = [0, 21, 48, 35, 34, 33, 36, 47, 23, 4, 5, 14, 37, 39, 38, 31, 44, 18, 40, 7, 8, 9, 42, 3, 24, 45, 43, 15, 49, 19, 22, 30, 17, 2, 16, 20, 41, 6, 1, 29, 28, 46, 13, 12, 26, 25, 27, 11, 50, 32, 10, 51]
 
 file_name = wamca_intance_path + sol_info[0]
 resp = best_neighbor(file_name, solint, 1, True)
@@ -103,10 +98,3 @@ workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 4)
 solver = DataFlowOpt(False, mpi_enabled)
 start_time = time.time()
 solver.run(workers, ini_solution, neigh_op, print_final_solution)
-
-# print "solinfo->", sol_info
-# print "sol->", ini_solution
-# print "sol->", Solution(sol_info, [10, 0, 7, 2, 1, 5, 6, 3, 9, 4, 8])
-
-# resp = best_neighbor(wamca_intance_path + sol_info[0], solint, 1)
-# print "oi {} - {}".format(resp[1], resp[0])

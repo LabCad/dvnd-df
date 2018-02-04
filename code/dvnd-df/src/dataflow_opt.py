@@ -22,9 +22,6 @@ class DataFlowOpt(object):
 	def __manager(self, args):
 		atual = args[0]
 		melhor = args[1]
-		# imprimir = "---------------------------- {} {}".format(atual.source, melhor.strsimple())
-		# melhor.solvalue[atual.source] = atual.solvalue[atual.source]
-		# ini_str = "sv: {}, m: !{}!".format(atual.solvalue, melhor)
 
 		# melhor_ini = melhor.get_best()
 		melhor.unset_all_targets()
@@ -45,31 +42,30 @@ class DataFlowOpt(object):
 				# Se vai chamar novamente remove o sinal
 				melhor.set_not_improved(x, False)
 
-		# print "Manager - s:{}, antes: {}, best: {}, atual: {} - {}, m2: !{}!".format(
-		# 	atual.source, melhor_ini, melhor.get_best(), atualValue, ini_str, melhor)
-
-		# TODO Remover
-		# print "{} {} ----------------------------".format(imprimir, melhor.strsimple())
 		return melhor
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
 		graph = DFGraph()
 
+		# Nó finalCria n
 		numberOfOpers = len(oper_funtions)
 		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(numberOfOpers)]), 1,
 			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
+		# Nó de gerenciamento ligado nele mesmo e no nó final
 		manNode = DecisionNode(self.__manager, 2)
 		graph.add(manNode)
 		manNode.add_edge(manNode, 1)
 		manNode.add_edge(fimNode, 0)
 
+		# Nó que inicializa o nó gerenciador
 		iniManNode = Feeder(OptMessage({x: initial_solution for x in xrange(numberOfOpers)}, numberOfOpers,
 			[False for y in xrange(numberOfOpers)], [False for i in xrange(numberOfOpers)]))
 		graph.add(iniManNode)
 		iniManNode.add_edge(manNode, 1)
 
+		# Nós de operações
 		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(numberOfOpers)]
 		oper_keep_going = [lambda a, b: True for y in xrange(numberOfOpers)]
 		operNode = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowOpt.__neighborhood(fnc, arg, it),
@@ -79,6 +75,7 @@ class DataFlowOpt(object):
 			manNode.add_edge(x, 0)
 			x.add_edge(manNode, 0)
 
+		# Nós que inicializam nós de operação
 		iniNode = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(numberOfOpers)],
 			[False for i in xrange(numberOfOpers)])) for x in xrange(numberOfOpers)]
 		for i in xrange(numberOfOpers):
