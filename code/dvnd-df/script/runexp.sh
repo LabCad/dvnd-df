@@ -33,11 +33,15 @@ if [ $# -gt 0 ]; then
 
 	for filei in "${file_list[@]}"
 	do
-		for i in {0..1}
+		for i in {0..99}
 		do
 			file_name=$solver_name"_np"$num_proc"w"$num_workes"in"$filei"_"$i
-			# echo $file_name
-			echo "time mpirun -np $num_proc --hostfile $host_file python main.py -mpi -n $num_workes -in $filei -s $solver_name > results/"$file_name".out 2> results/"$file_name".log"
+			echo $file_name
+			if [ "$solver_name" = "vnd_no_df" ]; then
+				time python mainvnd.py -in $filei > "results/"$file_name".out" 2> "results/"$file_name".log"
+			else
+				time mpirun -np $num_proc --hostfile $host_file python main.py -mpi -n $num_workes -in $filei -s $solver_name > "results/"$file_name".out" 2> "results/"$file_name".log"
+			fi
 		done
 	done
 fi
