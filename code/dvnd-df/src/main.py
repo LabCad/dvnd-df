@@ -1,16 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import time
-from mlproblem import *
+import os
 
 # os.environ['PYDF_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
 os.environ['PYDF_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df"
 # os.environ['SIMPLE_PYCUDA_HOME'] = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
 os.environ['SIMPLE_PYCUDA_HOME'] = "/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda"
 
+from mlproblem import *
 from dataflow_opt import *
 from wraper_wamca2016 import *
-
 
 start_time = time.time()
 
@@ -36,7 +36,7 @@ print "Início: {}".format(ini_solution)
 mpi_enabled = "-mpi" in sys.argv
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
 
-solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "rvnd"
+solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd"
 
 solver = None
 if "dvnd" == solver_param:
