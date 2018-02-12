@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="956e8775-94c0-4458-a19c-d58f01ce1ce0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pyDF/optimization.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simple-pycuda/README.md" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyDF/pydf.py" afterPath="$PROJECT_DIR$/pyDF/pydf.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dataflow_opt.py" afterPath="$PROJECT_DIR$/src/dataflow_opt.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/include_lib.py" afterPath="$PROJECT_DIR$/src/include_lib.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/optobj.py" afterPath="$PROJECT_DIR$/src/optobj.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wraper_wamca2016.py" afterPath="$PROJECT_DIR$/src/wraper_wamca2016.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../doc/results/gpu01-04/dvnd-rvnd.r" afterPath="$PROJECT_DIR$/../../doc/results/gpu01-04/dvnd-rvnd.r" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../doc/results/gpu01-04/gpu01-04.py" afterPath="$PROJECT_DIR$/../../doc/results/gpu01-04/gpu01-04.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,7 +13,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="547">
@@ -43,6 +33,16 @@
               <folding>
                 <element signature="e#42#55#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="wraper_wamca2016.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/wraper_wamca2016.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-947">
+              <caret line="3" column="12" lean-forward="true" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -172,7 +172,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="746" />
     <option name="y" value="27" />
     <option name="width" value="1152" />
@@ -368,7 +368,7 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="746" y="27" width="1152" height="868" extended-state="1" />
+    <frame x="746" y="27" width="1152" height="868" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2124774" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
@@ -717,14 +717,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/wraper_wamca2016.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="12" lean-forward="true" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/dataflow_opt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="313">
@@ -750,6 +742,14 @@
           <folding>
             <element signature="e#42#65#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/wraper_wamca2016.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-947">
+          <caret line="3" column="12" lean-forward="true" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
