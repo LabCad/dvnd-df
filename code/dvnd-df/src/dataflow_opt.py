@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import random
+from mpi4py import MPI
 from optobj import *
-from include_lib import *
-include_dvnd()
-include_pydf()
+# TODO Sucuri / pyDF
 from pyDF import Feeder
+# from sucuri import Feeder
 
 
 class DataFlowVND(object):
@@ -116,6 +116,15 @@ class DataFlowDVND(object):
 			graph.add(x)
 			manNode.add_edge(x, 0)
 			x.add_edge(manNode, 0)
+
+		# if self.__mpi_enabled:
+		# 	comm = MPI.COMM_WORLD
+		# 	nprocs = comm.Get_size()
+		# 	print "MPI {}/{}".format(comm.Get_rank(), nprocs)
+		# 	for i in xrange(len(operNode)):
+		# 		# TODO Sucuri / pyDF
+		# 		# operNode[i].pin([i % nprocs])
+		# 		operNode[i].pin(i % nprocs)
 
 		# Nós que inicializam nós de operação
 		iniNode = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(numberOfOpers)],
