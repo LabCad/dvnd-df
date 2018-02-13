@@ -78,8 +78,5 @@ class OptMessage:
 		return "sol: {}, s: {}, t: {}, ni: {}".format(self.__solmap, self.__source,
 			self.__target, self.__not_improved)
 
-	# def strsimple(self):
-	# 	return "v: {}, t: {} ni: {}".format([x.value for x in self.__solmap.values()], self.__target, self.__not_improved)
-
 	def get_not_improveds(self):
 		return [x for x in xrange(len(self.__not_improved)) if self.__not_improved[x]]
