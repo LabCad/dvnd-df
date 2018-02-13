@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import random
-from mpi4py import MPI
+# from mpi4py import MPI
 from optobj import *
 # TODO Sucuri / pyDF
 from pyDF import Feeder

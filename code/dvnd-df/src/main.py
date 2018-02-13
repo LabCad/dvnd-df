@@ -15,9 +15,13 @@ ini_solution = SolutionVectorValue(solint, calculate_value(file_name, solint))
 
 def print_final_solution(args):
 	end_time = time.time()
+	print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 	print [x.value for x in args]
 	print "Initial: {}".format(ini_solution)
-	print "Final time: {}s - Best: {}".format(end_time - start_time, min(args))
+	final_solution = min(args)
+	print "Final time: {}s - Best: {}".format(end_time - start_time, final_solution)
+	imp_value = 1.0 * ini_solution.value / final_solution.value
+	print "Value - initial: {}, final: {}, improveup: {}".format(ini_solution.value, final_solution.value, imp_value)
 
 
 neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
@@ -28,14 +32,13 @@ workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
 solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd"
 
 solver = None
-if "dvnd" == solver_param:
-	print "Solver: DVND"
+if "dvnd" == solver_param.lower():
 	solver = DataFlowDVND(False, mpi_enabled)
-elif "rvnd" == solver_param:
-	print "Solver: RVND"
+elif "rvnd" == solver_param.lower():
 	solver = DataFlowVND(False, mpi_enabled, True)
 else:
-	print "Solver: VND"
 	solver = DataFlowVND(False, mpi_enabled)
+
+print "Solver: {}".format(solver_param.upper())
 start_time = time.time()
 solver.run(workers, ini_solution, neigh_op, print_final_solution)

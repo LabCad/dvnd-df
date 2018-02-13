@@ -36,9 +36,8 @@ def create_wamca2016lib():
 	if not os.path.isfile(localpath + mylibname + '.so'):
 		print "Creating file: ", mylibname + '.so'
 		cmple_start_time = time.time()
-		SimpleSourceModule.compile_files('nvcc',
-			[wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], [],
-			localpath + mylibname)
+		wamca_files = [wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"]
+		SimpleSourceModule.compile_files('nvcc', wamca_files, [], localpath + mylibname)
 		cmple_end_time = time.time()
 		print "File: {}.so created in {}s".format(mylibname, cmple_end_time - cmple_start_time)
 	else:
@@ -86,20 +85,20 @@ wamca_solution_instance_file = [
 	("08_TRP-S1000-R1.tsp", 1001),
 	# http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/
 	# 08
-	# ("u1060.tsp", 1060),
-	# ("vm1084.tsp", 1084),
-	# ("u1432.tsp", 1432),
-	# ("vm1748.tsp", 1748),
-	# ("u1817.tsp", 1817),
-	# ("rl1889.tsp", 1889),
-	# ("u2152.tsp", 152),
+	("u1060.tsp", 1060),
+	("vm1084.tsp", 1084),
+	("u1432.tsp", 1432),
+	("vm1748.tsp", 1748),
+	("u1817.tsp", 1817),
+	("rl1889.tsp", 1889),
+	("u2152.tsp", 2152),
 	# 15
-	# ("u2319.tsp", 2319),
+	("u2319.tsp", 2319),
 	("fnl4461.tsp", 4461),
-	# ("rl5915.tsp", 5915),
-	# ("rl5934.tsp", 5934),
+	("rl5915.tsp", 5915),
+	("rl5934.tsp", 5934),
+	("rl11849.tsp", 11849),
 	# 20
-	# ("rl11849.tsp", 11849),
 	("usa13509.tsp", 13509),
 	("d18512.tsp", 18512)
 ]
