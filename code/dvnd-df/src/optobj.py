@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from include_lib import *
+from include_lib import include_dvnd, include_pydf
 include_dvnd()
 include_pydf()
 # TODO Sucuri / pyDF
-from pyDF import *
-# from sucuri import *
+from pyDF import Node, Oper
+# from sucuri import Node, Oper
 
 
 class DecisionNode(Node):

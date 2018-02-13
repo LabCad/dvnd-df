@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import random
 # from mpi4py import MPI
-from optobj import *
+from optobj import DecisionNode, OptMessage
 # TODO Sucuri / pyDF
-from pyDF import Feeder
+from pyDF import DFGraph, Feeder, Scheduler
 # from sucuri import Feeder
 
 
@@ -22,29 +22,29 @@ class DataFlowVND(object):
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
 		graph = DFGraph()
 
-		iniNode = Feeder([initial_solution, True])
-		graph.add(iniNode)
+		ini_node = Feeder([initial_solution, True])
+		graph.add(ini_node)
 
-		fimNode = DecisionNode(lambda y: result_callback([y[0][0]]), 1, lambda a: not a[0][1])
-		graph.add(fimNode)
+		fim_node = DecisionNode(lambda y: result_callback([y[0][0]]), 1, lambda a: not a[0][1])
+		graph.add(fim_node)
 
 		if self.__is_rvnd:
 			oper_funtions = [x for x in oper_funtions]
 			random.shuffle(oper_funtions)
 
-		numberOfOpers = len(oper_funtions)
-		operNode = [DecisionNode(lambda arg, idx=x: DataFlowVND.__neighborhood(oper_funtions[idx], arg, self.__maximize), 1,
-			lambda a, y=x: a[0][1] if y == 0 else (not a[0][1])) for x in xrange(numberOfOpers)]
+		number_of_opers = len(oper_funtions)
+		oper_node = [DecisionNode(lambda arg, idx=x: DataFlowVND.__neighborhood(oper_funtions[idx], arg, self.__maximize), 1,
+			lambda a, y=x: a[0][1] if y == 0 else (not a[0][1])) for x in xrange(number_of_opers)]
 
-		for operIt in operNode:
-			graph.add(operIt)
-			operIt.add_edge(operNode[0], 0)
+		for oper_it in oper_node:
+			graph.add(oper_it)
+			oper_it.add_edge(oper_node[0], 0)
 
-		for x in xrange(numberOfOpers - 1):
-			operNode[x].add_edge(operNode[x + 1], 0)
+		for x in xrange(number_of_opers - 1):
+			oper_node[x].add_edge(oper_node[x + 1], 0)
 
-		iniNode.add_edge(operNode[0], 0)
-		operNode[numberOfOpers - 1].add_edge(fimNode, 0)
+		ini_node.add_edge(oper_node[0], 0)
+		oper_node[number_of_opers - 1].add_edge(fim_node, 0)
 
 		Scheduler(graph, number_of_workers, mpi_enabled=self.__mpi_enabled).start()
 
@@ -90,47 +90,47 @@ class DataFlowDVND(object):
 		graph = DFGraph()
 
 		# Nó final Cria n
-		numberOfOpers = len(oper_funtions)
-		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(numberOfOpers)]), 1,
+		number_of_opers = len(oper_funtions)
+		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)]), 1,
 			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
 		# Nó de gerenciamento ligado nele mesmo e no nó final
-		manNode = DecisionNode(self.__manager, 2)
-		graph.add(manNode)
-		manNode.add_edge(manNode, 1)
-		manNode.add_edge(fimNode, 0)
+		man_node = DecisionNode(self.__manager, 2)
+		graph.add(man_node)
+		man_node.add_edge(man_node, 1)
+		man_node.add_edge(fimNode, 0)
 
 		# Nó que inicializa o nó gerenciador
-		iniManNode = Feeder(OptMessage({x: initial_solution for x in xrange(numberOfOpers)}, numberOfOpers,
-			[False for y in xrange(numberOfOpers)], [False for i in xrange(numberOfOpers)]))
-		graph.add(iniManNode)
-		iniManNode.add_edge(manNode, 1)
+		ini_man_node = Feeder(OptMessage({x: initial_solution for x in xrange(number_of_opers)}, number_of_opers,
+			[False for y in xrange(number_of_opers)], [False for i in xrange(number_of_opers)]))
+		graph.add(ini_man_node)
+		ini_man_node.add_edge(man_node, 1)
 
 		# Nós de operações
-		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(numberOfOpers)]
-		oper_keep_going = [lambda a, b: True for y in xrange(numberOfOpers)]
-		operNode = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowDVND.__neighborhood(fnc, arg, it),
-			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(numberOfOpers)]
-		for x in operNode:
+		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(number_of_opers)]
+		oper_keep_going = [lambda a, b: True for y in xrange(number_of_opers)]
+		oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowDVND.__neighborhood(fnc, arg, it),
+			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
+		for x in oper_node:
 			graph.add(x)
-			manNode.add_edge(x, 0)
-			x.add_edge(manNode, 0)
+			man_node.add_edge(x, 0)
+			x.add_edge(man_node, 0)
 
 		# if self.__mpi_enabled:
 		# 	comm = MPI.COMM_WORLD
 		# 	nprocs = comm.Get_size()
 		# 	print "MPI {}/{}".format(comm.Get_rank(), nprocs)
-		# 	for i in xrange(len(operNode)):
+		# 	for i in xrange(len(oper_node)):
 		# 		# TODO Sucuri / pyDF
-		# 		# operNode[i].pin([i % nprocs])
-		# 		operNode[i].pin(i % nprocs)
+		# 		# oper_node[i].pin([i % nprocs])
+		# 		oper_node[i].pin(i % nprocs)
 
 		# Nós que inicializam nós de operação
-		iniNode = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(numberOfOpers)],
-			[False for i in xrange(numberOfOpers)])) for x in xrange(numberOfOpers)]
-		for i in xrange(numberOfOpers):
-			graph.add(iniNode[i])
-			iniNode[i].add_edge(operNode[i], 0)
+		ini_node = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(number_of_opers)],
+			[False for i in xrange(number_of_opers)])) for x in xrange(number_of_opers)]
+		for i in xrange(number_of_opers):
+			graph.add(ini_node[i])
+			ini_node[i].add_edge(oper_node[i], 0)
 
 		Scheduler(graph, number_of_workers, mpi_enabled=self.__mpi_enabled).start()

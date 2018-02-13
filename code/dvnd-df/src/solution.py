@@ -3,6 +3,30 @@ from random import randint
 from movement import *
 
 
+class SolutionVectorValue:
+	def __init__(self, vector, value):
+		self.vector = vector
+		self.value = value
+
+	def __lt__(self, other):
+		return self.value < other.value
+
+	# def __len__(self):
+	# 	return len(self.vector)
+
+	def __str__(self):
+		return "{}-{}".format(self.value, self.vector)
+
+
+class SolutionTTP(SolutionVectorValue):
+	def __init__(self, vector, value, knapsack):
+		SolutionVectorValue.__init__(vector, value)
+		self.knapsack = knapsack
+
+	def __str__(self):
+		return "{}-{}-{}".format(self.value, self.vector, self.knapsack)
+
+
 class Solution(object):
 	def __init__(self, solinfo, route=None):
 		self.__solinfo = solinfo

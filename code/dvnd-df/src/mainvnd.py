@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from mlproblem import *
 from dataflow_opt import *
 from wraper_wamca2016 import *
 import random
@@ -24,12 +23,11 @@ print ini_solution
 start_time = time.time()
 solution = deepcopy(ini_solution)
 k = 0
-print "initial_solution=",ini_solution.value
 while k < len(neigh_op):
-	print "Start k=",k," f=",solution.value,
+	# print "Start k=", k, " f=", solution.value,
 	solution2 = deepcopy(solution)
 	resp = best_neighbor(file_name, solution2.vector, k)
-	print "out k=",k," -> ",resp[1]
+	# print "out k=", k, " -> ", resp[1]
 	if resp[1] < solution.value:
 		k = 0
 		solution.vector = resp[0]
@@ -39,3 +37,5 @@ while k < len(neigh_op):
 
 end_time = time.time()
 print "finished rvnd in {}s".format(end_time - start_time)
+print "initial_solution={}\n  final_solution={}, improveup={}".format(ini_solution.value, solution.value,
+	1.0 * ini_solution.value / solution.value)

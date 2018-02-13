@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from copy import deepcopy
+
+
 class MovementType:
 	SWAP = 1
 	TWO_OPT = 2
@@ -61,3 +64,35 @@ class Movement:
 				return (max(self.x, self.y) + self.k < min(mov.x, mov.y)) \
 					or (min(self.x, self.y) > max(mov.x, mov.y) + mov.k)
 		return True
+
+
+def neigh_mov(args, inimov):
+	atual = args[0]
+	# antes = atual[oper_idx]
+	# str_antes = "oper{} - sv: {}".format(oper_idx, solvalue)
+
+	# movs = {0: MovementType.SWAP, 1: MovementType.TWO_OPT, 2: MovementType.OR_OPT_K}
+	# movtype = movs[oper_idx]
+	movsinv = {MovementType.SWAP: 0, MovementType.TWO_OPT: 1, MovementType.OR_OPT_K: 2}
+	oper_idx = movsinv[inimov.movtype]
+	atual.source = oper_idx
+	sol = atual[oper_idx]
+	best_val = sol.value
+	best_sol = deepcopy(sol)
+	sol_copy = deepcopy(sol)
+	mov = inimov
+	for i in xrange(len(sol)):
+		for j in xrange(i + 1, len(sol)):
+			mov.x, mov.y = i, j
+			# TODO Melhorar implementação com desfazer movimento
+			sol_copy.set_route(sol.get_route)
+			sol_copy.accept(mov)
+			sol_val = sol_copy.value
+			if sol_val < best_val:
+				best_val = sol_val
+				best_sol.set_route(sol_copy.get_route)
+
+	atual[oper_idx] = best_sol
+	# print "{}:{}-{}".format(oper_idx, sol, best_sol)
+
+	return atual

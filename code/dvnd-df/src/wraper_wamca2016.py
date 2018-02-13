@@ -2,16 +2,10 @@
 # -*- coding: utf-8 -*-
 import ctypes
 import numpy
-import re
-import time
-import os
-import socket
-import include_lib
-include_lib.include_simple_pycuda()
-from simplepycuda import SimpleSourceModule
+from solution import SolutionVectorValue
+from util import gethostcode, array_1d_int, compilelib
 
 
-array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
 # wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 
@@ -23,26 +17,9 @@ localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 print "WAMCAPATH:" + wamca2016path
 
 
-def gethostcode():
-	hostname = socket.gethostname()
-	hostname_pattern = re.compile("\D*(\d*)")
-	hostcode = int(hostname_pattern.match(hostname).group(1) or 0)
-	# print "hostcode: {} hostname: {}".format(hostcode, hostname)
-	return hostcode
-
-
 def create_wamca2016lib():
 	mylibname = 'wamca2016lib'
-	if not os.path.isfile(localpath + mylibname + '.so'):
-		print "Creating file: ", mylibname + '.so'
-		cmple_start_time = time.time()
-		wamca_files = [wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"]
-		SimpleSourceModule.compile_files('nvcc', wamca_files, [], localpath + mylibname)
-		cmple_end_time = time.time()
-		print "File: {}.so created in {}s".format(mylibname, cmple_end_time - cmple_start_time)
-	else:
-		print "Using already created file: ", mylibname + '.so'
-
+	compilelib([wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], localpath, mylibname)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 
 	# unsigned int bestNeighbor(char * file, int *solution, unsigned int solutionSize, int neighborhood,
@@ -50,7 +27,6 @@ def create_wamca2016lib():
 	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool,
 		ctypes.c_uint]
 	# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
-	# mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool]
 	mylib.bestNeighbor.restype = ctypes.c_uint
 	# ctypes.POINTER(c_int)
 
@@ -72,6 +48,10 @@ def best_neighbor(file, solint, neighborhood, justcalc=False):
 
 	return solint, resp
 
+
+def neigh_gpu(solution, file, inimov):
+	resp = best_neighbor(file, solution.vector, inimov)
+	return SolutionVectorValue(resp[0], resp[1])
 
 wamca_intance_path = wamca2016path + "instances/"
 wamca_solution_instance_file = [
