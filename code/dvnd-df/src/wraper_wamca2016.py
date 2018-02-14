@@ -53,6 +53,16 @@ def neigh_gpu(solution, file, inimov):
 	resp = best_neighbor(file, solution.vector, inimov)
 	return SolutionVectorValue(resp[0], resp[1])
 
+
+def create_initial_solution(solution_index):
+	sol_info = wamca_solution_instance_file[solution_index]
+	file_name = wamca_intance_path + sol_info[0]
+
+	solint = [x for x in xrange(sol_info[1])]
+	print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
+	return SolutionVectorValue(solint, calculate_value(file_name, solint))
+
+
 wamca_intance_path = wamca2016path + "instances/"
 wamca_solution_instance_file = [
 	("01_berlin52.tsp", 52),

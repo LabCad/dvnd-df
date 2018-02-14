@@ -3,7 +3,7 @@ import re
 import fnmatch
 
 
-folder_to_look = "./novo/dvnd/n2w4/"
+folder_to_look = "./dvnd/results/"
 file_name_pattern = "*.out"
 
 rmy = re.compile("[a-z ]*: ([\d.]*)s - [a-z]*: ([\d]*)", re.IGNORECASE)
@@ -18,7 +18,7 @@ for file_name in fnmatch.filter(os.listdir(folder_to_look), file_name_pattern):
 	last_line = None
 	time_str, value_str = None, None
 	for line in open(folder_to_look + file_name, "r"):
-		if "Fim time:" in line:
+		if "Fim time:" in line or "Final time" in line:
 			time_value = rmy.search(line)
 			time_str = time_value.group(1)
 			value_str = time_value.group(2)
