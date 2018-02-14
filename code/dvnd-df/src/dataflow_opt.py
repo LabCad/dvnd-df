@@ -3,9 +3,7 @@
 import random
 # from mpi4py import MPI
 from optobj import DecisionNode, OptMessage
-# TODO Sucuri / pyDF
 from pyDF import DFGraph, Feeder, Scheduler
-# from sucuri import Feeder
 
 
 class DataFlowVND(object):
@@ -122,9 +120,7 @@ class DataFlowDVND(object):
 		# 	nprocs = comm.Get_size()
 		# 	print "MPI {}/{}".format(comm.Get_rank(), nprocs)
 		# 	for i in xrange(len(oper_node)):
-		# 		# TODO Sucuri / pyDF
 		# 		# oper_node[i].pin([i % nprocs])
-		# 		oper_node[i].pin(i % nprocs)
 
 		# Nós que inicializam nós de operação
 		ini_node = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(number_of_opers)],

@@ -2,9 +2,7 @@
 from include_lib import include_dvnd, include_pydf
 include_dvnd()
 include_pydf()
-# TODO Sucuri / pyDF
 from pyDF import Node, Oper
-# from sucuri import Node, Oper
 
 
 class DecisionNode(Node):
@@ -14,9 +12,7 @@ class DecisionNode(Node):
 		self.__keep_going = keep_going
 
 	def run(self, args, workerid, operq):
-		# TODO Sucuri / pyDF
 		param_args = [a.val for a in args]
-		# param_args = [arg for arg in args]
 		if not self.__should_run(param_args):
 			self.sendops([Oper(workerid, None, None, None)], operq)
 		else:

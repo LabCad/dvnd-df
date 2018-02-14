@@ -28,7 +28,7 @@ def include_pydf():
 
 def include_simple_pycuda():
 	pydf_home_var_name = 'SIMPLE_PYCUDA_HOME'
-	pydf_home_value = '/home/rodolfo/git/dvnd-df/code/dvnd-df/simple-pycuda'
+	pydf_home_value = '/home/rodolfo/git/simple-pycuda'
 	if pydf_home_var_name in os.environ:
 		sys.path.append(os.environ[pydf_home_var_name])
 	else:

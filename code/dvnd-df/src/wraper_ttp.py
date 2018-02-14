@@ -10,7 +10,7 @@ from util import array_1d_int, compilelib
 # ttppath = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 
 # ttppath = "/home/imcoelho/Rodolfo/wamca2016/"
-ttppath = "/home/rodolfo/git/suggarc/"
+ttppath = "/home/rodolfo/git/suggarc/suggarC"
 # localpath = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
 localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 
@@ -19,7 +19,8 @@ print "WAMCAPATH:" + ttppath
 
 def create_ttplib():
 	mylibname = 'wamca2016lib'
-	compilelib([ttppath + "source/*.cu", ttppath + "source/*.cpp"], localpath, mylibname)
+	libfiles = ["dvnd/*.cu", "dvnd/*.cpp"]
+	compilelib([ttppath + x for x in libfiles], localpath, mylibname)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 
 	# unsigned int bestNeighbor(char * file, int *solution, unsigned int solutionSize, int neighborhood,
