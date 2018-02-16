@@ -58,6 +58,8 @@ if [ $# -gt 3 ]; then
 			if [ "$solver_name" = "rvnd_no_df" ]; then
 				# echo rvnd_no_df
 				time python mainvnd.py -in $filei > "results/"$file_name".out" 2> "results/"$file_name".log"
+			elif [ "$solver_name" = "rvnd_no_mpi" ]; then
+				python main.py -n $num_workes -in $filei -s $solver_name -p $problem > "results/"$file_name".out" 2> "results/"$file_name".log"
 			else
 				# echo $solver_name
 				time mpirun -np $num_proc --hostfile $host_file python main.py -mpi -n $num_workes -in $filei -s $solver_name -p $problem > "results/"$file_name".out" 2> "results/"$file_name".log"
