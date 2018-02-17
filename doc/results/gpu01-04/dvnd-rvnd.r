@@ -421,7 +421,7 @@ value_dvnd_rvnd_n2w1=list(compareVectors(value_dvnd_n1w1in0, value_rvnd_n1w1in0)
 boxplot(value_dvnd_rvnd_n2w1, main="Value DVND/RVND n2w1", names=c("0", "1", "2", "3", "4", "5", "6", "7"))
 abline(h = 1, col = "red")
 
-drawGraph <- function(vec1, vec2, colors){
+drawNormalizedGraph <- function(vec1, vec2, colors){
 	seqvec1 = vec1 / max(mean(vec1), mean(vec2))
 	seqvec2 = vec2 / max(mean(vec1), mean(vec2))
 	plot(1:100, sort(seqvec1), type="o", col=colors[1], xlab = "", ylab = "", main = "", ylim=c(min(seqvec1, seqvec2), max(seqvec1, seqvec2)))
@@ -429,11 +429,27 @@ drawGraph <- function(vec1, vec2, colors){
 	legend("bottomright", inset=.02, c("RVND", "DVND"), fill=colors, horiz=TRUE, cex=0.8)
 }
 
-drawGraph(value_dvnd_n2w1in0, value_rvnd_n1w1in0, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in1, value_rvnd_n1w1in1, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in2, value_rvnd_n1w1in2, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in3, value_rvnd_n1w1in3, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in4, value_rvnd_n1w1in4, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in5, value_rvnd_n1w1in5, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in6, value_rvnd_n1w1in6, c("red", "blue"))
-drawGraph(value_dvnd_n2w1in7, value_rvnd_n1w1in7, c("red", "blue"))
+drawGraph <- function(seqvec1, seqvec2, colors){
+  plot(1:100, sort(seqvec1), type="o", col=colors[1], xlab = "", ylab = "", main = "", ylim=c(min(seqvec1, seqvec2), max(seqvec1, seqvec2)))
+  lines(1:100, sort(seqvec2), type = "o", col = colors[2])
+  legend("bottomright", inset=.02, c("RVND", "DVND"), fill=colors, horiz=TRUE, cex=0.8)
+}
+
+drawGraph(value_rvnd_n2w1in0, value_dvnd_n1w1in0, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in1, value_dvnd_n1w1in1, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in2, value_dvnd_n1w1in2, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in3, value_dvnd_n1w1in3, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in4, value_dvnd_n1w1in4, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in5, value_dvnd_n1w1in5, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in6, value_dvnd_n1w1in6, c("red", "blue"))
+drawGraph(value_rvnd_n2w1in7, value_dvnd_n1w1in7, c("red", "blue"))
+
+value_dvnd_rvnd_n2w1_all = c(unlist(value_dvnd_rvnd_n2w1[1]), unlist(value_dvnd_rvnd_n2w1[2]), unlist(value_dvnd_rvnd_n2w1[3]), unlist(value_dvnd_rvnd_n2w1[4]), 
+                             unlist(value_dvnd_rvnd_n2w1[5]), unlist(value_dvnd_rvnd_n2w1[6]), unlist(value_dvnd_rvnd_n2w1[7]), unlist(value_dvnd_rvnd_n2w1[8]))
+plot(1:100, sort(unlist(value_dvnd_rvnd_n2w1[1])), type="o", col=rainbow(8)[1],
+     xlab = "", ylab = "", main = "", 
+     ylim=c(min(value_dvnd_rvnd_n2w1_all), max(value_dvnd_rvnd_n2w1_all)))
+abline(h = 1, col = "black")
+for (i in 2:8) {
+  lines(1:100, sort(unlist(value_dvnd_rvnd_n2w1[i])), type = "o", col = rainbow(8)[i])
+}
