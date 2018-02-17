@@ -33,7 +33,9 @@ elif "ml" == problem_name.lower():
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 
-mpi_enabled = "-mpi" in sys.argv
+# TODO Versão 2 precisa do MPI enabled, bug
+# mpi_enabled = "-mpi" in sys.argv
+mpi_enabled = True
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
 solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd"
 goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
