@@ -20,7 +20,8 @@ print "WAMCAPATH:" + ttppath
 
 def create_ttplib():
 	mylibname = 'ttplib'
-	libfiles = ["dvnd/*.cpp", "src/po/pmv/ProblemInfo.cu", "src/po/pmv/Solution.cu"] # "dvnd/*.cu",
+	# "dvnd/*.cu",
+	libfiles = ["dvnd/*.cu", "src/po/pmv/ProblemInfo.cu", "src/po/pmv/Solution.cu", "src/po/pmv/BuscaLocal.cu"]
 	options = ["-std=c++11", "-I {}src".format(ttppath)]
 	compilelib([ttppath + x for x in libfiles], localpath, mylibname, options)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
