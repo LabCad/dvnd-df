@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from dataflow_opt import *
+# from dataflow_opt import *
 from wraper_wamca2016 import *
 import random
 import time

@@ -32,6 +32,7 @@ class OptMessage:
 		self.__source = source
 		self.__target = target
 		self.__not_improved = not_improved
+		self.counts = [0 for x in target]
 
 	def __getitem__(self, item):
 		return self.__solmap[item]

@@ -10,14 +10,19 @@ file_name = None
 ini_solution = None
 
 
-def print_final_solution(args):
+def print_final_solution(args, counts):
 	end_time = time.time()
-	print [x.value for x in args]
+	values_vec = [x.value for x in args]
+	print "solutions: {}, counts: {}".format(values_vec, counts)
 	print "Initial: {}".format(ini_solution)
 	final_solution = min(args)
-	print "Final time: {}s - Best: {}".format(end_time - start_time, final_solution)
+	elapsed_time = end_time - start_time
+	ini_value = ini_solution.value
+	fin_value = final_solution.value
+	print "Final time: {}s - Best: {}".format(elapsed_time, final_solution)
 	imp_value = 1.0 * ini_solution.value / final_solution.value
-	print "Value - initial: {}, final: {}, improveup: {}".format(ini_solution.value, final_solution.value, imp_value)
+	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
+	print "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{}".format(ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts)
 
 
 problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
@@ -34,12 +39,15 @@ elif "ml" == problem_name.lower():
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 
 # TODO Versão 2 precisa do MPI enabled, bug
-# mpi_enabled = "-mpi" in sys.argv
-mpi_enabled = True
+mpi_enabled = "-mpi" in sys.argv
+# mpi_enabled = True
+
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
 solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd"
 goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
 
+# FIXME Remover
+# solver_param="rvnd"
 solver = None
 if "dvnd" == solver_param.lower():
 	solver = DataFlowDVND(goal, mpi_enabled)

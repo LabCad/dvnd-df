@@ -435,14 +435,9 @@ drawGraph <- function(seqvec1, seqvec2, colors){
   legend("bottomright", inset=.02, c("RVND", "DVND"), fill=colors, horiz=TRUE, cex=0.8)
 }
 
-drawGraph(value_rvnd_n1w1in0, value_dvnd_n2w1in0, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in1, value_dvnd_n2w1in1, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in2, value_dvnd_n2w1in2, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in3, value_dvnd_n2w1in3, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in4, value_dvnd_n2w1in4, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in5, value_dvnd_n2w1in5, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in6, value_dvnd_n2w1in6, c("red", "blue"))
-drawGraph(value_rvnd_n1w1in7, value_dvnd_n2w1in7, c("red", "blue"))
+for (i in 1:8) {
+  drawGraph(unlist(value_rvnd_n1w1[i]), unlist(value_dvnd_n2w1[i]), c("red", "blue"))
+}
 
 value_dvnd_rvnd_n2w1_all = c(unlist(value_dvnd_rvnd_n2w1[1]), unlist(value_dvnd_rvnd_n2w1[2]), unlist(value_dvnd_rvnd_n2w1[3]), unlist(value_dvnd_rvnd_n2w1[4]), 
                              unlist(value_dvnd_rvnd_n2w1[5]), unlist(value_dvnd_rvnd_n2w1[6]), unlist(value_dvnd_rvnd_n2w1[7]), unlist(value_dvnd_rvnd_n2w1[8]))

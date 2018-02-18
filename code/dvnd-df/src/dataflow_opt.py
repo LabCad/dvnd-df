@@ -15,15 +15,15 @@ class DataFlowVND(object):
 	@staticmethod
 	def __neighborhood(func, args, maximize):
 		resp = func(args[0][0])
-		return [resp, resp < args[0][0] if not maximize else args[0][0] < resp]
+		return [resp, resp < args[0][0] if not maximize else args[0][0] < resp, args[0][2] + 1]
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
 		graph = DFGraph()
 
-		ini_node = Feeder([initial_solution, True])
+		ini_node = Feeder([initial_solution, True, 0])
 		graph.add(ini_node)
 
-		fim_node = DecisionNode(lambda y: result_callback([y[0][0]]), 1, lambda a: not a[0][1])
+		fim_node = DecisionNode(lambda y: result_callback([y[0][0]], [y[0][2]]), 1, lambda a: not a[0][1])
 		graph.add(fim_node)
 
 		if self.__is_rvnd:
@@ -57,6 +57,7 @@ class DataFlowDVND(object):
 		atual = args[0]
 		atual.source = inimov
 		atual[inimov] = func(atual[inimov])
+		atual.counts[inimov] += 1
 		return atual
 
 	def __manager(self, args):
@@ -82,6 +83,9 @@ class DataFlowDVND(object):
 				# Se vai chamar novamente remove o sinal
 				melhor.set_not_improved(x, False)
 
+		for i in xrange(len(melhor.counts)):
+			melhor.counts[i] = max(atual.counts[i], melhor.counts[i])
+
 		return melhor
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
@@ -89,7 +93,7 @@ class DataFlowDVND(object):
 
 		# Nó final Cria n
 		number_of_opers = len(oper_funtions)
-		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)]), 1,
+		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].counts), 1,
 			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
