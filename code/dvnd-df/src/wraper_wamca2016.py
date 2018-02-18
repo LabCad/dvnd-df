@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 import ctypes
 import numpy
+import util
 from solution import SolutionVectorValue
-from util import gethostcode, array_1d_int, compilelib
+from util import gethostcode, compilelib
 
 
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
@@ -24,7 +25,7 @@ def create_wamca2016lib():
 
 	# unsigned int bestNeighbor(char * file, int *solution, unsigned int solutionSize, int neighborhood,
 	# 	bool justCalc = false, unsigned int hostCode = 0) {
-	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool,
+	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool,
 		ctypes.c_uint]
 	# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
 	mylib.bestNeighbor.restype = ctypes.c_uint
@@ -54,13 +55,16 @@ def neigh_gpu(solution, file, inimov):
 	return SolutionVectorValue(resp[0], resp[1])
 
 
+def get_file_name(solution_index):
+	return wamca_intance_path + wamca_solution_instance_file[solution_index][0]
+
+
 def create_initial_solution(solution_index):
 	sol_info = wamca_solution_instance_file[solution_index]
-	file_name = wamca_intance_path + sol_info[0]
 
 	solint = [x for x in xrange(sol_info[1])]
 	print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
-	return SolutionVectorValue(solint, calculate_value(file_name, solint))
+	return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint))
 
 
 wamca_intance_path = wamca2016path + "instances/"

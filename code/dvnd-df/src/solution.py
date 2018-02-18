@@ -20,7 +20,7 @@ class SolutionVectorValue:
 
 class SolutionTTP(SolutionVectorValue):
 	def __init__(self, vector, value, knapsack):
-		SolutionVectorValue.__init__(vector, value)
+		SolutionVectorValue.__init__(self, vector, value)
 		self.knapsack = knapsack
 
 	def __str__(self):

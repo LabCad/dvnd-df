@@ -20,23 +20,32 @@ def print_final_solution(args, counts):
 	ini_value = ini_solution.value
 	fin_value = final_solution.value
 	print "Final time: {}s - Best: {}".format(elapsed_time, final_solution)
-	imp_value = 1.0 * ini_solution.value / final_solution.value
+	imp_value = None
+	if abs(fin_value * 1.0) > 0.00001:
+		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
 	print "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{}".format(ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts)
 
 
+goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
 problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
 neigh_op = []
+problem_name = "tt"
 if "tt" == problem_name.lower():
-	from wraper_ttp import create_initial_solution, neigh_gpu
+	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
+	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index)
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+	goal = True
 elif "ml" == problem_name.lower():
-	from wraper_wamca2016 import create_initial_solution, neigh_gpu
+	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name
+	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index)
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+
+print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 
 # TODO Versão 2 precisa do MPI enabled, bug
 mpi_enabled = "-mpi" in sys.argv
@@ -44,7 +53,6 @@ mpi_enabled = "-mpi" in sys.argv
 
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
 solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd"
-goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
 
 # FIXME Remover
 # solver_param="rvnd"

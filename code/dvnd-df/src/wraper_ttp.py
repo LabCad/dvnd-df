@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 import ctypes
 import numpy
+import util
 from solution import SolutionTTP
-from util import array_1d_int, compilelib
+from util import gethostcode, array_1d_int, compilelib
 
 
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
 # ttppath = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 
 # ttppath = "/home/imcoelho/Rodolfo/wamca2016/"
-ttppath = "/home/rodolfo/git/suggarc/suggarC"
+ttppath = "/home/rodolfo/git/suggarc/suggarC/"
 # localpath = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
 localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 
@@ -18,19 +19,20 @@ print "WAMCAPATH:" + ttppath
 
 
 def create_ttplib():
-	mylibname = 'wamca2016lib'
-	libfiles = ["dvnd/*.cu", "dvnd/*.cpp"]
-	compilelib([ttppath + x for x in libfiles], localpath, mylibname)
+	mylibname = 'ttplib'
+	libfiles = ["dvnd/*.cpp", "src/po/pmv/ProblemInfo.cu", "src/po/pmv/Solution.cu"] # "dvnd/*.cu",
+	options = ["-std=c++11", "-I {}src".format(ttppath)]
+	compilelib([ttppath + x for x in libfiles], localpath, mylibname, options)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 
-	mylib.bestNeighbor.restype = ctypes.c_ulong
-	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, array_1d_bool, ctypes.c_uint,
+	mylib.bestNeighbor.restype = ctypes.c_double
+	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, util.array_1d_bool, ctypes.c_uint,
 		ctypes.c_uint]
 
 	# unsigned long int calculateValue(char * file, int * percurso, unsigned int nCidades,
 	# bool * mochila, unsigned int nMochila)
-	mylib.calculateValue.restype = ctypes.c_ulong
-	mylib.calculateValue.argtypes = [ctypes.c_void_p, array_1d_int, ctypes.c_uint, array_1d_bool, ctypes.c_uint]
+	mylib.calculateValue.restype = ctypes.c_double
+	mylib.calculateValue.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, util.array_1d_bool, ctypes.c_uint]
 	# ctypes.POINTER(c_int)
 
 	return mylib
@@ -56,20 +58,24 @@ def best_neighbor(file_name, solint, solbool, neighborhood):
 
 
 def neigh_gpu(solution, file, inimov):
-	resp = best_neighbor(file, solution.vector, inimov)
+	resp = best_neighbor(file, solution.vector, solution.knapsack, inimov)
 	return SolutionTTP(resp[0], resp[1], resp[2])
+
+
+def get_file_name(solution_index):
+	return ttp_intance_path + ttp_solution_instance_file[solution_index][0]
 
 
 def create_initial_solution(solution_index):
 	sol_info = ttp_solution_instance_file[solution_index]
-	file_name = ttp_intance_path + sol_info[0]
 
 	solint = [x for x in xrange(sol_info[1][0])]
 	solbool = [False for x in xrange(sol_info[1][1])]
 	print "Size: {},{} - file name: {}".format(sol_info[1][0], sol_info[1][1], sol_info[0])
-	return SolutionTTP(solint, calculate_value(file_name, solint, solbool), solbool)
+	return SolutionTTP(solint, calculate_value(get_file_name(solution_index), solint, solbool), solbool)
 
-ttp_intance_path = ttppath + "pmv/input/"
+
+ttp_intance_path = ttppath + "../pmv/input/"
 ttp_solution_instance_file = [
 	("eil51_n50_bounded-strongly-corr_10.ttp", (51, 50)),
 	("eil51_n50_uncorr_10.ttp", (51, 50)),
