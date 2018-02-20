@@ -18,15 +18,46 @@ localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 print "WAMCAPATH:" + wamca2016path
 
 
+class MLMove:
+	"""
+	typedef enum {
+		MLMI_SWAP,
+		MLMI_2OPT,
+		MLMI_OROPT1,
+		MLMI_OROPT2,
+		MLMI_OROPT3,
+	} MLMoveId;
+
+	struct MLMove {
+		MLMoveId  id;
+		int       i;
+		int       j;
+		int       cost;
+	};
+	"""
+	def __init__(self, id, i, j, cost):
+		self.id = id
+		self.i = i
+		self.j = j
+		self.cost = cost
+
+	def __str__(self):
+		return "{{id:{},i:{},j:{},cost:{}}}".format(self.id, self.i, self.j, self.cost)
+
+
 def create_wamca2016lib():
 	mylibname = 'wamca2016lib'
 	compilelib([wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], localpath, mylibname)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 
 	# unsigned int bestNeighbor(char * file, int *solution, unsigned int solutionSize, int neighborhood,
-	# 	bool justCalc = false, unsigned int hostCode = 0) {
-	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int, ctypes.c_bool,
-		ctypes.c_uint]
+	# 	bool justCalc = false, unsigned int hostCode = 0,
+	#   unsigned int useMoves = 0, unsigned short *ids = NULL, unsigned int *is = NULL,
+	#   unsigned int *js = NULL, unsigned int *costs = NULL) {
+	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int,
+		ctypes.c_bool, ctypes.c_uint,
+		ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
+		util.array_1d_uint, util.array_1d_int]
 	# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
 	mylib.bestNeighbor.restype = ctypes.c_uint
 	# ctypes.POINTER(c_int)
@@ -43,11 +74,31 @@ def calculate_value(file_name, solint):
 
 def best_neighbor(file, solint, neighborhood, justcalc=False):
 	csolint = numpy.array(solint, dtype=ctypes.c_int)
-	resp = wamca2016lib.bestNeighbor(file, csolint, len(solint), neighborhood, justcalc, gethostcode())
+	resp = wamca2016lib.bestNeighbor(file, csolint, len(solint), neighborhood, justcalc, gethostcode(),
+		0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
+		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
 	solint = list(csolint)
 	# solint = list(numpy.ctypeslib.as_array(csolint, shape=(len(solint),)))
 
 	return solint, resp
+
+
+def best_neighbor_moves(file, solint, neighborhood, n_moves=1):
+	csolint = numpy.array(solint, dtype=ctypes.c_int)
+
+	cids = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_ushort)
+	ciis = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
+	cjjs = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
+	ccosts = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_int)
+
+	resp = wamca2016lib.bestNeighbor(file, csolint, len(solint), neighborhood, False, gethostcode(),
+		n_moves, cids, ciis, cjjs, ccosts)
+	solint = list(csolint)
+	mlmoves = []
+	for i in xrange(n_moves):
+		mlmoves.append(MLMove(cids[i], ciis[i], cjjs[i], ccosts[i]))
+
+	return solint, resp, mlmoves
 
 
 def neigh_gpu(solution, file, inimov):

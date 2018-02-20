@@ -30,7 +30,7 @@ def print_final_solution(args, counts):
 goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
 problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
 neigh_op = []
-problem_name = "tt"
+# problem_name = "tt"
 if "tt" == problem_name.lower():
 	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
 	file_name = get_file_name(solution_index)
@@ -39,11 +39,13 @@ if "tt" == problem_name.lower():
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 	goal = True
 elif "ml" == problem_name.lower():
-	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name
+	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves
 	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index)
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+	# moves = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=5)
+	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 

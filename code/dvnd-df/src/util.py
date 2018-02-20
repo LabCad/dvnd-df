@@ -11,7 +11,10 @@ from simplepycuda import SimpleSourceModule
 
 
 array_1d_int = numpy.ctypeslib.ndpointer(dtype=ctypes.c_int, ndim=1, flags='CONTIGUOUS')
+array_1d_uint = numpy.ctypeslib.ndpointer(dtype=ctypes.c_uint, ndim=1, flags='CONTIGUOUS')
 array_1d_bool = numpy.ctypeslib.ndpointer(dtype=ctypes.c_bool, ndim=1, flags='CONTIGUOUS')
+array_1d_short = numpy.ctypeslib.ndpointer(dtype=ctypes.c_short, ndim=1, flags='CONTIGUOUS')
+array_1d_ushort = numpy.ctypeslib.ndpointer(dtype=ctypes.c_ushort, ndim=1, flags='CONTIGUOUS')
 
 
 def gethostcode():
