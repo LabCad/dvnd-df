@@ -24,10 +24,14 @@ print ini_solution
 
 start_time = time.time()
 solution = deepcopy(ini_solution)
+solution2 = deepcopy(solution)
 k = 0
 while k < len(neigh_op):
 	# print "Start k=", k, " f=", solution.value,
-	solution2 = deepcopy(solution)
+	# solution2 = deepcopy(solution)
+	for i in xrange(len(solution.vector)):
+		solution2.vector[i] = solution.vector[i]
+	solution2.value = solution.value
 	resp = best_neighbor(file_name, solution2.vector, k)
 	# print "out k=", k, " -> ", resp[1]
 	if resp[1] < solution.value:

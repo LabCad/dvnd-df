@@ -60,6 +60,12 @@ def create_wamca2016lib():
 		util.array_1d_uint, util.array_1d_int]
 	# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
 	mylib.bestNeighbor.restype = ctypes.c_uint
+
+	# int getNoConflictMoves(unsigned int useMoves, unsigned short * ids, unsigned int * is, unsigned int * js,
+	#   int * costs, int * selectedMoves)
+	mylib.getNoConflictMoves.restype = ctypes.c_int
+	mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
+		util.array_1d_uint, util.array_1d_int, util.array_1d_int]
 	# ctypes.POINTER(c_int)
 
 	return mylib
@@ -73,32 +79,34 @@ def calculate_value(file_name, solint):
 
 
 def best_neighbor(file, solint, neighborhood, justcalc=False):
-	csolint = numpy.array(solint, dtype=ctypes.c_int)
-	resp = wamca2016lib.bestNeighbor(file, csolint, len(solint), neighborhood, justcalc, gethostcode(),
+	# csolint = numpy.array(solint, dtype=ctypes.c_int)
+	# csolint = solint
+	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, 0,#gethostcode(),
 		0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
 		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
-	solint = list(csolint)
+	# solint = list(csolint)
 	# solint = list(numpy.ctypeslib.as_array(csolint, shape=(len(solint),)))
 
 	return solint, resp
 
 
 def best_neighbor_moves(file, solint, neighborhood, n_moves=1):
-	csolint = numpy.array(solint, dtype=ctypes.c_int)
+	# csolint = numpy.array(solint, dtype=ctypes.c_int)
+	# csolint = solint
 
 	cids = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_ushort)
 	ciis = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
 	cjjs = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
 	ccosts = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_int)
 
-	resp = wamca2016lib.bestNeighbor(file, csolint, len(solint), neighborhood, False, gethostcode(),
+	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
 		n_moves, cids, ciis, cjjs, ccosts)
-	solint = list(csolint)
-	mlmoves = []
-	for i in xrange(n_moves):
-		mlmoves.append(MLMove(cids[i], ciis[i], cjjs[i], ccosts[i]))
+	# solint = list(csolint)
+	# mlmoves = []
+	# for i in xrange(n_moves):
+	# 	mlmoves.append(MLMove(cids[i], ciis[i], cjjs[i], ccosts[i]))
 
-	return solint, resp, mlmoves
+	return solint, resp, (cids, ciis, cjjs, ccosts)
 
 
 def neigh_gpu(solution, file, inimov):
@@ -113,9 +121,34 @@ def get_file_name(solution_index):
 def create_initial_solution(solution_index):
 	sol_info = wamca_solution_instance_file[solution_index]
 
-	solint = [x for x in xrange(sol_info[1])]
+	# solint = [x for x in xrange(sol_info[1])]
+	solint = numpy.array([x for x in xrange(sol_info[1])], dtype=ctypes.c_int)
 	print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 	return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint))
+
+
+def merge_moves(moves1, moves2):
+	len1 = len(moves1[0])
+	for i in xrange(len1):
+		if moves1[3][i] >= 0:
+			len1 = i
+			break
+
+	len2 = len(moves2[0])
+	for i in xrange(len2):
+		if moves2[3][i] >= 0:
+			len2 = i
+			break
+
+	return numpy.concatenate((moves1[0][:len1], moves2[0][:len2])), \
+			numpy.concatenate((moves1[1][:len1], moves2[1][:len2])), \
+			numpy.concatenate((moves1[2][:len1], moves2[2][:len2])), \
+			numpy.concatenate((moves1[3][:len1], moves2[3][:len2]))
+
+
+def get_no_conflict(cids, ciis, cjjs, ccosts):
+	wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts,
+		numpy.array([x for x in xrange(100)], dtype=ctypes.c_int))
 
 
 wamca_intance_path = wamca2016path + "instances/"
