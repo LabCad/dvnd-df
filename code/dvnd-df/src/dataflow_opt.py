@@ -12,10 +12,10 @@ class DataFlowVND(object):
 		self.__mpi_enabled = mpi_enabled
 		self.__is_rvnd = is_rvnd
 
-	@staticmethod
 	def __neighborhood(func, args, maximize):
 		resp = func(args[0][0])
-		return [resp, resp < args[0][0] if not maximize else args[0][0] < resp, args[0][2] + 1]
+		return [max(resp, args[0][0]) if maximize else min(resp, args[0][0]),
+			resp < args[0][0] if not maximize else args[0][0] < resp, args[0][2] + 1]
 
 	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
 		graph = DFGraph()
@@ -52,11 +52,11 @@ class DataFlowDVND(object):
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 
-	@staticmethod
-	def __neighborhood(func, args, inimov):
+	def __neighborhood(self, func, args, inimov):
 		atual = args[0]
 		atual.source = inimov
-		atual[inimov] = func(atual[inimov])
+		atual[inimov] = max(atual[inimov], func(atual[inimov])) if self.__maximize \
+			else min(atual[inimov], func(atual[inimov]))
 		atual.counts[inimov] += 1
 		return atual
 
@@ -112,7 +112,7 @@ class DataFlowDVND(object):
 		# Nós de operações
 		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(number_of_opers)]
 		oper_keep_going = [lambda a, b: True for y in xrange(number_of_opers)]
-		oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: DataFlowDVND.__neighborhood(fnc, arg, it),
+		oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it),
 			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
 		for x in oper_node:
 			graph.add(x)
