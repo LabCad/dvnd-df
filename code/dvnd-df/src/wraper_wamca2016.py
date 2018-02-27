@@ -46,8 +46,11 @@ class MLMove:
 
 
 def create_wamca2016lib():
+	files = [wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"]
 	mylibname = 'wamca2016lib'
-	compilelib([wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"], localpath, mylibname)
+	options = ["-lgomp"]
+	compiler_options = ["-Xcompiler -fopenmp"]
+	compilelib(files, localpath, mylibname, options, compiler_options)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 
 	# unsigned int bestNeighbor(char * file, int *solution, unsigned int solutionSize, int neighborhood,
@@ -62,10 +65,10 @@ def create_wamca2016lib():
 	mylib.bestNeighbor.restype = ctypes.c_uint
 
 	# int getNoConflictMoves(unsigned int useMoves, unsigned short * ids, unsigned int * is, unsigned int * js,
-	#   int * costs, int * selectedMoves)
+	#   int * costs, int * selectedMoves, int *impValue)
 	mylib.getNoConflictMoves.restype = ctypes.c_int
 	mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
-		util.array_1d_uint, util.array_1d_int, util.array_1d_int]
+		util.array_1d_uint, util.array_1d_int, util.array_1d_int, util.array_1d_int]
 	# ctypes.POINTER(c_int)
 
 	return mylib
@@ -147,8 +150,11 @@ def merge_moves(moves1, moves2):
 
 
 def get_no_conflict(cids, ciis, cjjs, ccosts):
-	wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts,
-		numpy.array([x for x in xrange(100)], dtype=ctypes.c_int))
+	impMoves = numpy.array([x for x in xrange(100)], dtype=ctypes.c_int)
+	impValue = numpy.array([0], dtype=ctypes.c_int)
+	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue)
+	# TODO Testar se os movimentos aplicados chegam na mesma solução
+	# print "Python {} moves, impvalue: {}".format(nMoves, impValue[0])
 
 
 wamca_intance_path = wamca2016path + "instances/"

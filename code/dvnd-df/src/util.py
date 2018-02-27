@@ -25,12 +25,12 @@ def gethostcode():
 	return hostcode
 
 
-def compilelib(files, localpath, mylibname, options=[]):
+def compilelib(files, localpath, mylibname, options=[], compiler_options=[]):
 	if not os.path.isfile(localpath + mylibname + '.so'):
 		import time
 		print "Creating file: ", mylibname + '.so'
 		cmple_start_time = time.time()
-		SimpleSourceModule.compile_files('nvcc', files, options, localpath + mylibname)
+		SimpleSourceModule.compile_files('nvcc', files, options, localpath + mylibname, compiler_options)
 		cmple_end_time = time.time()
 		print "File: {}.so created in {}s".format(mylibname, cmple_end_time - cmple_start_time)
 	else:
