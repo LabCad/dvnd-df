@@ -40,12 +40,13 @@ if "tt" == problem_name.lower():
 	goal = True
 elif "ml" == problem_name.lower():
 	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
-		get_no_conflict, merge_moves
-	import numpy
+		get_no_conflict, merge_moves, apply_moves, calculate_value
+	# import numpy
 	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index)
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+	# tempSol = numpy.copy(ini_solution.vector)
 	nmoves = 10
 	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
 	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
@@ -53,7 +54,11 @@ elif "ml" == problem_name.lower():
 	moves3 = best_neighbor_moves(file_name, ini_solution.vector, 3, n_moves=nmoves)[2]
 	moves4 = best_neighbor_moves(file_name, ini_solution.vector, 4, n_moves=nmoves)[2]
 	moves = merge_moves(merge_moves(merge_moves(moves0, moves1), merge_moves(moves2, moves3)), moves4)
-	get_no_conflict(moves[0], moves[1], moves[2], moves[3])
+	no_conflict_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
+
+	print "antes  value: {} - {}".format(calculate_value(file_name, ini_solution.vector), str(ini_solution.vector))
+	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1], no_conflict_moves[2], no_conflict_moves[3])
+	print "depois value: {} - {}".format(calculate_value(file_name, ini_solution.vector), str(ini_solution.vector))
 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
