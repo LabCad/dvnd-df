@@ -180,6 +180,7 @@ def apply_moves(file, solint, cids, ciis, cjjs, ccosts):
 	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves,
 	#   unsigned short * ids, unsigned int * is, unsigned int * js, int * costs)
 	return wamca2016lib.applyMoves(file, solint, len(solint), len(cids), cids, ciis, cjjs, ccosts)
+	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids, ciis, cjjs, ccosts)
 
 
 wamca_intance_path = wamca2016path + "instances/"

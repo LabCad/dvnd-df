@@ -56,9 +56,13 @@ elif "ml" == problem_name.lower():
 	moves = merge_moves(merge_moves(merge_moves(moves0, moves1), merge_moves(moves2, moves3)), moves4)
 	no_conflict_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
 
-	print "antes  value: {} - {}".format(calculate_value(file_name, ini_solution.vector), str(ini_solution.vector))
-	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1], no_conflict_moves[2], no_conflict_moves[3])
-	print "depois value: {} - {}".format(calculate_value(file_name, ini_solution.vector), str(ini_solution.vector))
+	valor_antes = calculate_value(file_name, ini_solution.vector)
+	print "antes  value: {} - {}".format(valor_antes, str(ini_solution.vector))
+	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1],
+		no_conflict_moves[2], no_conflict_moves[3])
+	valor_depois = calculate_value(file_name, ini_solution.vector)
+	print "depois value: {} - {}".format(valor_depois, str(ini_solution.vector))
+	print "{}-{}={}".format(valor_antes, valor_depois, valor_antes - valor_depois)
 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
