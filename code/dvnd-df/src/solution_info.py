@@ -17,7 +17,7 @@ class SolutionInfoAdjacencyMatrix(SolutionInfo):
 	def __init__(self, distvec=[]):
 		self.__distvec = distvec
 
-	def get_distance(self, x, y):
+	def get_distance(self, x=0, y=0):
 		return self.__distvec[x][y]
 
 	def __len__(self):
@@ -31,7 +31,7 @@ class SolutionInfoEuclidianPosition(SolutionInfo):
 	def __init__(self, positions=[]):
 		self.__positions = positions
 
-	def get_distance(self, x, y):
+	def get_distance(self, x=0, y=0):
 		xd = self.__positions[x][0] - self.__positions[y][0]
 		yd = self.__positions[x][1] - self.__positions[y][1]
 		return sqrt(xd * xd + yd * yd)

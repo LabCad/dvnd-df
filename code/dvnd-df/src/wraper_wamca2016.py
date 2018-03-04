@@ -35,7 +35,7 @@ class MLMove:
 		int       cost;
 	};
 	"""
-	def __init__(self, id, i, j, cost):
+	def __init__(self, id=0, i=0, j=0, cost=0):
 		self.id = id
 		self.i = i
 		self.j = j
@@ -83,11 +83,11 @@ def create_wamca2016lib():
 wamca2016lib = create_wamca2016lib()
 
 
-def calculate_value(file_name, solint):
+def calculate_value(file_name="", solint=[]):
 	return best_neighbor(file_name, solint, 1, True)[1]
 
 
-def best_neighbor(file, solint, neighborhood, justcalc=False):
+def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False):
 	# csolint = numpy.array(solint, dtype=ctypes.c_int)
 	# csolint = solint
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, 0,#gethostcode(),
@@ -99,7 +99,7 @@ def best_neighbor(file, solint, neighborhood, justcalc=False):
 	return solint, resp
 
 
-def best_neighbor_moves(file, solint, neighborhood, n_moves=0):
+def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 	# csolint = numpy.array(solint, dtype=ctypes.c_int)
 	# csolint = solint
 
@@ -118,16 +118,16 @@ def best_neighbor_moves(file, solint, neighborhood, n_moves=0):
 	return solint, resp, (cids, ciis, cjjs, ccosts)
 
 
-def neigh_gpu(solution, file, inimov):
+def neigh_gpu(solution=None, file="", inimov=0):
 	resp = best_neighbor(file, solution.vector, inimov)
 	return SolutionVectorValue(resp[0], resp[1])
 
 
-def get_file_name(solution_index):
+def get_file_name(solution_index=0):
 	return wamca_intance_path + wamca_solution_instance_file[solution_index][0]
 
 
-def create_initial_solution(solution_index):
+def create_initial_solution(solution_index=0, solution_in_index=None):
 	sol_info = wamca_solution_instance_file[solution_index]
 
 	# solint = [x for x in xrange(sol_info[1])]
@@ -136,7 +136,7 @@ def create_initial_solution(solution_index):
 	return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint))
 
 
-def merge_moves(moves1, moves2):
+def merge_moves(moves1=[], moves2=[]):
 	len1 = len(moves1[0])
 	for i in xrange(len1):
 		if moves1[3][i] >= 0:
@@ -179,7 +179,7 @@ def get_no_conflict(cids, ciis, cjjs, ccosts):
 	return impId, impI, impJ, impCost
 
 
-def apply_moves(file, solint, cids, ciis, cjjs, ccosts):
+def apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
 	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves,
 	#   unsigned short * ids, unsigned int * is, unsigned int * js, int * costs)
 	return wamca2016lib.applyMoves(file, solint, len(solint), len(cids), cids, ciis, cjjs, ccosts)

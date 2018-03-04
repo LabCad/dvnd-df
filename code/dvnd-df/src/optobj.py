@@ -6,7 +6,7 @@ from pyDF import Node, Oper
 
 
 class DecisionNode(Node):
-	def __init__(self, f, inputn, should_run=lambda x: True, keep_going=lambda x, y: True):
+	def __init__(self, f=lambda x: None, inputn=1, should_run=lambda x: True, keep_going=lambda x, y: True):
 		Node.__init__(self, f, inputn)
 		self.__should_run = should_run
 		self.__keep_going = keep_going
@@ -34,10 +34,10 @@ class OptMessage:
 		self.__not_improved = not_improved
 		self.counts = [0 for x in target]
 
-	def __getitem__(self, item):
+	def __getitem__(self, item=0):
 		return self.__solmap[item]
 
-	def __setitem__(self, item, val):
+	def __setitem__(self, item=0, val=None):
 		self.__solmap[item] = val
 
 	def __len__(self):
@@ -50,10 +50,10 @@ class OptMessage:
 	def source(self):
 		return self.__source
 
-	def has_target(self, idx):
+	def has_target(self, idx=0):
 		return self.__target[idx]
 
-	def has_not_improved(self, idx):
+	def has_not_improved(self, idx=0):
 		return not self.__not_improved[idx]
 
 	def no_improvement(self):
@@ -62,13 +62,13 @@ class OptMessage:
 	def unset_all_targets(self):
 		self.__target = [False for x in self.__target]
 
-	def set_target(self, idx, val=True):
+	def set_target(self, idx=0, val=True):
 		self.__target[idx] = val
 
-	def set_not_improved(self, idx, val=True):
+	def set_not_improved(self, idx=0, val=True):
 		self.__not_improved[idx] = val
 
-	def __contains__(self, item):
+	def __contains__(self, item=None):
 		return item in self.__solmap
 
 	def __str__(self):
@@ -77,3 +77,4 @@ class OptMessage:
 
 	def get_not_improveds(self):
 		return [x for x in xrange(len(self.__not_improved)) if self.__not_improved[x]]
+

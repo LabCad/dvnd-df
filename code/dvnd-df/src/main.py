@@ -6,6 +6,7 @@ from dataflow_opt import *
 
 start_time = time.time()
 solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
+solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
 file_name = None
 ini_solution = None
 
@@ -24,30 +25,11 @@ def print_final_solution(args, counts):
 	if abs(fin_value * 1.0) > 0.00001:
 		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
-	print "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{}".format(ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts)
+	print "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
+		ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts, imp_value)
 
 
-goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
-problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
-neigh_op = []
-# problem_name = "tt"
-if "tt" == problem_name.lower():
-	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
-	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index)
-
-	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
-	goal = True
-elif "ml" == problem_name.lower():
-	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
-		get_no_conflict, merge_moves, apply_moves, calculate_value
-	# import numpy
-	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index)
-
-	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
-	# tempSol = numpy.copy(ini_solution.vector)
-	nmoves = 10
+def testconflict(ini_solution = None, nmoves = 10):
 	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
 	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
 	moves2 = best_neighbor_moves(file_name, ini_solution.vector, 2, n_moves=nmoves)[2]
@@ -65,10 +47,33 @@ elif "ml" == problem_name.lower():
 	print "{}-{}={}".format(valor_depois, valor_antes, valor_depois - valor_antes)
 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
+
+goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
+problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
+neigh_op = []
+# problem_name = "tt"
+if "tt" == problem_name.lower():
+	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
+	file_name = get_file_name(solution_index)
+	ini_solution = create_initial_solution(solution_index, solution_in_index)
+
+	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+	goal = True
+elif "ml" == problem_name.lower():
+	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
+		get_no_conflict, merge_moves, apply_moves, calculate_value
+	# import numpy
+	file_name = get_file_name(solution_index)
+	ini_solution = create_initial_solution(solution_index, solution_in_index)
+
+	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+	# tempSol = numpy.copy(ini_solution.vector)
+	# testconflict(ini_solution, 10)
+
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 
-# TODO Versão 2 precisa do MPI enabled, bug
 mpi_enabled = "-mpi" in sys.argv
+# TODO Versão 2 precisa do MPI enabled, bug
 # mpi_enabled = True
 
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
@@ -86,4 +91,4 @@ elif "vnd" == solver_param.lower():
 
 print "Solver: {}".format(solver_param.upper())
 start_time = time.time()
-# solver.run(workers, ini_solution, neigh_op, print_final_solution)
+solver.run(workers, ini_solution, neigh_op, print_final_solution)

@@ -25,7 +25,7 @@ def gethostcode():
 	return hostcode
 
 
-def compilelib(files, localpath, mylibname, options=[], compiler_options=[]):
+def compilelib(files=[], localpath="", mylibname="", options=[], compiler_options=[]):
 	if not os.path.isfile(localpath + mylibname + '.so'):
 		import time
 		print "Creating file: ", mylibname + '.so'

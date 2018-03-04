@@ -9,7 +9,7 @@ class MovementType:
 
 
 class Movement:
-	def __init__(self, movtype, x=0, y=1, k=None):
+	def __init__(self, movtype=MovementType.SWAP, x=0, y=1, k=None):
 		self.movtype = movtype
 		self.x = x
 		self.y = y
@@ -18,23 +18,23 @@ class Movement:
 	def __str__(self):
 		return "{ type: %s, x: %d, y: %d%s }" % (self.movtype, self.x, self.y, (", k: %d" % self.k) if self.k is not None else "")
 
-	def __eq__(self, other):
+	def __eq__(self, other=None):
 		if isinstance(other, self.__class__):
 			return self.movtype == other.movtype and self.x == other.x \
 				and self.y == other.y and self.k == other.k
 		return False
 
-	def __ne__(self, other):
+	def __ne__(self, other=None):
 		"""Define a non-equality test"""
 		return not self.__eq__(other)
 
 	def __hash__(self):
 		return hash((self.movtype, self.x, self.y, self.k))
 
-	def conflict(self, mov):
+	def conflict(self, mov=None):
 		return not self.not_conflict(mov)
 
-	def not_conflict(self, mov):
+	def not_conflict(self, mov=None):
 		if self.movtype == MovementType.SWAP:
 			if mov.movtype == MovementType.SWAP:
 				return abs(self.x - mov.x) > 1 and abs(self.x - mov.y) > 1 \
@@ -66,7 +66,7 @@ class Movement:
 		return True
 
 
-def neigh_mov(args, inimov):
+def neigh_mov(args=[], inimov=Movement()):
 	atual = args[0]
 	# antes = atual[oper_idx]
 	# str_antes = "oper{} - sv: {}".format(oper_idx, solvalue)

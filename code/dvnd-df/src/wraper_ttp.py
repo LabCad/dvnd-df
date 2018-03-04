@@ -42,13 +42,13 @@ def create_ttplib():
 ttplib = create_ttplib()
 
 
-def calculate_value(file_name, solint, solbool):
+def calculate_value(file_name="", solint=[], solbool=[]):
 	csolint = numpy.array(solint, dtype=ctypes.c_int)
 	csolbool = numpy.array(solbool, dtype=ctypes.c_bool)
 	return ttplib.calculateValue(file_name, csolint, len(solint), csolbool, len(solbool))
 
 
-def best_neighbor(file_name, solint, solbool, neighborhood):
+def best_neighbor(file_name="", solint=[], solbool=[], neighborhood=0):
 	csolint = numpy.array(solint, dtype=ctypes.c_int)
 	csolbool = numpy.array(solbool, dtype=ctypes.c_bool)
 	resp = ttplib.calculateValue(file_name, csolint, len(solint), csolbool, len(solbool), neighborhood)
@@ -58,16 +58,16 @@ def best_neighbor(file_name, solint, solbool, neighborhood):
 	return solint, resp, solbool
 
 
-def neigh_gpu(solution, file, inimov):
+def neigh_gpu(solution=None, file="", inimov=0):
 	resp = best_neighbor(file, solution.vector, solution.knapsack, inimov)
 	return SolutionTTP(resp[0], resp[1], resp[2])
 
 
-def get_file_name(solution_index):
+def get_file_name(solution_index=0):
 	return ttp_intance_path + ttp_solution_instance_file[solution_index][0]
 
 
-def create_initial_solution(solution_index):
+def create_initial_solution(solution_index=0, solution_in_index=None):
 	sol_info = ttp_solution_instance_file[solution_index]
 
 	solint = [x for x in xrange(sol_info[1][0])]
