@@ -62,7 +62,7 @@ elif "ml" == problem_name.lower():
 		no_conflict_moves[2], no_conflict_moves[3])
 	valor_depois = calculate_value(file_name, ini_solution.vector)
 	print "depois value: {} - {}".format(valor_depois, str(ini_solution.vector))
-	print "{}-{}={}".format(valor_antes, valor_depois, valor_antes - valor_depois)
+	print "{}-{}={}".format(valor_depois, valor_antes, valor_depois - valor_antes)
 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)

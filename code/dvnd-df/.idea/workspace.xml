@@ -2,11 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="956e8775-94c0-4458-a19c-d58f01ce1ce0" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/.Rhistory" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/dvnd.zip" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/gpu03.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/gpu03.r" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w10dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w1dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w1rvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w2dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w3dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w4dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w5dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w6dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w7dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w8dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/n1w9dvnd.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/rvnd.zip" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time0.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/time7.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wraper_wamca2016.py" afterPath="$PROJECT_DIR$/src/wraper_wamca2016.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../doc/results/gpu01-04/dvnd-rvnd.r" afterPath="$PROJECT_DIR$/../../doc/results/gpu01-04/dvnd-rvnd.r" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../doc/results/gpu03/gpu03.r" afterPath="$PROJECT_DIR$/../../doc/results/gpu03/gpu03.r" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +42,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="64" column="81" lean-forward="false" selection-start-line="64" selection-start-column="81" selection-end-line="64" selection-end-column="81" />
+            <state relative-caret-position="0">
+              <caret line="64" column="55" lean-forward="false" selection-start-line="64" selection-start-column="55" selection-end-line="64" selection-end-column="55" />
               <folding>
                 <element signature="e#42#53#0" expanded="true" />
               </folding>
@@ -32,23 +54,11 @@
       <file leaf-file-name="wraper_wamca2016.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/wraper_wamca2016.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
+            <state relative-caret-position="522">
+              <caret line="173" column="8" lean-forward="false" selection-start-line="173" selection-start-column="8" selection-end-line="173" selection-end-column="8" />
               <folding>
                 <element signature="e#42#55#0" expanded="true" />
                 <element signature="e#579#773#1" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gpu03.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../doc/results/gpu03/gpu03.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -166,17 +176,17 @@
         <option value="$PROJECT_DIR$/src/dataflow_opt.py" />
         <option value="$PROJECT_DIR$/../../../simple-pycuda/simplepycuda.py" />
         <option value="$PROJECT_DIR$/src/util.py" />
-        <option value="$PROJECT_DIR$/../../doc/results/gpu03/gpu03.py" />
         <option value="$PROJECT_DIR$/src/main.py" />
+        <option value="$PROJECT_DIR$/../../doc/results/gpu03/gpu03.py" />
         <option value="$PROJECT_DIR$/src/wraper_wamca2016.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="784" />
-    <option name="y" value="34" />
+    <option name="y" value="6" />
     <option name="width" value="1136" />
-    <option name="height" value="971" />
+    <option name="height" value="999" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -269,7 +279,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.gpu03">
     <configuration name="gpu01-04" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -346,8 +356,8 @@
     </list>
     <recent_temporary>
       <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Python.main" />
-        <item index="1" class="java.lang.String" itemvalue="Python.gpu03" />
+        <item index="0" class="java.lang.String" itemvalue="Python.gpu03" />
+        <item index="1" class="java.lang.String" itemvalue="Python.main" />
         <item index="2" class="java.lang.String" itemvalue="Python.mainvnd" />
         <item index="3" class="java.lang.String" itemvalue="Python.gpu01-04" />
       </list>
@@ -416,19 +426,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="784" y="34" width="1136" height="971" extended-state="0" />
+    <frame x="65" y="-4" width="1855" height="1084" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29836065" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42625168" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32646048" sideWeight="0.5018868" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27553445" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27553445" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24909091" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41675392" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -445,17 +455,17 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32646048" sideWeight="0.5018868" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27553445" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24397905" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29836065" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3434555" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24909091" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41675392" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4726841" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
@@ -521,17 +531,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/wraper_wamca2016.py</url>
-          <line>175</line>
+          <line>178</line>
           <option name="timeStamp" value="252" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/wraper_wamca2016.py</url>
-          <line>181</line>
+          <line>184</line>
           <option name="timeStamp" value="254" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/wraper_wamca2016.py</url>
-          <line>167</line>
+          <line>170</line>
           <option name="timeStamp" value="258" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -773,30 +783,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../doc/results/gpu03/gpu03.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="64" column="81" lean-forward="false" selection-start-line="64" selection-start-column="81" selection-end-line="64" selection-end-column="81" />
+        <state relative-caret-position="0">
+          <caret line="64" column="55" lean-forward="false" selection-start-line="64" selection-start-column="55" selection-end-line="64" selection-end-column="55" />
           <folding>
             <element signature="e#42#53#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../doc/results/gpu03/gpu03.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/wraper_wamca2016.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="182" column="0" lean-forward="true" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
+        <state relative-caret-position="522">
+          <caret line="173" column="8" lean-forward="false" selection-start-line="173" selection-start-column="8" selection-end-line="173" selection-end-column="8" />
           <folding>
             <element signature="e#42#55#0" expanded="true" />
             <element signature="e#579#773#1" expanded="true" />

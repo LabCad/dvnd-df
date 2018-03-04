@@ -156,22 +156,25 @@ def merge_moves(moves1, moves2):
 
 
 def get_no_conflict(cids, ciis, cjjs, ccosts):
+	print "Todos os movimentos"
+	for i in xrange(len(cids)):
+		print "{}-id:{}, i: {}, j: {}, cost: {}".format(i, cids[i], ciis[i], cjjs[i], ccosts[i])
 	impMoves = numpy.array([x for x in xrange(100)], dtype=ctypes.c_int)
 	impValue = numpy.array([0], dtype=ctypes.c_int)
 	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue)
 	impValue = impValue[0]
 	# TODO Testar se os movimentos aplicados chegam na mesma solução
-	impId = numpy.array([x for x in xrange(nMoves)], dtype=ctypes.c_ushort)
-	impI = numpy.array([x for x in xrange(nMoves)], dtype=ctypes.c_uint)
-	impJ = numpy.array([x for x in xrange(nMoves)], dtype=ctypes.c_uint)
-	impCost = numpy.array([x for x in xrange(nMoves)], dtype=ctypes.c_int)
+	impId = numpy.array([cids[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_ushort)
+	impI = numpy.array([ciis[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_uint)
+	impJ = numpy.array([cjjs[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_uint)
+	impCost = numpy.array([ccosts[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_int)
 	print "pyth selected"
 	print " ".join([str(impMoves[x]) for x in xrange(nMoves)])
-	for i in xrange(nMoves):
-		impId[i] = cids[impMoves[(i + 1) % nMoves]]
-		impI[i] = ciis[impMoves[(i + 1) % nMoves]]
-		impJ[i] = cjjs[impMoves[(i + 1) % nMoves]]
-		impCost[i] = ccosts[impMoves[(i + 1) % nMoves]]
+	# for i in xrange(nMoves):
+	# 	impId[i] = cids[impMoves[(i + 1) % nMoves]]
+	# 	impI[i] = ciis[impMoves[(i + 1) % nMoves]]
+	# 	impJ[i] = cjjs[impMoves[(i + 1) % nMoves]]
+	# 	impCost[i] = ccosts[impMoves[(i + 1) % nMoves]]
 	# print "Python {} moves, impvalue: {}".format(nMoves, impValue[0])
 	return impId, impI, impJ, impCost
 
@@ -180,7 +183,9 @@ def apply_moves(file, solint, cids, ciis, cjjs, ccosts):
 	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves,
 	#   unsigned short * ids, unsigned int * is, unsigned int * js, int * costs)
 	return wamca2016lib.applyMoves(file, solint, len(solint), len(cids), cids, ciis, cjjs, ccosts)
-	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids, ciis, cjjs, ccosts)
+	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids,ciis, cjjs, ccosts)
+	# idx = 0
+	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids[idx:], ciis[idx:], cjjs[idx:], ccosts[idx:])
 
 
 wamca_intance_path = wamca2016path + "instances/"
