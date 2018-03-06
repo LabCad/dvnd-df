@@ -48,6 +48,7 @@ class SolutionMovementAccept(unittest.TestCase):
 		self.assertEquals(esperado, sol, "%s - %s - %s" % (mov, esperado, sol))
 		sol.accept(mov)
 
+
 class SolutionMovementTest(unittest.TestCase):
 	def test_create(self):
 		tam = 5

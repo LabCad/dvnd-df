@@ -35,13 +35,13 @@ class Worker(Process):
 		# self.sendops(opermsg)
 
 
-class Task:
+class Task(object):
 	def __init__(self, f, nodeid, args=None):
 		self.nodeid = nodeid
 		self.args = args
 
 
-class DFGraph:
+class DFGraph(object):
 	def __init__(self):
 		self.nodes = []
 		self.node_count = 0
@@ -53,7 +53,7 @@ class DFGraph:
 		self.nodes += [node]
 
 
-class Node:
+class Node(object):
 	def __init__(self, f, inputn):
 		self.f = f
 		self.inport = [[] for i in range(inputn)]
@@ -104,7 +104,7 @@ class Node:
 			return None
 
 
-class Oper:
+class Oper(object):
 	def __init__(self, prodid, dstid, dstport, val):
 		self.wid, self.dstid, self.dstport, self.val = prodid, dstid, dstport, val
 		# wid -> id of the worker that produced the oper
@@ -115,7 +115,7 @@ class Oper:
 		self.request_task = True  # if true, piggybacks a request for a task to the worker where the opers were produced.
 
 
-class Scheduler:
+class Scheduler(object):
 	TASK_TAG = 0
 	TERMINATE_TAG = 1
 
@@ -315,5 +315,3 @@ class Scheduler:
 
 		print "Waiting %s" % self.waiting
 		self.terminate_workers(self.workers)
-
-

@@ -12,12 +12,13 @@ class DataFlowVND(object):
 		self.__mpi_enabled = mpi_enabled
 		self.__is_rvnd = is_rvnd
 
-	def __neighborhood(func, args, maximize):
+	@staticmethod
+	def __neighborhood(func=lambda args: None, args=[], maximize=False):
 		resp = func(args[0][0])
 		return [max(resp, args[0][0]) if maximize else min(resp, args[0][0]),
 			resp < args[0][0] if not maximize else args[0][0] < resp, args[0][2] + 1]
 
-	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x: True):
 		graph = DFGraph()
 
 		ini_node = Feeder([initial_solution, True, 0])
@@ -52,7 +53,7 @@ class DataFlowDVND(object):
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 
-	def __neighborhood(self, func, args, inimov):
+	def __neighborhood(self, func=lambda arg: None, args=[], inimov=0):
 		atual = args[0]
 		atual.source = inimov
 		atual[inimov] = max(atual[inimov], func(atual[inimov])) if self.__maximize \
@@ -60,7 +61,7 @@ class DataFlowDVND(object):
 		atual.counts[inimov] += 1
 		return atual
 
-	def __manager(self, args):
+	def __manager(self, args=[]):
 		atual = args[0]
 		melhor = args[1]
 
@@ -88,7 +89,7 @@ class DataFlowDVND(object):
 
 		return melhor
 
-	def run(self, number_of_workers, initial_solution, oper_funtions, result_callback=lambda x: True):
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x: True):
 		graph = DFGraph()
 
 		# Nó final Cria n
@@ -113,7 +114,7 @@ class DataFlowDVND(object):
 		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(number_of_opers)]
 		oper_keep_going = [lambda a, b: True for y in xrange(number_of_opers)]
 		oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it),
-			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
+		                          1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
 		for x in oper_node:
 			graph.add(x)
 			man_node.add_edge(x, 0)
@@ -134,3 +135,8 @@ class DataFlowDVND(object):
 			ini_node[i].add_edge(oper_node[i], 0)
 
 		Scheduler(graph, number_of_workers, mpi_enabled=self.__mpi_enabled).start()
+
+
+class DataFlowGDVND(DataFlowDVND):
+	def __init__(self, maximize=False, mpi_enabled=False):
+		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled)

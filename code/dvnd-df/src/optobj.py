@@ -7,7 +7,7 @@ from pyDF import Node, Oper
 
 class DecisionNode(Node):
 	def __init__(self, f=lambda x: None, inputn=1, should_run=lambda x: True, keep_going=lambda x, y: True):
-		Node.__init__(self, f, inputn)
+		super(DecisionNode, self).__init__(f, inputn)
 		self.__should_run = should_run
 		self.__keep_going = keep_going
 
@@ -26,7 +26,7 @@ class DecisionNode(Node):
 			self.sendops(opers, operq)
 
 
-class OptMessage:
+class OptMessage(object):
 	def __init__(self, solmap={}, source=0, target=[], not_improved=[]):
 		self.__solmap = solmap
 		self.__source = source
@@ -49,6 +49,10 @@ class OptMessage:
 	@property
 	def source(self):
 		return self.__source
+
+	@source.setter
+	def source(self, value):
+		self.__source = value
 
 	def has_target(self, idx=0):
 		return self.__target[idx]

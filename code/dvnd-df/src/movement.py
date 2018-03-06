@@ -2,13 +2,13 @@
 from copy import deepcopy
 
 
-class MovementType:
+class MovementType(object):
 	SWAP = 1
 	TWO_OPT = 2
 	OR_OPT_K = 3
 
 
-class Movement:
+class Movement(object):
 	def __init__(self, movtype=MovementType.SWAP, x=0, y=1, k=None):
 		self.movtype = movtype
 		self.x = x

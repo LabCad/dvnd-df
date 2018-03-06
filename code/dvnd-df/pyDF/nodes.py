@@ -4,7 +4,7 @@ from pydf import *
 import bisect
 
 
-class TaggedValue:
+class TaggedValue(object):
 	def __init__(self, value, tag):
 		self.value = value
 		self.tag = tag
@@ -27,7 +27,6 @@ class TaggedValue:
 
 
 class Source(Node):  # source class
-
 	def __init__(self, it):
 		self.it = it
 		self.inport = []
@@ -130,4 +129,3 @@ class Serializer(Node):
 					buffertag = None
 
 			self.next_tag = next
-

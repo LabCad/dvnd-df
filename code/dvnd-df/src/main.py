@@ -82,12 +82,15 @@ solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd
 # FIXME Remover
 # solver_param="rvnd"
 solver = None
+solver_param = "gdvnd"
 if "dvnd" == solver_param.lower():
 	solver = DataFlowDVND(goal, mpi_enabled)
 elif "rvnd" == solver_param.lower():
 	solver = DataFlowVND(goal, mpi_enabled, True)
 elif "vnd" == solver_param.lower():
 	solver = DataFlowVND(goal, mpi_enabled)
+elif "gdvnd" == solver_param.lower():
+	solver = DataFlowGDVND(goal, mpi_enabled)
 
 print "Solver: {}".format(solver_param.upper())
 start_time = time.time()

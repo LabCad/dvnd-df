@@ -8,6 +8,7 @@ if os.environ.has_key('DVND_HOME'):
 
 from movement import *
 
+
 class MovementTest(unittest.TestCase):
 	def test_create(self):
 		mov = Movement(MovementType.SWAP, 0, 1)

@@ -18,7 +18,7 @@ localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 print "WAMCAPATH:" + wamca2016path
 
 
-class MLMove:
+class MLMove(object):
 	"""
 	typedef enum {
 		MLMI_SWAP,
