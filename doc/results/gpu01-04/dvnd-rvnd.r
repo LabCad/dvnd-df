@@ -361,64 +361,64 @@ plot_labels_n1=c("n1w1", "n1w2", "n1w3", "n1w4")
 plot_labels_n2=c("n2w1", "n2w2", "n2w3", "n2w4")
 plot_labels=c(plot_labels_n1, plot_labels_n2)
 
-boxplot(c(value_rvnd_in0, value_dvnd_in0), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in0")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in1, value_dvnd_in1), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in1")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in2, value_dvnd_in2), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in2")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in3, value_dvnd_in3), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in3")
-legend("bottomleft", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in4, value_dvnd_in4), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in4")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in5, value_dvnd_in5), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in5")
-legend("bottomleft", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in6, value_dvnd_in6), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in6")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(value_rvnd_in7, value_dvnd_in7), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in7")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in0, time_dvnd_in0), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in0")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in1, time_dvnd_in1), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in1")
-legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in2, time_dvnd_in2), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in2")
-legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in3, time_dvnd_in3), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in3")
-legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in4, time_dvnd_in4), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in4")
-legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in5, time_dvnd_in5), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in5")
-legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in6, time_dvnd_in6), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in6")
-legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
-
-boxplot(c(time_rvnd_in7, time_dvnd_in7), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in7")
-legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# boxplot(c(value_rvnd_in0, value_dvnd_in0), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in0")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in1, value_dvnd_in1), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in1")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in2, value_dvnd_in2), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in2")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in3, value_dvnd_in3), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in3")
+# legend("bottomleft", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in4, value_dvnd_in4), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in4")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in5, value_dvnd_in5), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in5")
+# legend("bottomleft", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in6, value_dvnd_in6), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in6")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(value_rvnd_in7, value_dvnd_in7), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Value in7")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in0, time_dvnd_in0), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in0")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in1, time_dvnd_in1), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in1")
+# legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in2, time_dvnd_in2), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in2")
+# legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in3, time_dvnd_in3), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in3")
+# legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in4, time_dvnd_in4), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in4")
+# legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in5, time_dvnd_in5), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in5")
+# legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in6, time_dvnd_in6), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in6")
+# legend("bottomright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
+# 
+# boxplot(c(time_rvnd_in7, time_dvnd_in7), names=c(plot_labels_n1, plot_labels), col=c(red_color[1:4], white_color), main="Time in7")
+# legend("topright", inset=.02, c("RVND", "DVND"), fill=c("red", "white"), horiz=TRUE, cex=0.8)
 
 
 
 time_dvnd_rvnd_n2w1=list(compareVectors(time_dvnd_n1w1in0, time_rvnd_n1w1in0), compareVectors(time_dvnd_n1w1in1, time_rvnd_n1w1in1), compareVectors(time_dvnd_n1w1in2, time_rvnd_n1w1in2), compareVectors(time_dvnd_n1w1in3, time_rvnd_n1w1in3), compareVectors(time_dvnd_n1w1in4, time_rvnd_n1w1in4), compareVectors(time_dvnd_n1w1in5, time_rvnd_n1w1in5), compareVectors(time_dvnd_n1w1in6, time_rvnd_n1w1in6), compareVectors(time_dvnd_n1w1in7, time_rvnd_n1w1in7))
 
-boxplot(time_dvnd_rvnd_n2w1, main="Time DVND/RVND n2w1", names=c("0", "1", "2", "3", "4", "5", "6", "7"))
+boxplot(time_dvnd_rvnd_n2w1, main="Time DVND/RVND", names=0:7, xlab="# Instance", ylab="Time DVND/RVND")
 abline(h = 1, col = "red")
 
 value_dvnd_rvnd_n2w1=list(compareVectors(value_dvnd_n1w1in0, value_rvnd_n1w1in0), compareVectors(value_dvnd_n1w1in1, value_rvnd_n1w1in1), compareVectors(value_dvnd_n1w1in2, value_rvnd_n1w1in2), compareVectors(value_dvnd_n1w1in3, value_rvnd_n1w1in3), compareVectors(value_dvnd_n1w1in4, value_rvnd_n1w1in4), compareVectors(value_dvnd_n1w1in5, value_rvnd_n1w1in5), compareVectors(value_dvnd_n1w1in6, value_rvnd_n1w1in6), compareVectors(value_dvnd_n1w1in7, value_rvnd_n1w1in7))
 
-boxplot(value_dvnd_rvnd_n2w1, main="Value DVND/RVND n2w1", names=c("0", "1", "2", "3", "4", "5", "6", "7"))
+boxplot(value_dvnd_rvnd_n2w1, main="Value DVND/RVND", names=0:7, xlab="# Instance", ylab="Value DVND/RVND")
 abline(h = 1, col = "red")
 
 drawNormalizedGraph <- function(vec1, vec2, colors){
@@ -429,25 +429,31 @@ drawNormalizedGraph <- function(vec1, vec2, colors){
 	legend("bottomright", inset=.02, c("RVND", "DVND"), fill=colors, horiz=TRUE, cex=0.8)
 }
 
-drawGraph <- function(seqvec1, seqvec2, colors){
-  plot(1:100, sort(seqvec1), type="o", col=colors[1], xlab = "", ylab = "", main = "", ylim=c(min(seqvec1, seqvec2), max(seqvec1, seqvec2)))
+drawGraph <- function(seqvec1, seqvec2, colors, xlabel, ylabel){
+  if (missing(xlabel)) {
+    xlabel = ""
+  }
+  if (missing(ylabel)) {
+    ylabel = ""
+  }
+  plot(1:100, sort(seqvec1), type="o", col=colors[1], xlab = xlabel, ylab = ylabel, main = "", ylim=c(min(seqvec1, seqvec2), max(seqvec1, seqvec2)))
   lines(1:100, sort(seqvec2), type = "o", col = colors[2])
   legend("bottomright", inset=.02, c("RVND", "DVND"), fill=colors, horiz=TRUE, cex=0.8)
 }
 
 for (i in 1:8) {
-  drawGraph(unlist(value_rvnd_n1w1[i]), unlist(value_dvnd_n2w1[i]), c("red", "blue"))
+  drawGraph(unlist(value_rvnd_n1w1[i]), unlist(value_dvnd_n2w1[i]), c("red", "blue"), "Sample", "Solution Value")
 }
 
 value_dvnd_rvnd_n2w1_all = c(unlist(value_dvnd_rvnd_n2w1[1]), unlist(value_dvnd_rvnd_n2w1[2]), unlist(value_dvnd_rvnd_n2w1[3]), unlist(value_dvnd_rvnd_n2w1[4]), 
                              unlist(value_dvnd_rvnd_n2w1[5]), unlist(value_dvnd_rvnd_n2w1[6]), unlist(value_dvnd_rvnd_n2w1[7]), unlist(value_dvnd_rvnd_n2w1[8]))
-plot(1:100, sort(unlist(value_dvnd_rvnd_n2w1[1])), type="o", col=rainbow(8)[1],
-     xlab = "", ylab = "", main = "", 
-     ylim=c(min(value_dvnd_rvnd_n2w1_all), max(value_dvnd_rvnd_n2w1_all)))
-abline(h = 1, col = "black")
-for (i in 2:8) {
-  lines(1:100, sort(unlist(value_dvnd_rvnd_n2w1[i])), type = "o", col = rainbow(8)[i])
-}
+# plot(1:100, sort(unlist(value_dvnd_rvnd_n2w1[1])), type="o", col=rainbow(8)[1],
+#      xlab = "", ylab = "", main = "", 
+#      ylim=c(min(value_dvnd_rvnd_n2w1_all), max(value_dvnd_rvnd_n2w1_all)))
+# abline(h = 1, col = "black")
+# for (i in 2:8) {
+#   lines(1:100, sort(unlist(value_dvnd_rvnd_n2w1[i])), type = "o", col = rainbow(8)[i])
+# }
 
 time_dvnd_n1w1in0=c(1.29632306099,1.26356506348,1.26753401756,1.15059399605,1.26067900658,1.20264101028,1.25329494476,1.21212697029,1.22876095772,1.22901415825,1.24377703667,1.27159404755,1.23273491859,1.21809911728,1.23270487785,1.24314498901,1.20727205276,1.228536129,1.26924180984,1.28487610817,1.24900984764,1.23844504356,1.25318717957,1.19770908356,1.26718688011,1.23911714554,1.2312040329,1.26625680923,1.26783394814,1.25463485718,1.26002001762,1.28285694122,1.26868200302,1.27015805244,1.23816800117,1.22770500183,1.21978902817,1.29060292244,1.26228499413,1.25493311882,1.21046280861,1.24276781082,1.24825596809,1.22589588165,1.23500990868,1.23079299927,1.22474002838,1.20834589005,1.28181791306,1.27415013313,1.26674199104,1.2625169754,1.26852703094,1.25036001205,1.25416493416,1.27594089508,1.22923207283,1.24873995781,1.25566792488,1.23876094818,1.25074315071,1.2464389801,1.22578787804,1.25612998009,1.24307084084,1.28860497475,1.23975801468,1.26965403557,1.26357507706,1.28078889847,1.25286388397,1.2533428669,1.23323202133,1.24989700317,1.23461508751,1.22678089142,1.23873305321,1.25681591034,1.24921798706,1.27229213715,1.27569103241,1.24882602692,1.25885009766,1.22533917427,1.22777509689,1.27422499657,1.25176310539,1.24866199493,1.15561413765,1.26191997528,1.25721883774,1.24918603897,1.25668001175,1.34483218193,1.23721504211,1.26692700386,1.1659719944,1.25350284576,1.23076605797,1.16938614845)
 time_dvnd_n1w1in1=c(1.45988297462,1.52198791504,1.45780992508,1.48967599869,1.52196383476,1.54422688484,1.48813486099,1.50549507141,1.47267103195,1.45529413223,1.43376088142,1.43466091156,1.48074698448,1.43068909645,1.46784710884,1.50235199928,1.41363501549,1.48666405678,1.46938085556,1.51530194283,1.5133330822,1.51134395599,1.42369413376,1.5172419548,1.4062731266,1.433562994,1.41908383369,1.49597096443,1.50274515152,1.44373703003,1.5276889801,1.42264819145,1.43616008759,1.43061995506,1.43683505058,1.50753521919,1.4298582077,1.40055298805,1.51027011871,1.49947404861,1.49814295769,1.41197013855,1.43507385254,1.46771192551,1.45740890503,1.51338005066,1.45598506927,1.47652411461,1.55661511421,1.45425200462,1.48176383972,1.44360494614,1.41930413246,1.52400493622,1.48823690414,1.45048213005,1.40853786469,1.49604701996,1.48547101021,1.52724599838,1.39569687843,1.43732881546,1.43259096146,1.48315215111,1.47345519066,1.40356588364,1.51427793503,1.46151685715,1.51727294922,1.42787909508,1.4764289856,1.50136709213,1.51761102676,1.61768817902,1.43443202972,1.42578792572,1.57193899155,1.54721617699,1.48865890503,1.43824887276,1.44374990463,1.42942595482,1.45353221893,1.42949295044,1.49114108086,1.40832304955,1.40311598778,1.5000231266,1.41153097153,1.43663811684,1.55613589287,1.56545901299,1.43035697937,1.46985602379,1.44846010208,1.43255186081,1.46533513069,1.39939689636,1.49283885956,1.44459104538)
@@ -542,30 +548,30 @@ drawGraph3 <- function(seqvec, colors, labels, title="") {
 
 colors3 = c("red", "blue", "green")
 labels3 = c("rvnd_n1w1", "dvnd_n1w1", "dvnd_n2w1")
-drawGraph3(list(time_rvnd_n1w1in0, time_dvnd_n1w1in0, time_dvnd_n2w1in0), colors3, labels3, "Time #0")
-drawGraph3(list(time_rvnd_n1w1in1, time_dvnd_n1w1in1, time_dvnd_n2w1in1), colors3, labels3, "Time #1")
-drawGraph3(list(time_rvnd_n1w1in2, time_dvnd_n1w1in2, time_dvnd_n2w1in2), colors3, labels3, "Time #2")
-drawGraph3(list(time_rvnd_n1w1in3, time_dvnd_n1w1in3, time_dvnd_n2w1in3), colors3, labels3, "Time #3")
-drawGraph3(list(time_rvnd_n1w1in4, time_dvnd_n1w1in4, time_dvnd_n2w1in4), colors3, labels3, "Time #4")
-drawGraph3(list(time_rvnd_n1w1in5, time_dvnd_n1w1in5, time_dvnd_n2w1in5), colors3, labels3, "Time #5")
-drawGraph3(list(time_rvnd_n1w1in6, time_dvnd_n1w1in6, time_dvnd_n2w1in6), colors3, labels3, "Time #6")
-drawGraph3(list(time_rvnd_n1w1in7, time_dvnd_n1w1in7, time_dvnd_n2w1in7), colors3, labels3, "Time #7")
-
-drawGraph3(list(value_rvnd_n1w1in0, value_dvnd_n1w1in0, value_dvnd_n2w1in0), colors3, labels3, "Value #0")
-drawGraph3(list(value_rvnd_n1w1in1, value_dvnd_n1w1in1, value_dvnd_n2w1in1), colors3, labels3, "Value #1")
-drawGraph3(list(value_rvnd_n1w1in2, value_dvnd_n1w1in2, value_dvnd_n2w1in2), colors3, labels3, "Value #2")
-drawGraph3(list(value_rvnd_n1w1in3, value_dvnd_n1w1in3, value_dvnd_n2w1in3), colors3, labels3, "Value #3")
-drawGraph3(list(value_rvnd_n1w1in4, value_dvnd_n1w1in4, value_dvnd_n2w1in4), colors3, labels3, "Value #4")
-drawGraph3(list(value_rvnd_n1w1in5, value_dvnd_n1w1in5, value_dvnd_n2w1in5), colors3, labels3, "Value #5")
-drawGraph3(list(value_rvnd_n1w1in6, value_dvnd_n1w1in6, value_dvnd_n2w1in6), colors3, labels3, "Value #6")
-drawGraph3(list(value_rvnd_n1w1in7, value_dvnd_n1w1in7, value_dvnd_n2w1in7), colors3, labels3, "Value #7")
-
-drawGraph3(list(count_rvnd_n1w1in0, count_dvnd_n1w1in0, count_dvnd_n2w1in0), colors3, labels3, "Count #0")
-drawGraph3(list(count_rvnd_n1w1in1, count_dvnd_n1w1in1, count_dvnd_n2w1in1), colors3, labels3, "Count #1")
-drawGraph3(list(count_rvnd_n1w1in2, count_dvnd_n1w1in2, count_dvnd_n2w1in2), colors3, labels3, "Count #2")
-drawGraph3(list(count_rvnd_n1w1in3, count_dvnd_n1w1in3, count_dvnd_n2w1in3), colors3, labels3, "Count #3")
-drawGraph3(list(count_rvnd_n1w1in4, count_dvnd_n1w1in4, count_dvnd_n2w1in4), colors3, labels3, "Count #4")
-drawGraph3(list(count_rvnd_n1w1in5, count_dvnd_n1w1in5, count_dvnd_n2w1in5), colors3, labels3, "Count #5")
-drawGraph3(list(count_rvnd_n1w1in6, count_dvnd_n1w1in6, count_dvnd_n2w1in6), colors3, labels3, "Count #6")
-drawGraph3(list(count_rvnd_n1w1in7, count_dvnd_n1w1in7, count_dvnd_n2w1in7), colors3, labels3, "Count #7")
+# drawGraph3(list(time_rvnd_n1w1in0, time_dvnd_n1w1in0, time_dvnd_n2w1in0), colors3, labels3, "Time #0")
+# drawGraph3(list(time_rvnd_n1w1in1, time_dvnd_n1w1in1, time_dvnd_n2w1in1), colors3, labels3, "Time #1")
+# drawGraph3(list(time_rvnd_n1w1in2, time_dvnd_n1w1in2, time_dvnd_n2w1in2), colors3, labels3, "Time #2")
+# drawGraph3(list(time_rvnd_n1w1in3, time_dvnd_n1w1in3, time_dvnd_n2w1in3), colors3, labels3, "Time #3")
+# drawGraph3(list(time_rvnd_n1w1in4, time_dvnd_n1w1in4, time_dvnd_n2w1in4), colors3, labels3, "Time #4")
+# drawGraph3(list(time_rvnd_n1w1in5, time_dvnd_n1w1in5, time_dvnd_n2w1in5), colors3, labels3, "Time #5")
+# drawGraph3(list(time_rvnd_n1w1in6, time_dvnd_n1w1in6, time_dvnd_n2w1in6), colors3, labels3, "Time #6")
+# drawGraph3(list(time_rvnd_n1w1in7, time_dvnd_n1w1in7, time_dvnd_n2w1in7), colors3, labels3, "Time #7")
+# 
+# drawGraph3(list(value_rvnd_n1w1in0, value_dvnd_n1w1in0, value_dvnd_n2w1in0), colors3, labels3, "Value #0")
+# drawGraph3(list(value_rvnd_n1w1in1, value_dvnd_n1w1in1, value_dvnd_n2w1in1), colors3, labels3, "Value #1")
+# drawGraph3(list(value_rvnd_n1w1in2, value_dvnd_n1w1in2, value_dvnd_n2w1in2), colors3, labels3, "Value #2")
+# drawGraph3(list(value_rvnd_n1w1in3, value_dvnd_n1w1in3, value_dvnd_n2w1in3), colors3, labels3, "Value #3")
+# drawGraph3(list(value_rvnd_n1w1in4, value_dvnd_n1w1in4, value_dvnd_n2w1in4), colors3, labels3, "Value #4")
+# drawGraph3(list(value_rvnd_n1w1in5, value_dvnd_n1w1in5, value_dvnd_n2w1in5), colors3, labels3, "Value #5")
+# drawGraph3(list(value_rvnd_n1w1in6, value_dvnd_n1w1in6, value_dvnd_n2w1in6), colors3, labels3, "Value #6")
+# drawGraph3(list(value_rvnd_n1w1in7, value_dvnd_n1w1in7, value_dvnd_n2w1in7), colors3, labels3, "Value #7")
+# 
+# drawGraph3(list(count_rvnd_n1w1in0, count_dvnd_n1w1in0, count_dvnd_n2w1in0), colors3, labels3, "Count #0")
+# drawGraph3(list(count_rvnd_n1w1in1, count_dvnd_n1w1in1, count_dvnd_n2w1in1), colors3, labels3, "Count #1")
+# drawGraph3(list(count_rvnd_n1w1in2, count_dvnd_n1w1in2, count_dvnd_n2w1in2), colors3, labels3, "Count #2")
+# drawGraph3(list(count_rvnd_n1w1in3, count_dvnd_n1w1in3, count_dvnd_n2w1in3), colors3, labels3, "Count #3")
+# drawGraph3(list(count_rvnd_n1w1in4, count_dvnd_n1w1in4, count_dvnd_n2w1in4), colors3, labels3, "Count #4")
+# drawGraph3(list(count_rvnd_n1w1in5, count_dvnd_n1w1in5, count_dvnd_n2w1in5), colors3, labels3, "Count #5")
+# drawGraph3(list(count_rvnd_n1w1in6, count_dvnd_n1w1in6, count_dvnd_n2w1in6), colors3, labels3, "Count #6")
+# drawGraph3(list(count_rvnd_n1w1in7, count_dvnd_n1w1in7, count_dvnd_n2w1in7), colors3, labels3, "Count #7")
 

@@ -61,7 +61,7 @@ if "tt" == problem_name.lower():
 	goal = True
 elif "ml" == problem_name.lower():
 	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
-		get_no_conflict, merge_moves, apply_moves, calculate_value
+		get_no_conflict, merge_moves, apply_moves, calculate_value, best_neighbor
 	# import numpy
 	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index, solution_in_index)
@@ -69,6 +69,9 @@ elif "ml" == problem_name.lower():
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 	# tempSol = numpy.copy(ini_solution.vector)
 	# testconflict(ini_solution, 10)
+
+	for x in xrange(5):
+		best_neighbor(file_name, ini_solution.vector, x)
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 
@@ -94,4 +97,4 @@ elif "gdvnd" == solver_param.lower():
 
 print "Solver: {}".format(solver_param.upper())
 start_time = time.time()
-solver.run(workers, ini_solution, neigh_op, print_final_solution)
+# solver.run(workers, ini_solution, neigh_op, print_final_solution)
