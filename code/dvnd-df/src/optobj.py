@@ -81,4 +81,3 @@ class OptMessage(object):
 
 	def get_not_improveds(self):
 		return [x for x in xrange(len(self.__not_improved)) if self.__not_improved[x]]
-

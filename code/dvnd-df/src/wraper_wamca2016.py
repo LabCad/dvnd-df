@@ -65,16 +65,10 @@ def create_wamca2016lib():
 	mylib.bestNeighbor.restype = ctypes.c_uint
 
 	# int getNoConflictMoves(unsigned int useMoves, unsigned short * ids, unsigned int * is, unsigned int * js,
-	#   int * costs, int * selectedMoves, int *impValue)
-	mylib.getNoConflictMoves.restype = ctypes.c_int
-	mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
-		util.array_1d_uint, util.array_1d_int, util.array_1d_int, util.array_1d_int]
-
-	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves,
-	#   unsigned short * ids, unsigned int * is, unsigned int * js, int * costs)
-	mylib.applyMoves.restype = ctypes.c_uint
-	mylib.applyMoves.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_uint,
-		util.array_1d_ushort, util.array_1d_uint, util.array_1d_uint, util.array_1d_int]
+	#   int * costs, int * selectedMoves)
+	# mylib.getNoConflictMoves.restype = ctypes.c_int
+	# mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
+	#	util.array_1d_uint, util.array_1d_int, util.array_1d_int]
 	# ctypes.POINTER(c_int)
 
 	return mylib

@@ -6,7 +6,7 @@ from dataflow_opt import *
 
 start_time = time.time()
 solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
-solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
+# solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
 file_name = None
 ini_solution = None
 
@@ -29,23 +29,23 @@ def print_final_solution(args, counts):
 		ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts, imp_value)
 
 
-def testconflict(ini_solution = None, nmoves = 10):
-	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
-	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
-	moves2 = best_neighbor_moves(file_name, ini_solution.vector, 2, n_moves=nmoves)[2]
-	moves3 = best_neighbor_moves(file_name, ini_solution.vector, 3, n_moves=nmoves)[2]
-	moves4 = best_neighbor_moves(file_name, ini_solution.vector, 4, n_moves=nmoves)[2]
-	moves = merge_moves(merge_moves(merge_moves(moves0, moves1), merge_moves(moves2, moves3)), moves4)
-	no_conflict_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
-
-	valor_antes = calculate_value(file_name, ini_solution.vector)
-	print "antes  value: {} - {}".format(valor_antes, str(ini_solution.vector))
-	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1],
-		no_conflict_moves[2], no_conflict_moves[3])
-	valor_depois = calculate_value(file_name, ini_solution.vector)
-	print "depois value: {} - {}".format(valor_depois, str(ini_solution.vector))
-	print "{}-{}={}".format(valor_depois, valor_antes, valor_depois - valor_antes)
-	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
+# def testconflict(ini_solution = None, nmoves = 10):
+# 	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
+# 	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
+# 	moves2 = best_neighbor_moves(file_name, ini_solution.vector, 2, n_moves=nmoves)[2]
+# 	moves3 = best_neighbor_moves(file_name, ini_solution.vector, 3, n_moves=nmoves)[2]
+# 	moves4 = best_neighbor_moves(file_name, ini_solution.vector, 4, n_moves=nmoves)[2]
+# 	moves = merge_moves(merge_moves(merge_moves(moves0, moves1), merge_moves(moves2, moves3)), moves4)
+# 	no_conflict_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
+#
+# 	valor_antes = calculate_value(file_name, ini_solution.vector)
+# 	print "antes  value: {} - {}".format(valor_antes, str(ini_solution.vector))
+# 	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1],
+# 		no_conflict_moves[2], no_conflict_moves[3])
+# 	valor_depois = calculate_value(file_name, ini_solution.vector)
+# 	print "depois value: {} - {}".format(valor_depois, str(ini_solution.vector))
+# 	print "{}-{}={}".format(valor_depois, valor_antes, valor_depois - valor_antes)
+# 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
 
 goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
@@ -55,28 +55,29 @@ neigh_op = []
 if "tt" == problem_name.lower():
 	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
 	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index, solution_in_index)
+	ini_solution = create_initial_solution(solution_index)
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 	goal = True
 elif "ml" == problem_name.lower():
-	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
-		get_no_conflict, merge_moves, apply_moves, calculate_value, best_neighbor
+	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name#, best_neighbor_moves, \
+		# get_no_conflict, merge_moves, apply_moves, calculate_value, best_neighbor
 	# import numpy
 	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index, solution_in_index)
+	ini_solution = create_initial_solution(solution_index)
 
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
-	# tempSol = numpy.copy(ini_solution.vector)
-	# testconflict(ini_solution, 10)
-
-	for x in xrange(5):
-		best_neighbor(file_name, ini_solution.vector, x)
+	# nmoves = 10
+	# moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
+	# moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
+	# moves = merge_moves(moves0, moves1)
+	# get_no_conflict(moves[0], moves[1], moves[2], moves[3])
+	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 
-mpi_enabled = "-mpi" in sys.argv
 # TODO Versão 2 precisa do MPI enabled, bug
+mpi_enabled = "-mpi" in sys.argv
 # mpi_enabled = True
 
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
@@ -85,7 +86,6 @@ solver_param = sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd
 # FIXME Remover
 # solver_param="rvnd"
 solver = None
-solver_param = "gdvnd"
 if "dvnd" == solver_param.lower():
 	solver = DataFlowDVND(goal, mpi_enabled)
 elif "rvnd" == solver_param.lower():
@@ -97,4 +97,4 @@ elif "gdvnd" == solver_param.lower():
 
 print "Solver: {}".format(solver_param.upper())
 start_time = time.time()
-# solver.run(workers, ini_solution, neigh_op, print_final_solution)
+solver.run(workers, ini_solution, neigh_op, print_final_solution)
