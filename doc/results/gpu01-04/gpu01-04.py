@@ -3,7 +3,7 @@ import re
 import fnmatch
 
 
-folder_to_look = "./dvnd/results/"
+folder_to_look = "./rvnd/n1w1/"
 file_name_pattern = "*.out"
 
 rmy = re.compile("[a-z ]*: ([\d.]*)s - [a-z]*: ([\d]*)", re.IGNORECASE)

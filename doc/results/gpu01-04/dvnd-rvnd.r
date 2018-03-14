@@ -442,7 +442,7 @@ drawGraph <- function(seqvec1, seqvec2, colors, xlabel, ylabel){
 }
 
 for (i in 1:8) {
-  drawGraph(unlist(value_rvnd_n1w1[i]), unlist(value_dvnd_n2w1[i]), c("red", "blue"), "Sample", "Solution Value")
+  drawGraph(unlist(value_rvnd_n1w1[i]), unlist(value_dvnd_n2w1[i]), c("red", "blue"), "Sample", "Solution value")
 }
 
 value_dvnd_rvnd_n2w1_all = c(unlist(value_dvnd_rvnd_n2w1[1]), unlist(value_dvnd_rvnd_n2w1[2]), unlist(value_dvnd_rvnd_n2w1[3]), unlist(value_dvnd_rvnd_n2w1[4]), 
