@@ -166,8 +166,8 @@ createLabel = function(seqvec, name) {
 }
 
 drawGraph = function(seqvec, colors, labels, title="") {
-  # dev.off()
-  # par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
+  #dev.off() 
+  #par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
   labels[1] = createLabel(seqvec[1], labels[1])
   plot(1:100, sort(unlist(seqvec[1])), type="o", col=colors[1], xlab = "", ylab = "", main = title, ylim=c(min(unlist(seqvec)), max(unlist(seqvec))))
   for (i in 2:length(seqvec)) {
@@ -175,7 +175,7 @@ drawGraph = function(seqvec, colors, labels, title="") {
     labels[i] = createLabel(seqvec[i], labels[i])
   }
   legend("topright", inset=c(-.51, 0), labels, fill=colors, horiz=FALSE, cex=0.8, ncol = 1)
-  # legend("topleft", inset=c(.01, .01), c("RVND", "DVND", "DVND", "DVND"), fill=c(colors[1], colors[11], colors[21], colors[31]), horiz=FALSE, cex=0.8, ncol = 1)
+  legend("topleft", inset=c(.01, .01), c("RVND", "DVND", "DVND"), fill=c(colors[1], colors[11], colors[21]), horiz=FALSE, cex=0.8, ncol = 1)
 }
 
 colorAlpha = function(colorValue, number) {
@@ -189,9 +189,7 @@ colorAlpha = function(colorValue, number) {
 labelsTipos = c("n1w1")
 labelsTipos = c(labelsTipos, "n1w1", "n1w2", "n1w3", "n1w4", "n1w5", "n1w6", "n1w7", "n1w8", "n1w9", "n1w10")
 labelsTipos = c(labelsTipos, "n2w1", "n2w2", "n2w3", "n2w4", "n2w5", "n2w6", "n2w7", "n2w8", "n2w9", "n2w10")
-labelsTipos = c(labelsTipos, "n3w1", "n3w2", "n3w3", "n3w4", "n3w5", "n3w6", "n3w7", "n3w8", "n3w9", "n3w10")
-# red, yellow, blue, green
-colorsTipos = c("red", colorAlpha(c(255.0/255, 255.0/255, 140.0/255), 10), colorAlpha(c(0, 0, 153.0/255), 10), colorAlpha(c(0, 102.0/255, 0), 10))
+colorsTipos = c("red", colorAlpha(c(0, 0, 153.0/255), 10), colorAlpha(c(0, 102.0/255, 0), 10))
 
 drawGraph(in0time, colorsTipos, labelsTipos, "Time #0")
 drawGraph(in1time, colorsTipos, labelsTipos, "Time #1")
@@ -219,3 +217,4 @@ drawGraph(in4count, colorsTipos, labelsTipos, "Count #4")
 drawGraph(in5count, colorsTipos, labelsTipos, "Count #5")
 drawGraph(in6count, colorsTipos, labelsTipos, "Count #6")
 drawGraph(in7count, colorsTipos, labelsTipos, "Count #7")
+
