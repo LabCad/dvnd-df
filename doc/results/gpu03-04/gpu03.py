@@ -4,7 +4,7 @@ import fnmatch
 import itertools
 
 rfn = re.compile("\w*in_*(\d*)", re.IGNORECASE)
-folder_to_look = "./n3/n3w10/"
+folder_to_look = "./n4/n4w10/"
 file_name_pattern = "*.out"
 
 names_list = []
