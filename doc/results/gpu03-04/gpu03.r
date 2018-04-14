@@ -203,21 +203,43 @@ createLabel = function(seqvec, name) {
 library("stringr")
 library(gridExtra)
 library(grid)
+library(ggplot2)
 drawGraph = function(seqvec, colors, labels, title="") {
   # dev.off()
-  # svg(paste("chart/", str_replace_all(str_replace_all(title, " ", "_"), "#", "")))
-  # par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
-  labels[1] = createLabel(seqvec[1], labels[1])
-  plot(1:100, sort(unlist(seqvec[1])), type="o", col=colors[1], xlab = "", ylab = "", main = title, ylim=c(min(unlist(seqvec)), max(unlist(seqvec))))
-  for (i in 2:length(seqvec)) {
-    lines(1:100, sort(unlist(seqvec[i])), type = "o", col = colors[i])
-    labels[i] = createLabel(seqvec[i], labels[i])
+  chart_name = paste("chart/", str_replace_all(str_replace_all(title, " ", "_"), "#", ""), sep = "")
+  
+  drawGraphMaster = function(seqvec, colors, labels, title="") {
+    labels[1] = createLabel(seqvec[1], labels[1])
+    par(xpd=T, mar=par()$mar+c(0, 0, 0, 0))
+    plot(1:100, sort(unlist(seqvec[1])), type="o", col=colors[1], xlab = "", ylab = "", main = title, ylim=c(min(unlist(seqvec)), max(unlist(seqvec))), bg = "transparent")
+    for (i in 2:length(seqvec)) {
+      lines(1:100, sort(unlist(seqvec[i])), type = "o", col = colors[i])
+      labels[i] = createLabel(seqvec[i], labels[i])
+    }
+    legend("topleft", inset=c(.01, .01), c("RVND", "DVND n1", "DVND n2", "DVND n3", "DVND n4"), fill=c(colors[1], colors[11], colors[21], colors[31], colors[41]), horiz=FALSE, cex=0.8, ncol = 1)
+    # par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
+    # legend("topright", labels, inset=c(-.42, 0), fill=colors, horiz=FALSE, cex=0.8, ncol = 1)
+    
+    par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
+    legend("topleft", labels[1:21], inset=c(.01, .02), fill=colors[1:21], horiz=FALSE, cex=0.8, ncol = 1)
+    legend("topright", labels[22:41], inset=c(-.4, .02), fill=colors[22:41], horiz=FALSE, cex=0.8, ncol = 1)
   }
-  legend("topleft", inset=c(.01, .01), c("RVND", "DVND n1", "DVND n2", "DVND n3", "DVND n4"), fill=c(colors[1], colors[11], colors[21], colors[31], colors[41]), horiz=FALSE, cex=0.8, ncol = 1)
+
+  svg(paste(chart_name, ".svg", sep=""))
+  drawGraphMaster(seqvec, colors, labels, title)
   dev.off()
   
-  # legend("topright", labels, fill=colors, horiz=FALSE, cex=0.8, ncol = 1)
-  grid.table(labels)
+  png(paste(chart_name, ".png", sep=""), width = 800, height = 600)
+  drawGraphMaster(seqvec, colors, labels, title)
+  dev.off()
+
+  svg(paste(chart_name, "legend.svg", sep=""))
+  plot(x=c(0), y=c(0), bg = "transparent")
+  legend("topleft", labels[1:21], inset=c(.01, .02), fill=colors[1:21], horiz=FALSE, cex=0.8, ncol = 1)
+  legend("topright", labels[22:41], inset=c(.01, .02), fill=colors[22:41], horiz=FALSE, cex=0.8, ncol = 1)
+  dev.off()
+  
+  # grid.table(labels)
 }
 
 colorAlpha = function(colorValue, number) {
