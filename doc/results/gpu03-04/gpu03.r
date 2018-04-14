@@ -201,18 +201,23 @@ createLabel = function(seqvec, name) {
 }
 
 library("stringr")
+library(gridExtra)
+library(grid)
 drawGraph = function(seqvec, colors, labels, title="") {
-  png(str_replace_all(title, "[ #]", "_"))
-  par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
+  # dev.off()
+  # svg(paste("chart/", str_replace_all(str_replace_all(title, " ", "_"), "#", "")))
+  # par(xpd=T, mar=par()$mar+c(0, 0, 0, 11))
   labels[1] = createLabel(seqvec[1], labels[1])
   plot(1:100, sort(unlist(seqvec[1])), type="o", col=colors[1], xlab = "", ylab = "", main = title, ylim=c(min(unlist(seqvec)), max(unlist(seqvec))))
   for (i in 2:length(seqvec)) {
     lines(1:100, sort(unlist(seqvec[i])), type = "o", col = colors[i])
     labels[i] = createLabel(seqvec[i], labels[i])
   }
-  legend("topright", inset=c(-.51, 0), labels, fill=colors, horiz=FALSE, cex=0.8, ncol = 1)
-  legend("topleft", inset=c(.01, .01), c("RVND", "DVND", "DVND", "DVND"), fill=c(colors[1], colors[11], colors[21]), horiz=FALSE, cex=0.8, ncol = 1)
+  legend("topleft", inset=c(.01, .01), c("RVND", "DVND n1", "DVND n2", "DVND n3", "DVND n4"), fill=c(colors[1], colors[11], colors[21], colors[31], colors[41]), horiz=FALSE, cex=0.8, ncol = 1)
   dev.off()
+  
+  # legend("topright", labels, fill=colors, horiz=FALSE, cex=0.8, ncol = 1)
+  grid.table(labels)
 }
 
 colorAlpha = function(colorValue, number) {
@@ -235,29 +240,28 @@ colorPink = colorAlpha(c(204.0/255, 0, 204.0/255), 10)
 colorsTipos = c("red", colorYellow, colorBlue, colorGreen, colorPink)
 
 drawGraph(in0time, colorsTipos, labelsTipos, "Time #0")
-drawGraph(in1time, colorsTipos, labelsTipos, "Time #1")
-drawGraph(in2time, colorsTipos, labelsTipos, "Time #2")
-drawGraph(in3time, colorsTipos, labelsTipos, "Time #3")
-drawGraph(in4time, colorsTipos, labelsTipos, "Time #4")
-drawGraph(in5time, colorsTipos, labelsTipos, "Time #5")
-drawGraph(in6time, colorsTipos, labelsTipos, "Time #6")
-drawGraph(in7time, colorsTipos, labelsTipos, "Time #7")
-
-drawGraph(in0final, colorsTipos, labelsTipos, "Final #0")
-drawGraph(in1final, colorsTipos, labelsTipos, "Final #1")
-drawGraph(in2final, colorsTipos, labelsTipos, "Final #2")
-drawGraph(in3final, colorsTipos, labelsTipos, "Final #3")
-drawGraph(in4final, colorsTipos, labelsTipos, "Final #4")
-drawGraph(in5final, colorsTipos, labelsTipos, "Final #5")
-drawGraph(in6final, colorsTipos, labelsTipos, "Final #6")
-drawGraph(in7final, colorsTipos, labelsTipos, "Final #7")
-
-drawGraph(in0count, colorsTipos, labelsTipos, "Count #0")
-drawGraph(in1count, colorsTipos, labelsTipos, "Count #1")
-drawGraph(in2count, colorsTipos, labelsTipos, "Count #2")
-drawGraph(in3count, colorsTipos, labelsTipos, "Count #3")
-drawGraph(in4count, colorsTipos, labelsTipos, "Count #4")
-drawGraph(in5count, colorsTipos, labelsTipos, "Count #5")
-drawGraph(in6count, colorsTipos, labelsTipos, "Count #6")
-drawGraph(in7count, colorsTipos, labelsTipos, "Count #7")
-
+# drawGraph(in1time, colorsTipos, labelsTipos, "Time #1")
+# drawGraph(in2time, colorsTipos, labelsTipos, "Time #2")
+# drawGraph(in3time, colorsTipos, labelsTipos, "Time #3")
+# drawGraph(in4time, colorsTipos, labelsTipos, "Time #4")
+# drawGraph(in5time, colorsTipos, labelsTipos, "Time #5")
+# drawGraph(in6time, colorsTipos, labelsTipos, "Time #6")
+# drawGraph(in7time, colorsTipos, labelsTipos, "Time #7")
+# 
+# drawGraph(in0final, colorsTipos, labelsTipos, "Final #0")
+# drawGraph(in1final, colorsTipos, labelsTipos, "Final #1")
+# drawGraph(in2final, colorsTipos, labelsTipos, "Final #2")
+# drawGraph(in3final, colorsTipos, labelsTipos, "Final #3")
+# drawGraph(in4final, colorsTipos, labelsTipos, "Final #4")
+# drawGraph(in5final, colorsTipos, labelsTipos, "Final #5")
+# drawGraph(in6final, colorsTipos, labelsTipos, "Final #6")
+# drawGraph(in7final, colorsTipos, labelsTipos, "Final #7")
+# 
+# drawGraph(in0count, colorsTipos, labelsTipos, "Count #0")
+# drawGraph(in1count, colorsTipos, labelsTipos, "Count #1")
+# drawGraph(in2count, colorsTipos, labelsTipos, "Count #2")
+# drawGraph(in3count, colorsTipos, labelsTipos, "Count #3")
+# drawGraph(in4count, colorsTipos, labelsTipos, "Count #4")
+# drawGraph(in5count, colorsTipos, labelsTipos, "Count #5")
+# drawGraph(in6count, colorsTipos, labelsTipos, "Count #6")
+# drawGraph(in7count, colorsTipos, labelsTipos, "Count #7")
