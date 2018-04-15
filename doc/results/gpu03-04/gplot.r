@@ -12,25 +12,54 @@ removeLegendPrint <- function(mychart, file_name) {
 }
 
 for (input_num in 0:7) {
-  timechart = ggplot(subset(compNoIndMov, inum==input_num), aes(factor(paste(type, n, sep="")), time))
+  timechart = ggplot(compNoIndMov[inum==input_num, ], aes(factor(paste(type, n, sep="")), time))
   timechart = timechart + geom_violin(aes(fill = factor(paste(type, n, sep=""))))
-  timechart = removeLegendPrint(timechart, paste("chart/time", input_num, ".png", sep=""))
+  timechart = removeLegendPrint(timechart, paste("chart/violin_time", input_num, ".png", sep=""))
 
-  finalchart = ggplot(subset(compNoIndMov, inum==input_num), aes(factor(paste(type, n, sep="")), final))
+  finalchart = ggplot(compNoIndMov[inum==input_num, ], aes(factor(paste(type, n, sep="")), final))
   finalchart = finalchart + geom_violin(aes(fill = factor(paste(type, n, sep=""))))
-  finalchart = removeLegendPrint(finalchart, paste("chart/final", input_num, ".png", sep=""))
+  finalchart = removeLegendPrint(finalchart, paste("chart/violin_final", input_num, ".png", sep=""))
 
-  countchart = ggplot(subset(compNoIndMov, inum==input_num), aes(factor(paste(type, n, sep="")), count))
+  countchart = ggplot(compNoIndMov[inum==input_num, ], aes(factor(paste(type, n, sep="")), count))
   countchart = countchart + geom_violin(aes(fill = factor(paste(type, n, sep=""))))
-  countchart = removeLegendPrint(countchart, paste("chart/count", input_num, ".png", sep=""))
+  countchart = removeLegendPrint(countchart, paste("chart/violin_count", input_num, ".png", sep=""))
   
-  impchart = ggplot(subset(compNoIndMov, inum==input_num), aes(factor(paste(type, n, sep="")), imp))
+  impchart = ggplot(compNoIndMov[inum==input_num, ], aes(factor(paste(type, n, sep="")), imp))
   impchart = countchart + geom_violin(aes(fill = factor(paste(type, n, sep=""))))
-  impchart = removeLegendPrint(impchart, paste("chart/imp", input_num, ".png", sep=""))
-
-  # mychart = mychart + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
-  # ggsave(paste(paste("chart/time", input_num, sep=""), ".tex", sep=""), device="tex")
+  impchart = removeLegendPrint(impchart, paste("chart/violin_imp", input_num, ".png", sep=""))
 }
 
-# Testando
-ggplot(subset(compNoIndMov, inum==0), aes(x=factor(n), y=time, color=type, shape=factor(w))) + geom_point(size=6, alpha=0.6)
+removeLegendPrintPoints <- function(mychart, file_name) {
+  mychart = mychart + geom_point(size=6, alpha=0.6)
+  mychart = mychart + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(), legend.title = element_blank())
+  ggsave(file_name, plot = mychart, device="png")
+  return(mychart)
+}
+
+compNoIndMov = compNoIndMov[order(compNoIndMov$type, compNoIndMov$inum, compNoIndMov$n, compNoIndMov$w, compNoIndMov$time),]
+compNoIndMov$inum_id = rep(1:100, 328)
+for (input_num in 0:7) {
+  timelinechart = ggplot(compNoIndMov[inum==input_num, ], aes(x=factor(inum_id), y=time, color=factor(w), shape=factor(paste(type, "_n", n, sep=""))))
+  removeLegendPrintPoints(timelinechart, paste("chart/points_time", input_num, ".png", sep=""))
+}
+
+compNoIndMov = compNoIndMov[order(compNoIndMov$type, compNoIndMov$inum, compNoIndMov$n, compNoIndMov$w, compNoIndMov$final),]
+compNoIndMov$inum_id = rep(1:100, 328)
+for (input_num in 0:7) {
+  finallinechart = ggplot(compNoIndMov[inum==input_num, ], aes(x=factor(inum_id), y=final, color=factor(w), shape=factor(paste(type, "_n", n, sep=""))))
+  removeLegendPrintPoints(finallinechart, paste("chart/points_final", input_num, ".png", sep=""))
+}
+
+compNoIndMov = compNoIndMov[order(compNoIndMov$type, compNoIndMov$inum, compNoIndMov$n, compNoIndMov$w, compNoIndMov$count),]
+compNoIndMov$inum_id = rep(1:100, 328)
+for (input_num in 0:7) {
+  countlinechart = ggplot(compNoIndMov[inum==input_num, ], aes(x=factor(inum_id), y=count, color=factor(w), shape=factor(paste(type, "_n", n, sep=""))))
+  removeLegendPrintPoints(countlinechart, paste("chart/points_count", input_num, ".png", sep=""))
+}
+
+compNoIndMov = compNoIndMov[order(compNoIndMov$type, compNoIndMov$inum, compNoIndMov$n, compNoIndMov$w, compNoIndMov$imp),]
+compNoIndMov$inum_id = rep(1:100, 328)
+for (input_num in 0:7) {
+  implinechart = ggplot(compNoIndMov[inum==input_num, ], aes(x=factor(inum_id), y=imp, color=factor(w), shape=factor(paste(type, "_n", n, sep=""))))
+  removeLegendPrintPoints(implinechart, paste("chart/points_imp", input_num, ".png", sep=""))
+}
