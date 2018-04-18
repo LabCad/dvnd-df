@@ -18,7 +18,7 @@ for (ni in 1:4) {
     }
     nomes = colnames(medias)
     medias = data.frame(medias, temp)
-    colnames(medias) = c(nomes, paste("n", ni, "w", iw, "timeMean", sep = ""))
+    colnames(medias) = c(nomes, paste("n", ni, "w", iw, "TimeMean", sep = ""))
   }
 }
 
@@ -34,7 +34,7 @@ for (ni in 1:4) {
     }
     nomes = colnames(medias)
     medias = data.frame(medias, temp)
-    colnames(medias) = c(nomes, paste("n", ni, "w", iw, "finalMean", sep = ""))
+    colnames(medias) = c(nomes, paste("n", ni, "w", iw, "FinalMean", sep = ""))
   }
 }
 
@@ -50,16 +50,30 @@ for (ni in 1:4) {
     }
     nomes = colnames(medias)
     medias = data.frame(medias, temp)
-    colnames(medias) = c(nomes, paste("n", ni, "w", iw, "impMean", sep = ""))
+    colnames(medias) = c(nomes, paste("n", ni, "w", iw, "ImpMean", sep = ""))
   }
 }
 
-mediasNovo = data.frame(
-  instanceNo = c(0),
-  n = c(1),
-  w = c(1),
-  type = c('rvnd'),
-  timeMean = c(mean(compNoIndMov[compNoIndMov$inum==0 & compNoIndMov$type == 'rvnd',]$time)),
-  finalMean = c(mean(compNoIndMov[compNoIndMov$inum==0 & compNoIndMov$type == 'rvnd',]$final)),
-  impMean = c(mean(compNoIndMov[compNoIndMov$inum==0 & compNoIndMov$type == 'rvnd',]$imp))
-)
+for (sufix in c("Time", "Final", "Imp")) {
+  print(sufix)
+
+  for (mac_num in 1:4) {
+    instancCol = c(paste("rvnd", sufix, "Mean", sep = ""))
+    for (work_num in 1:10) {
+      instancCol = c(instancCol, paste("n", mac_num, "w", work_num, sufix, "Mean", sep = ""))
+    }
+    print(instancCol)
+    # write.table(medias[, instancCol, drop=FALSE], sep="&", row.names = FALSE)
+    print("")
+  }
+}
+
+# mediasNovo = data.frame(
+#   instanceNo = c(0),
+#   n = c(1),
+#   w = c(1),
+#   type = c('rvnd'),
+#   timeMean = c(mean(compNoIndMov[compNoIndMov$inum==0 & compNoIndMov$type == 'rvnd',]$time)),
+#   finalMean = c(mean(compNoIndMov[compNoIndMov$inum==0 & compNoIndMov$type == 'rvnd',]$final)),
+#   impMean = c(mean(compNoIndMov[compNoIndMov$inum==0 & compNoIndMov$type == 'rvnd',]$imp))
+# )
