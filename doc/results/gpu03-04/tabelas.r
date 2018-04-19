@@ -55,6 +55,7 @@ for (ni in 1:4) {
 }
 
 for (sufix in c("Time", "Final", "Imp")) {
+  print("")
   print(sufix)
 
   for (mac_num in 1:4) {
@@ -62,9 +63,10 @@ for (sufix in c("Time", "Final", "Imp")) {
     for (work_num in 1:10) {
       instancCol = c(instancCol, paste("n", mac_num, "w", work_num, sufix, "Mean", sep = ""))
     }
-    print(instancCol)
+    print(paste("n", mac_num, sep=""))
+    # print(instancCol)
+    write.table(format(medias[, instancCol, drop=FALSE], digits=3), sep="&", row.names = FALSE, quote = FALSE)
     # write.table(medias[, instancCol, drop=FALSE], sep="&", row.names = FALSE)
-    print("")
   }
 }
 

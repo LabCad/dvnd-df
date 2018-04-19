@@ -95,6 +95,28 @@ foreach(mac_num=1:4, .combine=cbind) %dopar% {
   }
 }
 
+compNoIndMov$wpad = str_pad(compNoIndMov$w, 2, pad="0")
+foreach(mac_num=1:4, .combine=cbind) %dopar% {
+  library(ggplot2)
+  
+  for (input_num in 0:7) {
+    mychart = ggplot(compNoIndMov[compNoIndMov$inum==input_num & compNoIndMov$n==mac_num,], aes(x=factor(paste(substr(type, 1, 1), "w", wpad, sep="")), y=time, fill=factor(w))) + geom_boxplot(alpha=0.3) + theme(legend.position="none")
+    mychart = mychart + theme(axis.title.x=element_blank(), axis.ticks.x=element_blank(), legend.title = element_blank())
+    mychart = mychart + stat_summary(fun.y=mean, geom="point", shape=20, size=2, color="red", fill="red")
+    ggsave(paste("chart/boxplot/n", mac_num, "/time", input_num, ".png", sep=""), plot = mychart, device="png")
+
+    mychart = ggplot(compNoIndMov[compNoIndMov$inum==input_num & compNoIndMov$n==mac_num,], aes(x=factor(paste(substr(type, 1, 1), "w", wpad, sep="")), y=imp, fill=factor(w))) + geom_boxplot(alpha=0.3) + theme(legend.position="none")
+    mychart = mychart + theme(axis.title.x=element_blank(), axis.ticks.x=element_blank(), legend.title = element_blank())
+    mychart = mychart + stat_summary(fun.y=mean, geom="point", shape=20, size=2, color="red", fill="red")
+    ggsave(paste("chart/boxplot/n", mac_num, "/imp", input_num, ".png", sep=""), plot = mychart, device="png")
+    
+    mychart = ggplot(compNoIndMov[compNoIndMov$inum==input_num & compNoIndMov$n==mac_num,], aes(x=factor(paste(substr(type, 1, 1), "w", wpad, sep="")), y=count, fill=factor(w))) + geom_boxplot(alpha=0.3) + theme(legend.position="none")
+    mychart = mychart + theme(axis.title.x=element_blank(), axis.ticks.x=element_blank(), legend.title = element_blank())
+    mychart = mychart + stat_summary(fun.y=mean, geom="point", shape=20, size=2, color="red", fill="red")
+    ggsave(paste("chart/boxplot/n", mac_num, "/count", input_num, ".png", sep=""), plot = mychart, device="png")
+  }
+}
+
 stopCluster(cl)
 b = Sys.time()
 b - a
