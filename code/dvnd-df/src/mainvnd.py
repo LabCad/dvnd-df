@@ -14,7 +14,12 @@ sol_info = wamca_solution_instance_file[solution_index]
 file_name = wamca_intance_path + sol_info[0]
 
 solint = [x for x in xrange(sol_info[1])]
-ini_solution = SolutionVectorValue(solint, calculate_value(file_name, solint))
+from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name#, best_neighbor_moves, \
+	# get_no_conflict, merge_moves, apply_moves, calculate_value, best_neighbor
+# import numpy
+file_name = get_file_name(solution_index)
+ini_solution = create_initial_solution(solution_index)
+# ini_solution = SolutionVectorValue(solint, calculate_value(file_name, solint))
 
 neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(3)]
 print "ns: ", neigh_op
@@ -43,5 +48,5 @@ while k < len(neigh_op):
 
 end_time = time.time()
 print "finished rvnd in {}s".format(end_time - start_time)
-print "initial_solution={}\n  final_solution={}, improveup={}".format(ini_solution.value, solution.value,
-	1.0 * ini_solution.value / solution.value)
+print "initial_solution={};final_solution={};improveup={};time;{}".format(ini_solution.value, solution.value,
+	1.0 * ini_solution.value / solution.value, end_time - start_time)
