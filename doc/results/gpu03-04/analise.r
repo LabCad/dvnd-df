@@ -15,16 +15,17 @@ for (itnum in 0:7) {
   }
 }
 
+maquinas = 1:5
 for (itnum in 0:7) {
   for (mac in 1:4) {
     linha = paste(itnum, " & ", mac, " & ", sep="")
-    for (work in 1:5) {
+    for (work in maquinas) {
       testarTudo = compNoIndMov[(compNoIndMov$inum==itnum & compNoIndMov$type=='rvnd') | (compNoIndMov$inum==itnum & compNoIndMov$n==mac & compNoIndMov$w==work & compNoIndMov$type=='dvnd'),]
       assertthat::are_equal(length(testarTudo[testarTudo$type=='rvnd',]$time), 100)
       assertthat::are_equal(length(testarTudo[testarTudo$type=='dvnd',]$time), 100)
 
-      #resp = wilcox.test(time ~ type, data=testarTudo)
-      resp = kruskal.test(time ~ type, data=testarTudo)
+      resp = wilcox.test(time ~ type, data=testarTudo)
+      #resp = kruskal.test(time ~ type, data=testarTudo)
       linha = paste(linha, if (resp$p.value >= .05) "\\textbf{" else "", format(resp$p.value, digits=3), if (resp$p.value >= .05) "}" else "", if (work == 5 || work == 10) " \\\\" else " & ", sep="")
     }
     cat(sprintf("%s\n", linha))
