@@ -15,7 +15,7 @@ for (itnum in 0:7) {
   }
 }
 
-maquinas = 1:5
+maquinas = 1:10
 for (itnum in 0:7) {
   for (mac in 1:4) {
     linha = paste(itnum, " & ", mac, " & ", sep="")
@@ -26,12 +26,12 @@ for (itnum in 0:7) {
 
       resp = wilcox.test(time ~ type, data=testarTudo)
       #resp = kruskal.test(time ~ type, data=testarTudo)
-      linha = paste(linha, if (resp$p.value >= .05) "\\textbf{" else "", format(resp$p.value, digits=3), if (resp$p.value >= .05) "}" else "", if (work == 5 || work == 10) " \\\\" else " & ", sep="")
+      linha = paste(linha, if (resp$p.value >= .05) "\\textbf{" else "", format(resp$p.value, digits=3), if (resp$p.value >= .05) "}" else "", if (work == length(maquinas)) " \\\\" else " & ", sep="")
     }
     cat(sprintf("%s\n", linha))
   }
 }
 
-testar = compNoIndMov[compNoIndMov$inum==itnum & compNoIndMov$n==mac & compNoIndMov$w==work & compNoIndMov$type=='dvnd',]
-testarRvnd = compNoIndMov[compNoIndMov$inum==itnum & compNoIndMov$type=='rvnd',]
-wilcox.test(testar$time, testarRvnd$time)
+# testar = compNoIndMov[compNoIndMov$inum==itnum & compNoIndMov$n==mac & compNoIndMov$w==work & compNoIndMov$type=='dvnd',]
+# testarRvnd = compNoIndMov[compNoIndMov$inum==itnum & compNoIndMov$type=='rvnd',]
+# wilcox.test(testar$time, testarRvnd$time)
