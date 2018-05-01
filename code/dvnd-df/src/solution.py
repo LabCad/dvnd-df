@@ -3,7 +3,7 @@ from random import randint
 from movement import *
 
 
-class SolutionVectorValue:
+class SolutionVectorValue(object):
 	def __init__(self, vector, value):
 		self.vector = vector
 		self.value = value

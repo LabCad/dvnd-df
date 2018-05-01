@@ -2,7 +2,7 @@
 from copy import *
 
 
-class SolutionMovement:
+class SolutionMovement(object):
 	def __init__(self, sol, mov, imp):
 		self.sol = copy(sol)
 		self.mov = mov
@@ -15,7 +15,7 @@ class SolutionMovement:
 		return self.sol == other.sol and self.mov.not_conflict(other.mov)
 
 
-class SolutionMovementCollection:
+class SolutionMovementCollection(object):
 	def __init__(self, sol):
 		self.__sol = copy(sol)
 		self.__movs = {}

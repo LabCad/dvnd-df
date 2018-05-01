@@ -65,11 +65,17 @@ def create_wamca2016lib():
 	mylib.bestNeighbor.restype = ctypes.c_uint
 
 	# int getNoConflictMoves(unsigned int useMoves, unsigned short * ids, unsigned int * is, unsigned int * js,
-	#   int * costs, int * selectedMoves)
-	# mylib.getNoConflictMoves.restype = ctypes.c_int
-	# mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
-	#	util.array_1d_uint, util.array_1d_int, util.array_1d_int]
+	#   int * costs, int * selectedMoves, int * impValue)
+	mylib.getNoConflictMoves.restype = ctypes.c_int
+	mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
+		util.array_1d_uint, util.array_1d_int, util.array_1d_int, util.array_1d_int]
 	# ctypes.POINTER(c_int)
+
+	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves = 0,
+	#   unsigned short * ids = NULL, unsigned int * is = NULL, unsigned int * js = NULL, int * costs = NULL)
+	mylib.applyMoves.restype = ctypes.c_uint
+	mylib.applyMoves.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_uint,
+		util.array_1d_ushort, util.array_1d_uint, util.array_1d_uint, util.array_1d_int]
 
 	return mylib
 
@@ -121,6 +127,10 @@ def get_file_name(solution_index=0):
 	return wamca_intance_path + wamca_solution_instance_file[solution_index][0]
 
 
+def copy_solution(ini_solution):
+	return SolutionVectorValue(numpy.copy(ini_solution.vector), ini_solution.value)
+
+
 def create_initial_solution(solution_index=0, solution_in_index=None):
 	sol_info = wamca_solution_instance_file[solution_index]
 
@@ -170,12 +180,12 @@ def get_no_conflict(cids, ciis, cjjs, ccosts):
 	# 	impJ[i] = cjjs[impMoves[(i + 1) % nMoves]]
 	# 	impCost[i] = ccosts[impMoves[(i + 1) % nMoves]]
 	# print "Python {} moves, impvalue: {}".format(nMoves, impValue[0])
-	return impId, impI, impJ, impCost
+	return impId, impI, impJ, impCost, impValue
 
 
 def apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
-	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves,
-	#   unsigned short * ids, unsigned int * is, unsigned int * js, int * costs)
+	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves = 0,
+	#   unsigned short * ids = NULL, unsigned int * is = NULL, unsigned int * js = NULL, int * costs = NULL)
 	return wamca2016lib.applyMoves(file, solint, len(solint), len(cids), cids, ciis, cjjs, ccosts)
 	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids,ciis, cjjs, ccosts)
 	# idx = 0
