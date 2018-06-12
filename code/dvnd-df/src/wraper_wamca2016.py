@@ -3,6 +3,7 @@
 import ctypes
 import numpy
 import util
+import os.path
 from solution import SolutionVectorValue
 from util import gethostcode, compilelib
 
@@ -10,10 +11,13 @@ from util import gethostcode, compilelib
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
 # wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
 
-# wamca2016path = "/home/imcoelho/Rodolfo/wamca2016/"
-wamca2016path = "/home/rodolfo/git/wamca2016/"
-# localpath = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
-localpath = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
+wamca2016path_uff = "/home/imcoelho/Rodolfo/wamca2016/"
+wamca2016path_local = "/home/rodolfo/git/wamca2016/"
+localpath_uff = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
+localpath_local = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
+
+wamca2016path = wamca2016path_uff if os.path.isdir(wamca2016path_uff) else wamca2016path_local
+localpath = localpath_uff if os.path.isdir(localpath_uff) else localpath_local
 
 print "WAMCAPATH:" + wamca2016path
 
@@ -49,7 +53,9 @@ def create_wamca2016lib():
 	files = [wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"]
 	mylibname = 'wamca2016lib'
 	options = ["-lgomp"]
-	compiler_options = ["-Xcompiler -fopenmp"]
+	# options = []
+	compiler_options = ["-fopenmp"]
+	# compiler_options = []
 	compilelib(files, localpath, mylibname, options, compiler_options)
 	mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 

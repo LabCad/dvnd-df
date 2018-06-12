@@ -30,7 +30,9 @@ def compilelib(files=[], localpath="", mylibname="", options=[], compiler_option
 		import time
 		print "Creating file: ", mylibname + '.so'
 		cmple_start_time = time.time()
-		SimpleSourceModule.compile_files('nvcc', files, options, localpath + mylibname, compiler_options)
+		nvccFile = '/usr/local/cuda-8.0/bin/nvcc'
+		nvccFile = 'nvcc'
+		SimpleSourceModule.compile_files(nvccFile, files, options, localpath + mylibname, compiler_options)
 		cmple_end_time = time.time()
 		print "File: {}.so created in {}s".format(mylibname, cmple_end_time - cmple_start_time)
 	else:
