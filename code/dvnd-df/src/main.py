@@ -12,6 +12,10 @@ ini_solution = None
 
 
 def print_final_solution(args, counts):
+	"""
+	:param args: Lista de soluções encontradas por cada estratégia.
+	:param counts: Lista com quantidade de vizinhanças exploradas por estratégia.
+	"""
 	end_time = time.time()
 	values_vec = [x.value for x in args]
 	print "solutions: {}, counts: {}".format(values_vec, counts)
@@ -75,7 +79,7 @@ elif "ml" == problem_name.lower():
 	# moves = merge_moves(moves0, moves1)
 	# get_no_conflict(moves[0], moves[1], moves[2], moves[3])
 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
-	testconflict(copy_solution(ini_solution))
+	# testconflict(copy_solution(ini_solution))
 
 print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 
@@ -98,6 +102,6 @@ elif "vnd" == solver_param:
 elif "gdvnd" == solver_param:
 	solver = DataFlowGDVND(goal, mpi_enabled)
 
-print "Solver: {}".format(solver_param.upper())
+print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)
 start_time = time.time()
-# solver.run(workers, ini_solution, neigh_op, print_final_solution)
+solver.run(workers, ini_solution, neigh_op, print_final_solution)

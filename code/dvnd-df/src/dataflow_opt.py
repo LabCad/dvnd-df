@@ -8,6 +8,11 @@ from pyDF import DFGraph, Feeder, Scheduler
 
 class DataFlowVND(object):
 	def __init__(self, maximize=False, mpi_enabled=False, is_rvnd=False):
+		"""
+		:param maximize: Indica se é um problema de maximização ou minimização.
+		:param mpi_enabled: Indica se usa MPI.
+		:param is_rvnd: Indica se o método é VND ou RVND
+		"""
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 		self.__is_rvnd = is_rvnd
@@ -19,6 +24,12 @@ class DataFlowVND(object):
 			resp < args[0][0] if not maximize else args[0][0] < resp, args[0][2] + 1]
 
 	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x: True):
+		"""
+		:param number_of_workers: Número de workers Sucuri.
+		:param initial_solution: Solução inicial.
+		:param oper_funtions: Funções dos operadores, vizinhanças.
+		:param result_callback: Método chamado quando o processo termina.
+		"""
 		graph = DFGraph()
 
 		ini_node = Feeder([initial_solution, True, 0])
@@ -50,6 +61,10 @@ class DataFlowVND(object):
 
 class DataFlowDVND(object):
 	def __init__(self, maximize=False, mpi_enabled=False):
+		"""
+		:param maximize: Indica se é um problema de maximização ou minimização.
+		:param mpi_enabled: Indica se usa MPI.
+		"""
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 
@@ -90,6 +105,12 @@ class DataFlowDVND(object):
 		return melhor
 
 	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x: True):
+		"""
+		:param number_of_workers: Número de workers Sucuri.
+		:param initial_solution: Solução inicial.
+		:param oper_funtions: Funções dos operadores, vizinhanças.
+		:param result_callback: Método chamado quando o processo termina.
+		"""
 		graph = DFGraph()
 
 		# Nó final Cria n
@@ -114,7 +135,7 @@ class DataFlowDVND(object):
 		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(number_of_opers)]
 		oper_keep_going = [lambda a, b: True for y in xrange(number_of_opers)]
 		oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it),
-		                          1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
+			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
 		for x in oper_node:
 			graph.add(x)
 			man_node.add_edge(x, 0)

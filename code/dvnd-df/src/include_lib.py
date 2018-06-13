@@ -12,8 +12,8 @@ simple_pycuda_home_local = "/home/rodolfo/git/simple-pycuda"
 pydf_home = pydf_home_local if os.path.isdir(pydf_home_local) else pydf_home_uff
 simple_pycuda_home = simple_pycuda_home_local if os.path.isdir(simple_pycuda_home_local) else simple_pycuda_home_uff
 
-# print("pydf_home: {}".format(pydf_home))
-# print("simple_pycuda_home: {}".format(simple_pycuda_home))
+print("pydf_home: {}".format(pydf_home))
+print("simple_pycuda_home: {}".format(simple_pycuda_home))
 
 os.environ['PYDF_HOME'] = pydf_home
 os.environ['SIMPLE_PYCUDA_HOME'] = simple_pycuda_home

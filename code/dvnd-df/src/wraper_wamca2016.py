@@ -19,6 +19,9 @@ localpath_local = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 wamca2016path = wamca2016path_uff if os.path.isdir(wamca2016path_uff) else wamca2016path_local
 localpath = localpath_uff if os.path.isdir(localpath_uff) else localpath_local
 
+print("wamca2016path: {}".format(wamca2016path))
+print("localpath: {}".format(localpath))
+
 print "WAMCAPATH:" + wamca2016path
 
 
