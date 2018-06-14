@@ -119,6 +119,9 @@ def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
 		n_moves, cids, ciis, cjjs, ccosts)
+	# resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,# gethostcode(),
+	# 	0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
+	# 	numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
 	# solint = list(csolint)
 	# mlmoves = []
 	# for i in xrange(n_moves):
@@ -129,6 +132,12 @@ def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 
 def neigh_gpu(solution=None, file="", inimov=0):
 	resp = best_neighbor(file, solution.vector, inimov)
+	return SolutionVectorValue(resp[0], resp[1])
+
+
+def neigh_gpu_moves(solution=None, file="", inimov=0, n_moves=0):
+	resp = best_neighbor_moves(file, solution.vector, inimov, n_moves)
+	# TODO Retornar solução com movimentos
 	return SolutionVectorValue(resp[0], resp[1])
 
 

@@ -55,6 +55,10 @@ def testconflict(ini_solution = None, nmoves = 10):
 
 goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
 problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
+number_of_moves = int(sys.argv[sys.argv.index("--number_of_moves") + 1]) if "--number_of_moves" in sys.argv else 10
+solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd").lower()
+# FIXME Remover
+solver_param = "gdvnd"
 neigh_op = []
 # problem_name = "tt"
 if "tt" == problem_name.lower():
@@ -67,12 +71,15 @@ if "tt" == problem_name.lower():
 elif "ml" == problem_name.lower():
 	from solution import SolutionVectorValue
 	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
-		get_no_conflict, merge_moves, copy_solution#, apply_moves, calculate_value, best_neighbor
+		get_no_conflict, merge_moves, neigh_gpu_moves, copy_solution#, apply_moves, calculate_value, best_neighbor
 	# import numpy
 	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index)
 
-	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+	if "gdvnd" == solver_param:
+		neigh_op = [lambda ab, y=mv: neigh_gpu_moves(ab, file_name, y, number_of_moves) for mv in xrange(5)]
+	else:
+		neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 	# nmoves = 10
 	# moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
 	# moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
@@ -88,7 +95,6 @@ print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
 mpi_enabled = "-mpi" in sys.argv
 
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
-solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd").lower()
 
 # FIXME Remover
 # solver_param="rvnd"

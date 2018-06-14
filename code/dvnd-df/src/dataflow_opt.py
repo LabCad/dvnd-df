@@ -76,6 +76,17 @@ class DataFlowDVND(object):
 		atual.counts[inimov] += 1
 		return atual
 
+	def best_solution(self, sol1=None, sol2=None):
+		"""
+		Decide qual é a melhor solução.
+		:param sol1: Primeira solução.
+		:param sol2: Segunda solução.
+		:return: Melhor solução e flag indicando se a melhor é a atual.
+		"""
+		if (not self.__maximize and sol1 < sol2) or (self.__maximize and sol2 < sol1):
+			return sol1, True
+		return sol2, False
+
 	def __manager(self, args=[]):
 		atual = args[0]
 		melhor = args[1]
@@ -84,12 +95,20 @@ class DataFlowDVND(object):
 		melhor.unset_all_targets()
 		# atualValue = atual[atual.source]
 
-		if (not self.__maximize and atual[atual.source] < melhor[atual.source]) \
-				or (self.__maximize and melhor[atual.source] < atual[atual.source]):
-			melhor[atual.source] = atual[atual.source]
+		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source])
+		melhor[atual.source] = atual_melhor[0]
+
+		# if (not self.__maximize and atual[atual.source] < melhor[atual.source]) \
+		# 		or (self.__maximize and melhor[atual.source] < atual[atual.source]):
+		# 	melhor[atual.source] = atual[atual.source]
+		# 	melhor.set_target(atual.source)
+		# else:
+		# 	melhor.set_not_improved(atual.source)
+		if atual_melhor[1]:
 			melhor.set_target(atual.source)
 		else:
 			melhor.set_not_improved(atual.source)
+
 		best_sol = melhor[atual.source] = melhor.get_best(self.__maximize)
 		# Caso não tenha melhorado mas tenha aparecido uma solução melhor
 		for x in melhor.get_not_improveds():
@@ -161,3 +180,7 @@ class DataFlowDVND(object):
 class DataFlowGDVND(DataFlowDVND):
 	def __init__(self, maximize=False, mpi_enabled=False):
 		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled)
+
+	def best_solution(self, sol1=None, sol2=None):
+		# TODO fazer o merge de duas soluções e pegar a melhor
+		return super(DataFlowGDVND, self).best_solution(sol1, sol2)
