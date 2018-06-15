@@ -7,7 +7,7 @@ from movement import *
 class SolutionVectorValue(object):
 	def __init__(self, vector, value):
 		if type(vector) is not numpy.ndarray:
-			raise ValueError('Use a numpy array for the vector')
+			raise ValueError('Use a numpy array in the vector, for performance reasons')
 		self.vector = vector
 		self.value = value
 

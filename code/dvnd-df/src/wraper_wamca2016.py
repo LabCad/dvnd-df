@@ -133,13 +133,15 @@ def from_movement_list_to_tuple(values_tuple=[]):
 
 
 def merge_solutions(solutions):
-	if [solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))].all():
+	if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
 		intersection = set(from_tuple_to_movement_list(solutions[0].movtuple))
 		for i in xrange(1, len(solutions)):
 			intersection &= set(from_tuple_to_movement_list(solutions[i].movtuple))
 		if len(intersection) > 0:
+			# FIXME Aplicar os movimentos ao vector
 			return [SolutionMovementTuple(sol.vector, sol.value,
-				from_movement_list_to_tuple(list(set(sol.movtuple) - intersection))) for sol in solutions]
+				from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
+				for sol in solutions]
 	return solutions
 
 
