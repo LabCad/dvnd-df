@@ -87,7 +87,7 @@ class DataFlowDVND(object):
 			return sol1, True
 		return sol2, False
 
-	def __manager(self, args=[]):
+	def manager(self, args=[]):
 		atual = args[0]
 		melhor = args[1]
 
@@ -139,7 +139,7 @@ class DataFlowDVND(object):
 		graph.add(fimNode)
 
 		# Nó de gerenciamento ligado nele mesmo e no nó final
-		man_node = DecisionNode(self.__manager, 2)
+		man_node = DecisionNode(self.manager, 2)
 		graph.add(man_node)
 		man_node.add_edge(man_node, 1)
 		man_node.add_edge(fimNode, 0)
@@ -184,3 +184,12 @@ class DataFlowGDVND(DataFlowDVND):
 	def best_solution(self, sol1=None, sol2=None):
 		# TODO fazer o merge de duas soluções e pegar a melhor
 		return super(DataFlowGDVND, self).best_solution(sol1, sol2)
+
+	def manager(self, args=[]):
+		from wraper_wamca2016 import merge_solutions
+
+		resp = super(DataFlowGDVND, self).manager(args)
+		resp_sol = merge_solutions([resp[x] for x in xrange(len(resp))])
+		for x in xrange(len(resp)):
+			resp[x] = resp_sol[x]
+		return resp

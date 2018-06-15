@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="956e8775-94c0-4458-a19c-d58f01ce1ce0" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/solution.py" afterPath="$PROJECT_DIR$/src/solution.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/wraper_wamca2016.py" afterPath="$PROJECT_DIR$/src/wraper_wamca2016.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_localserach.py" afterPath="$PROJECT_DIR$/test/test_localserach.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_solution.py" afterPath="$PROJECT_DIR$/test/test_solution.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_solution_movement.py" afterPath="$PROJECT_DIR$/test/test_solution_movement.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_solution_vector.py" afterPath="$PROJECT_DIR$/test/test_solution_vector.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_wraper_wamca2016.py" afterPath="$PROJECT_DIR$/test/test_wraper_wamca2016.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dataflow_opt.py" afterPath="$PROJECT_DIR$/src/dataflow_opt.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,11 +14,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_solution_vector.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="305">
+              <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+              <folding>
+                <element signature="e#42#53#0" expanded="true" />
+                <element signature="e#374#526#1" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_solution_vector.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/test_solution_vector.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="21" column="54" lean-forward="false" selection-start-line="21" selection-start-column="54" selection-end-line="21" selection-end-column="54" />
+            <state relative-caret-position="468">
+              <caret line="26" column="51" lean-forward="true" selection-start-line="26" selection-start-column="51" selection-end-line="26" selection-end-column="51" />
               <folding>
                 <element signature="e#24#34#0" expanded="true" />
               </folding>
@@ -34,10 +42,20 @@
       <file leaf-file-name="test_wraper_wamca2016.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/test_wraper_wamca2016.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-306">
-              <caret line="16" column="24" lean-forward="true" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
+            <state relative-caret-position="108">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="solution.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/solution.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="17" column="31" lean-forward="true" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
               <folding>
-                <element signature="e#24#34#0" expanded="true" />
+                <element signature="e#24#36#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -146,22 +164,22 @@
         <option value="$PROJECT_DIR$/../../../simple-pycuda/simplepycuda.py" />
         <option value="$PROJECT_DIR$/src/util.py" />
         <option value="$PROJECT_DIR$/src/include_lib.py" />
-        <option value="$PROJECT_DIR$/src/dataflow_opt.py" />
         <option value="$PROJECT_DIR$/src/movement.py" />
         <option value="$PROJECT_DIR$/src/main.py" />
         <option value="$PROJECT_DIR$/test/test_solution_vector.py" />
         <option value="$PROJECT_DIR$/src/solution.py" />
         <option value="$PROJECT_DIR$/src/wraper_wamca2016.py" />
         <option value="$PROJECT_DIR$/test/test_wraper_wamca2016.py" />
-        <option value="$PROJECT_DIR$/test/test_localserach.py" />
         <option value="$PROJECT_DIR$/test/test_solution.py" />
         <option value="$PROJECT_DIR$/test/test_solution_movement.py" />
+        <option value="$PROJECT_DIR$/test/test_localserach.py" />
+        <option value="$PROJECT_DIR$/src/dataflow_opt.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="700" />
-    <option name="y" value="28" />
+    <option name="y" value="27" />
     <option name="width" value="1218" />
     <option name="height" value="1030" />
   </component>
@@ -214,7 +232,7 @@
             <path>
               <item name="dvnd-df" type="b2602c69:ProjectViewProjectNode" />
               <item name="dvnd-df" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -251,7 +269,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in test">
+  <component name="RunManager" selected="Python.main">
     <configuration name="Unittests for test_solution_vector.SolutionMovementTupleTest.test_can_merge" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -278,20 +296,6 @@
       <module name="dvnd-df" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_solution_vector.SolutionMovementTupleTest.test_create&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-    </configuration>
-    <configuration name="Unittests for test_solution_vector.SolutionVectorValueTest.test_create" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="dvnd-df" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_solution_vector.SolutionVectorValueTest.test_create&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
     </configuration>
     <configuration name="Unittests for test_wraper_wamca2016.WraperWamca2016Test.test_merge_solutions_one_move" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
@@ -339,20 +343,37 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="dvnd-df" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionVectorValueTest.test_create" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_create" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_can_merge" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests for test_wraper_wamca2016.WraperWamca2016Test.test_merge_solutions_one_move" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in test" />
+      <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_create" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_can_merge" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests for test_wraper_wamca2016.WraperWamca2016Test.test_merge_solutions_one_move" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests in test" />
+      <item index="4" class="java.lang.String" itemvalue="Python.main" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in test" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests for test_wraper_wamca2016.WraperWamca2016Test.test_merge_solutions_one_move" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_can_merge" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_create" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionVectorValueTest.test_create" />
+        <item index="0" class="java.lang.String" itemvalue="Python.main" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in test" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests for test_wraper_wamca2016.WraperWamca2016Test.test_merge_solutions_one_move" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_can_merge" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests for test_solution_vector.SolutionMovementTupleTest.test_create" />
       </list>
     </recent_temporary>
   </component>
@@ -395,12 +416,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Unittests_for_test_solution_SolutionTest_test_value - 2018.06.14 at 23h 10m 02s.xml">
-      <configuration name="Unittests for test_solution.SolutionTest.test_value" configurationId="tests" />
-    </history-entry>
-    <history-entry file="Unittests_for_test_solution_movement_SolutionMovementAccept_test_accept_swap - 2018.06.14 at 23h 10m 25s.xml">
-      <configuration name="Unittests for test_solution_movement.SolutionMovementAccept.test_accept_swap" configurationId="tests" />
-    </history-entry>
     <history-entry file="Unittests_for_test_solution_movement_SolutionMovementAccept_test_accept_two_opt - 2018.06.14 at 23h 10m 36s.xml">
       <configuration name="Unittests for test_solution_movement.SolutionMovementAccept.test_accept_two_opt" configurationId="tests" />
     </history-entry>
@@ -425,6 +440,12 @@
     <history-entry file="Unittests_in_test - 2018.06.14 at 23h 12m 35s.xml">
       <configuration name="Unittests in test" configurationId="tests" />
     </history-entry>
+    <history-entry file="Unittests_in_test - 2018.06.14 at 23h 18m 21s.xml">
+      <configuration name="Unittests in test" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_test - 2018.06.14 at 23h 19m 58s.xml">
+      <configuration name="Unittests in test" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -436,16 +457,16 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="700" y="28" width="1218" height="1030" extended-state="0" />
+    <frame x="700" y="27" width="1218" height="1030" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14096186" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15201768" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3748691" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32646048" sideWeight="0.5018868" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34219652" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34136125" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42198953" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32963374" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42175362" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24862385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32897863" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -466,12 +487,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32646048" sideWeight="0.5018868" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.42198953" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32963374" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.42175362" sideWeight="0.49811321" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32897863" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14096186" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15201768" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34219652" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34136125" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24862385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -561,8 +582,13 @@
           <line>68</line>
           <option name="timeStamp" value="322" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/dataflow_opt.py</url>
+          <line>190</line>
+          <option name="timeStamp" value="323" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="323" />
+      <option name="time" value="324" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -705,13 +731,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1044">
           <caret line="71" column="19" lean-forward="false" selection-start-line="71" selection-start-column="19" selection-end-line="71" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/optobj.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="7" lean-forward="false" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -745,16 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dataflow_opt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="759">
-          <caret line="183" column="50" lean-forward="true" selection-start-line="183" selection-start-column="50" selection-end-line="183" selection-end-column="50" />
-          <folding>
-            <element signature="e#2673#2847#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="579">
@@ -779,17 +789,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="75" column="36" lean-forward="true" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="36" />
-          <folding>
-            <element signature="e#42#53#0" expanded="true" />
-            <element signature="e#374#526#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/wraper_wamca2016.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="149">
@@ -797,24 +796,6 @@
           <folding>
             <element signature="e#42#55#0" expanded="true" />
             <element signature="e#917#1111#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_localserach.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="16" column="164" lean-forward="false" selection-start-line="11" selection-start-column="2" selection-end-line="16" selection-end-column="164" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solution.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding>
-            <element signature="e#24#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -843,22 +824,67 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_wraper_wamca2016.py">
+    <entry file="file://$PROJECT_DIR$/test/test_solution_vector.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-306">
-          <caret line="16" column="24" lean-forward="true" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
+        <state relative-caret-position="468">
+          <caret line="26" column="51" lean-forward="true" selection-start-line="26" selection-start-column="51" selection-end-line="26" selection-end-column="51" />
           <folding>
             <element signature="e#24#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_solution_vector.py">
+    <entry file="file://$PROJECT_DIR$/test/test_localserach.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="21" column="54" lean-forward="false" selection-start-line="21" selection-start-column="54" selection-end-line="21" selection-end-column="54" />
+        <state relative-caret-position="252">
+          <caret line="16" column="164" lean-forward="false" selection-start-line="11" selection-start-column="2" selection-end-line="16" selection-end-column="164" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/optobj.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="30" column="19" lean-forward="true" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
           <folding>
-            <element signature="e#24#34#0" expanded="true" />
+            <element signature="e#42#53#0" expanded="true" />
+            <element signature="e#374#526#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dataflow_opt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="184" column="10" lean-forward="false" selection-start-line="184" selection-start-column="10" selection-end-line="184" selection-end-column="10" />
+          <folding>
+            <element signature="e#2673#2847#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test_wraper_wamca2016.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solution.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="31" lean-forward="true" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+          <folding>
+            <element signature="e#24#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
