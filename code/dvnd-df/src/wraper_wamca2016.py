@@ -4,8 +4,9 @@ import ctypes
 import numpy
 import util
 import os.path
-from solution import SolutionVectorValue
-from util import gethostcode, compilelib
+from movement import *
+from solution import SolutionVectorValue, SolutionMovementTuple
+from util import compilelib
 
 
 # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
@@ -108,17 +109,54 @@ def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False):
 	return solint, resp
 
 
+def from_list_to_tuple(ids=[], iis=[], jjs=[], costs=[]):
+	return numpy.array(ids, dtype=ctypes.c_ushort), \
+		numpy.array(iis, dtype=ctypes.c_uint), \
+		numpy.array(jjs, dtype=ctypes.c_uint), \
+		numpy.array(costs, dtype=ctypes.c_int)
+
+
+def from_tuple_to_movement(value_tuple):
+	return SimpleMovement(value_tuple[0], value_tuple[1], value_tuple[2], value_tuple[3])
+
+
+def from_tuple_to_movement_list(values_tuple):
+	return [SimpleMovement(values_tuple[0][x], values_tuple[1][x], values_tuple[2][x], values_tuple[3][x])
+		for x in xrange(len(values_tuple[0]))]
+
+
+def from_movement_list_to_tuple(values_tuple=[]):
+	return numpy.array([x.movtype for x in values_tuple], dtype=ctypes.c_ushort), \
+		numpy.array([x.value_i for x in values_tuple], dtype=ctypes.c_uint), \
+		numpy.array([x.value_j for x in values_tuple], dtype=ctypes.c_uint), \
+		numpy.array([x.cost for x in values_tuple], dtype=ctypes.c_int)
+
+
+def merge_solutions(solutions):
+	if [solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))].all():
+		intersection = set(from_tuple_to_movement_list(solutions[0].movtuple))
+		for i in xrange(1, len(solutions)):
+			intersection &= set(from_tuple_to_movement_list(solutions[i].movtuple))
+		if len(intersection) > 0:
+			return [SolutionMovementTuple(sol.vector, sol.value,
+				from_movement_list_to_tuple(list(set(sol.movtuple) - intersection))) for sol in solutions]
+	return solutions
+
+
 def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 	# csolint = numpy.array(solint, dtype=ctypes.c_int)
 	# csolint = solint
 
-	cids = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_ushort)
-	ciis = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
-	cjjs = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
-	ccosts = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_int)
+	carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
+		[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
+
+	# cids = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_ushort)
+	# ciis = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
+	# cjjs = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
+	# ccosts = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_int)
 
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
-		n_moves, cids, ciis, cjjs, ccosts)
+		n_moves, carrays[0], carrays[1], carrays[2], carrays[3])
 	# resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,# gethostcode(),
 	# 	0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
 	# 	numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
@@ -127,7 +165,8 @@ def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 	# for i in xrange(n_moves):
 	# 	mlmoves.append(MLMove(cids[i], ciis[i], cjjs[i], ccosts[i]))
 
-	return solint, resp, (cids, ciis, cjjs, ccosts)
+	# return solint, resp, (cids, ciis, cjjs, ccosts)
+	return solint, resp, carrays
 
 
 def neigh_gpu(solution=None, file="", inimov=0):
@@ -137,8 +176,7 @@ def neigh_gpu(solution=None, file="", inimov=0):
 
 def neigh_gpu_moves(solution=None, file="", inimov=0, n_moves=0):
 	resp = best_neighbor_moves(file, solution.vector, inimov, n_moves)
-	# TODO Retornar solução com movimentos
-	return SolutionVectorValue(resp[0], resp[1])
+	return SolutionMovementTuple(resp[0], resp[1], resp[2])
 
 
 def get_file_name(solution_index=0):
@@ -149,13 +187,16 @@ def copy_solution(ini_solution):
 	return SolutionVectorValue(numpy.copy(ini_solution.vector), ini_solution.value)
 
 
-def create_initial_solution(solution_index=0, solution_in_index=None):
+def create_initial_solution(solution_index=0, solver_param=""):
 	sol_info = wamca_solution_instance_file[solution_index]
 
 	# solint = [x for x in xrange(sol_info[1])]
 	solint = numpy.array([x for x in xrange(sol_info[1])], dtype=ctypes.c_int)
 	print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
-	return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint))
+	if "gdvnd" == solver_param:
+		return SolutionMovementTuple(solint, calculate_value(get_file_name(solution_index), solint), ([], [], [], []))
+	else:
+		return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint))
 
 
 def merge_moves(moves1=[], moves2=[]):
@@ -199,6 +240,10 @@ def get_no_conflict(cids, ciis, cjjs, ccosts):
 	# 	impCost[i] = ccosts[impMoves[(i + 1) % nMoves]]
 	# print "Python {} moves, impvalue: {}".format(nMoves, impValue[0])
 	return impId, impI, impJ, impCost, impValue
+
+
+def apply_moves_tuple(file="", solint=[], tupple=None):
+	return apply_moves(file, solint, tupple[0], tupple[1], tupple[2], tupple[3])
 
 
 def apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):

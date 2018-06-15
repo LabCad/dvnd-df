@@ -7,11 +7,9 @@ from dataflow_opt import *
 start_time = time.time()
 solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
 # solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
-file_name = None
-ini_solution = None
 
 
-def print_final_solution(args, counts):
+def print_final_solution(args=[], counts=[], ini_solution=None):
 	"""
 	:param args: Lista de soluções encontradas por cada estratégia.
 	:param counts: Lista com quantidade de vizinhanças exploradas por estratégia.
@@ -33,7 +31,7 @@ def print_final_solution(args, counts):
 		ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts, imp_value)
 
 
-def testconflict(ini_solution = None, nmoves = 10):
+def testconflict(ini_solution=None, nmoves=10, file_name=""):
 	from wraper_wamca2016 import best_neighbor_moves, get_no_conflict, merge_moves, apply_moves, calculate_value
 	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
 	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
@@ -60,6 +58,7 @@ solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvn
 # FIXME Remover
 solver_param = "gdvnd"
 neigh_op = []
+ini_solution = None
 # problem_name = "tt"
 if "tt" == problem_name.lower():
 	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
@@ -69,12 +68,12 @@ if "tt" == problem_name.lower():
 	neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 	goal = True
 elif "ml" == problem_name.lower():
-	from solution import SolutionVectorValue
+	# from solution import SolutionVectorValue
 	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
 		get_no_conflict, merge_moves, neigh_gpu_moves, copy_solution#, apply_moves, calculate_value, best_neighbor
 	# import numpy
 	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index)
+	ini_solution = create_initial_solution(solution_index, solver_param)
 
 	if "gdvnd" == solver_param:
 		neigh_op = [lambda ab, y=mv: neigh_gpu_moves(ab, file_name, y, number_of_moves) for mv in xrange(5)]
@@ -110,4 +109,7 @@ elif "gdvnd" == solver_param:
 
 print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)
 start_time = time.time()
-solver.run(workers, ini_solution, neigh_op, print_final_solution)
+# ini_solution = None
+# print_final_solution(args=[], counts=[], ini_solution=None)
+solver.run(workers, ini_solution, neigh_op,
+	lambda args, counts, inisol=ini_solution: print_final_solution(args, counts, inisol))

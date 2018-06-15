@@ -1,26 +1,50 @@
 # -*- coding: utf-8 -*-
+import numpy
 from random import randint
 from movement import *
 
 
 class SolutionVectorValue(object):
 	def __init__(self, vector, value):
+		if type(vector) is not numpy.ndarray:
+			raise ValueError('Use a numpy array for the vector')
 		self.vector = vector
 		self.value = value
 
 	def __lt__(self, other):
 		return self.value < other.value
 
-	# def __len__(self):
-	# 	return len(self.vector)
+	def __len__(self):
+		return len(self.vector)
 
 	def __str__(self):
 		return "{}-{}".format(self.value, self.vector)
 
+	def __eq__(self, other):
+		return other.value == self.value and (other.vector == self.vector).all()
+
+	def __hash__(self):
+		return self.value + self.vector[0]
+
+
+class SolutionMovementTuple(SolutionVectorValue):
+	def __init__(self, vector, value, movtuple):
+		super(SolutionMovementTuple, self).__init__(vector, value)
+		self.movtuple = movtuple
+
+	def can_merge(self, other):
+		return super(SolutionMovementTuple, self).__eq__(other)
+
+	# def merge(self, other):
+	# 	newtuple = set(SimpleMovement.from_tuple_to_list(self.movtuple)) - \
+	# 		set(SimpleMovement.from_tuple_to_list(other.movtuple))
+	# 	newtuple = SimpleMovement.from_list_to_tuple(list(newtuple))
+	# 	return SolutionMovementTuple(deepcopy(self.vector), self.value, newtuple)
+
 
 class SolutionTTP(SolutionVectorValue):
 	def __init__(self, vector, value, knapsack):
-		super(SolutionVectorValue, self).__init__(vector, value)
+		super(SolutionTTP, self).__init__(vector, value)
 		self.knapsack = knapsack
 
 	def __str__(self):
@@ -39,7 +63,7 @@ class Solution(object):
 	def __eq__(self, other):
 		"""Define an equality test"""
 		if isinstance(other, self.__class__):
-			return self.__size == other.__size and self.__route == other.__route
+			return self.__size == other.__size and (self.__route == other.__route).all()
 		return False
 
 	def __ne__(self, other):

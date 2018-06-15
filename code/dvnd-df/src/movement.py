@@ -2,6 +2,21 @@
 from copy import deepcopy
 
 
+class SimpleMovement(object):
+	def __init__(self, movtype=0, value_i=0, value_j=0, cost=0):
+		self.movtype = movtype
+		self.value_i = value_i
+		self.value_j = value_j
+		self.cost = cost
+
+	def __hash__(self):
+		return hash((self.movtype, self.value_i, self.value_j, self.cost))
+
+	def __eq__(self, other):
+		return self.movtype == other.movtype and self.value_i == other.value_i \
+			and self.value_j == other.value_j and self.cost == other.cost
+
+
 class MovementType(object):
 	SWAP = 1
 	TWO_OPT = 2
