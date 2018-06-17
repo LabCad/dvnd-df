@@ -178,18 +178,23 @@ class DataFlowDVND(object):
 
 
 class DataFlowGDVND(DataFlowDVND):
-	def __init__(self, maximize=False, mpi_enabled=False):
+	def __init__(self, maximize=False, mpi_enabled=False, merge_solutions=lambda sols=[]: sols):
+		"""
+		:param maximize: Indica se é um problema de maximização ou minimização.
+		:param mpi_enabled: Indica se usa MPI.
+		:param merge_solutions: The merge solution function.
+		"""
 		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled)
+		self.__merge_solutions = merge_solutions
 
 	def best_solution(self, sol1=None, sol2=None):
-		# TODO fazer o merge de duas soluções e pegar a melhor
+		# TODO Falta fazer o merge dos movimentos independentes
 		return super(DataFlowGDVND, self).best_solution(sol1, sol2)
 
 	def manager(self, args=[]):
-		from wraper_wamca2016 import merge_solutions
-
 		resp = super(DataFlowGDVND, self).manager(args)
-		resp_sol = merge_solutions([resp[x] for x in xrange(len(resp))])
+		# TODO fazer o merge de duas soluções e pegar a melhor
+		resp_sol = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
 		return resp

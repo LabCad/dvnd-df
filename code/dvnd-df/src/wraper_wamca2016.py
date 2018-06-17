@@ -132,40 +132,28 @@ def from_movement_list_to_tuple(values_tuple=[]):
 		numpy.array([x.cost for x in values_tuple], dtype=ctypes.c_int)
 
 
-def merge_solutions(solutions):
+def merge_solutions(solutions=None, file=""):
 	if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
 		intersection = set(from_tuple_to_movement_list(solutions[0].movtuple))
 		for i in xrange(1, len(solutions)):
 			intersection &= set(from_tuple_to_movement_list(solutions[i].movtuple))
 		if len(intersection) > 0:
-			# FIXME Aplicar os movimentos ao vector
-			return [SolutionMovementTuple(sol.vector, sol.value,
+			new_solution_vetor = numpy.copy(solutions[0].vector)
+			new_value = apply_moves_tuple(file, new_solution_vetor, from_movement_list_to_tuple(intersection))
+			# from_list_to_tuple([0, 0], [0, 2], [1, 3], [0, 0]))
+			# TODO Aplicar os movimentos ao vector
+			return [SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
 				from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
-				for sol in solutions]
-	return solutions
+				for sol in solutions], intersection
+	return solutions, None
 
 
 def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
-	# csolint = numpy.array(solint, dtype=ctypes.c_int)
-	# csolint = solint
-
 	carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 		[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
 
-	# cids = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_ushort)
-	# ciis = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
-	# cjjs = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_uint)
-	# ccosts = numpy.array([0 for x in xrange(n_moves)], dtype=ctypes.c_int)
-
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
 		n_moves, carrays[0], carrays[1], carrays[2], carrays[3])
-	# resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,# gethostcode(),
-	# 	0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
-	# 	numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
-	# solint = list(csolint)
-	# mlmoves = []
-	# for i in xrange(n_moves):
-	# 	mlmoves.append(MLMove(cids[i], ciis[i], cjjs[i], ccosts[i]))
 
 	# return solint, resp, (cids, ciis, cjjs, ccosts)
 	return solint, resp, carrays

@@ -9,7 +9,7 @@ solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-i
 # solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
 
 
-def print_final_solution(args=[], counts=[], ini_solution=None):
+def print_final_solution(args=[], counts=[], ini_sol=None):
 	"""
 	:param args: Lista de soluções encontradas por cada estratégia.
 	:param counts: Lista com quantidade de vizinhanças exploradas por estratégia.
@@ -17,10 +17,10 @@ def print_final_solution(args=[], counts=[], ini_solution=None):
 	end_time = time.time()
 	values_vec = [x.value for x in args]
 	print "solutions: {}, counts: {}".format(values_vec, counts)
-	print "Initial: {}".format(ini_solution)
+	print "Initial: {}".format(ini_sol)
 	final_solution = min(args)
 	elapsed_time = end_time - start_time
-	ini_value = ini_solution.value
+	ini_value = ini_sol.value
 	fin_value = final_solution.value
 	print "Final time: {}s - Best: {}".format(elapsed_time, final_solution)
 	imp_value = None
@@ -31,30 +31,11 @@ def print_final_solution(args=[], counts=[], ini_solution=None):
 		ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts, imp_value)
 
 
-def testconflict(ini_solution=None, nmoves=10, file_name=""):
-	from wraper_wamca2016 import best_neighbor_moves, get_no_conflict, merge_moves, apply_moves, calculate_value
-	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
-	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
-	moves2 = best_neighbor_moves(file_name, ini_solution.vector, 2, n_moves=nmoves)[2]
-	moves3 = best_neighbor_moves(file_name, ini_solution.vector, 3, n_moves=nmoves)[2]
-	moves4 = best_neighbor_moves(file_name, ini_solution.vector, 4, n_moves=nmoves)[2]
-	moves = merge_moves(merge_moves(merge_moves(moves0, moves1), merge_moves(moves2, moves3)), moves4)
-	no_conflict_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
-
-	valor_antes = calculate_value(file_name, ini_solution.vector)
-	print "antes  value: {} - {}".format(valor_antes, str(ini_solution.vector))
-	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1],
-		no_conflict_moves[2], no_conflict_moves[3])
-	ini_solution.value = calculate_value(file_name, ini_solution.vector)
-	print "depois value: {} - {}".format(ini_solution.value, str(ini_solution.vector))
-	print "{}-{}={} -- {}".format(ini_solution.value, valor_antes, ini_solution.value - valor_antes, no_conflict_moves[4])
-	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
-
-
 goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
 problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
 number_of_moves = int(sys.argv[sys.argv.index("--number_of_moves") + 1]) if "--number_of_moves" in sys.argv else 10
 solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd").lower()
+
 # FIXME Remover
 solver_param = "gdvnd"
 neigh_op = []
@@ -95,8 +76,6 @@ mpi_enabled = "-mpi" in sys.argv
 
 workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
 
-# FIXME Remover
-# solver_param="rvnd"
 solver = None
 if "dvnd" == solver_param:
 	solver = DataFlowDVND(goal, mpi_enabled)
@@ -105,7 +84,10 @@ elif "rvnd" == solver_param:
 elif "vnd" == solver_param:
 	solver = DataFlowVND(goal, mpi_enabled)
 elif "gdvnd" == solver_param:
-	solver = DataFlowGDVND(goal, mpi_enabled)
+	assert "ml" == problem_name.lower(), "Merge solutions not implemented for TTP"
+	print("number_of_moves: {}".format(number_of_moves))
+	from wraper_wamca2016 import merge_solutions
+	solver = DataFlowGDVND(goal, mpi_enabled, lambda sols, file=file_name: merge_solutions(sols, file)[0])
 
 print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)
 start_time = time.time()
@@ -113,3 +95,6 @@ start_time = time.time()
 # print_final_solution(args=[], counts=[], ini_solution=None)
 solver.run(workers, ini_solution, neigh_op,
 	lambda args, counts, inisol=ini_solution: print_final_solution(args, counts, inisol))
+
+
+
