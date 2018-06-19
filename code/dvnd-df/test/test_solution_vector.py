@@ -15,25 +15,19 @@ from solution import *
 class SolutionVectorValueTest(unittest.TestCase):
 	def test_create(self):
 		tam = 5
-		# sol = SolutionVectorValue([x for x in xrange(tam)], 10)
-		# self.assertEquals(tam, len(sol), "Tamanho incorreto")
-		# self.assertEquals([i for i in xrange(tam)], sol.vector, "Solução inicial diferente do esperado")
-
 		sol = SolutionVectorValue(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 100)
 		self.assertEquals(tam, len(sol), "Tamanho incorreto")
-		self.assertTrue((numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int) == sol.vector).all(), "Solução inicial diferente do esperado")
+		self.assertTrue((numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int) == sol.vector).all(),
+			"Solução inicial diferente do esperado")
 
 
 class SolutionMovementTupleTest(unittest.TestCase):
 	def test_create(self):
 		tam = 5
-		# sol = SolutionMovementTuple([x for x in xrange(tam)], 10, ([], [], [], []))
-		# self.assertEquals(tam, len(sol), "Tamanho incorreto")
-		# self.assertEquals([i for i in xrange(tam)], sol.vector, "Solução inicial diferente do esperado")
-
 		sol = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 100, ([], [], [], []))
 		self.assertEquals(tam, len(sol), "Tamanho incorreto")
-		self.assertTrue((numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int) == sol.vector).all(), "Solução inicial diferente do esperado")
+		self.assertTrue((numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int) == sol.vector).all(),
+			"Solução inicial diferente do esperado")
 
 	def test_can_merge(self):
 		tam = 5

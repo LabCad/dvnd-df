@@ -37,7 +37,7 @@ number_of_moves = int(sys.argv[sys.argv.index("--number_of_moves") + 1]) if "--n
 solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd").lower()
 
 # FIXME Remover
-solver_param = "gdvnd"
+# solver_param = "gdvnd"
 neigh_op = []
 ini_solution = None
 # problem_name = "tt"

@@ -6,6 +6,7 @@ import ctypes
 # import numpy
 from wraper_wamca2016 import merge_solutions, get_file_name, wamca_solution_instance_file, \
 	apply_moves_tuple, from_list_to_tuple
+from util import getLastCudaError, getLastCudaErrorString
 
 
 if os.environ.has_key('DVND_HOME'):
@@ -22,7 +23,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		sol1.vector[0], sol1.vector[1] = sol1.vector[1], sol1.vector[0]
 		sols = [sol0, sol1]
 
-		merged_sols = merge_solutions(sols)
+		merged_sols = merge_solutions(sols)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(merged_sols[i], sols[i], "Solução {} diferente do esperado".format(i))
@@ -34,19 +35,23 @@ class WraperWamca2016Test(unittest.TestCase):
 		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([], [], [], []))
 		sols = [sol0, sol1]
 
-		merged_sols = merge_solutions(sols)
+		merged_sols = merge_solutions(sols)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(merged_sols[i], sols[i], "Solução {} diferente do esperado".format(i))
 			self.assertEquals(0, len(merged_sols[i].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(i))
 
 	def test_merge_solutions_one_move(self):
-		tam = 5
+		solution_index = 0
+		sol_info = wamca_solution_instance_file[solution_index]
+		tam = sol_info[1]
+		file_name = get_file_name(solution_index)
+
 		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([0], [0], [1], [2]))
 		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([0], [0], [1], [2]))
 		sols = [sol0, sol1]
 
-		merged_sols = merge_solutions(sols)
+		merged_sols = merge_solutions(sols, file_name)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(merged_sols[i], sols[i], "Solução {} diferente do esperado".format(i))
@@ -54,19 +59,19 @@ class WraperWamca2016Test(unittest.TestCase):
 
 		sol1.movtuple = [1], [0], [1], [2]
 
-		merged_sols = merge_solutions(sols)
+		merged_sols = merge_solutions(sols, file_name)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(merged_sols[i], sols[i], "Solução {} diferente do esperado".format(i))
 			self.assertEquals(1, len(merged_sols[i].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(i))
 
 		sol1.movtuple = [1, 0], [0, 0], [1, 1], [2, 2]
-		merged_sols = merge_solutions(sols)
+		merged_sols = merge_solutions(sols, file_name)[0]
 		self.assertEquals(0, len(merged_sols[0].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(0))
 		self.assertEquals(1, len(merged_sols[1].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(1))
 
 		sol0.movtuple = [1, 2, 3, 0], [3, 4, 0, 0], [4, 5, 1, 1], [7, 9, 2, 2]
-		merged_sols = merge_solutions(sols)
+		merged_sols = merge_solutions(sols, file_name)[0]
 		self.assertEquals(3, len(merged_sols[0].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(0))
 		self.assertEquals(1, len(merged_sols[1].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(1))
 
