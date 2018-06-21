@@ -37,7 +37,7 @@ number_of_moves = int(sys.argv[sys.argv.index("--number_of_moves") + 1]) if "--n
 solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd").lower()
 
 # FIXME Remover
-# solver_param = "gdvnd"
+solver_param = "gdvnd"
 neigh_op = []
 ini_solution = None
 # problem_name = "tt"
@@ -86,8 +86,21 @@ elif "vnd" == solver_param:
 elif "gdvnd" == solver_param:
 	assert "ml" == problem_name.lower(), "Merge solutions not implemented for TTP"
 	print("number_of_moves: {}".format(number_of_moves))
-	from wraper_wamca2016 import merge_solutions
-	solver = DataFlowGDVND(goal, mpi_enabled, lambda sols, file=file_name: merge_solutions(sols, file)[0])
+	from wraper_wamca2016 import merge_solutions, apply_moves_tuple
+
+	def apply_moves_to_sol_on_oper(sol):
+		"""
+		Apply the moves to the solution.
+		:param sol: Solution
+		:return: Solution with the moves applied.
+		"""
+		if len(sol.movtuple[0]) > 0:
+			apply_moves_tuple(file_name, sol.vector, sol.movtuple)
+		return sol
+
+	solver = DataFlowGDVND(goal, mpi_enabled,
+		lambda sol: apply_moves_to_sol_on_oper(sol),
+		lambda sols, file=file_name: merge_solutions(sols, file)[0])
 
 print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)
 start_time = time.time()

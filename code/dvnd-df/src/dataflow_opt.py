@@ -60,19 +60,23 @@ class DataFlowVND(object):
 
 
 class DataFlowDVND(object):
-	def __init__(self, maximize=False, mpi_enabled=False):
+	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: arg):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
 		"""
 		self.__maximize = maximize
 		self.__mpi_enabled = mpi_enabled
+		self.__process_sol_before_oper = process_sol_before_oper
 
 	def __neighborhood(self, func=lambda arg: None, args=[], inimov=0):
 		atual = args[0]
 		atual.source = inimov
-		atual[inimov] = max(atual[inimov], func(atual[inimov])) if self.__maximize \
-			else min(atual[inimov], func(atual[inimov]))
+		# Alterar soluão antes de enviar
+		sol_param = atual[inimov] if self.__process_sol_before_oper is None \
+			else self.__process_sol_before_oper(atual[inimov])
+		atual[inimov] = max(atual[inimov], func(sol_param)) if self.__maximize \
+			else min(atual[inimov], func(sol_param))
 		atual.counts[inimov] += 1
 		return atual
 
@@ -178,13 +182,14 @@ class DataFlowDVND(object):
 
 
 class DataFlowGDVND(DataFlowDVND):
-	def __init__(self, maximize=False, mpi_enabled=False, merge_solutions=lambda sols=[]: sols):
+	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: None, merge_solutions=lambda sols=[]: sols):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
 		:param merge_solutions: The merge solution function.
+		:param process_sol_before_oper: Process the solution before it is sent to the operation node.
 		"""
-		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled)
+		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled, process_sol_before_oper)
 		self.__merge_solutions = merge_solutions
 
 	def best_solution(self, sol1=None, sol2=None):

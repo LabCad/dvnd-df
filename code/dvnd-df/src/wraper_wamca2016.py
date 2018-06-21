@@ -139,9 +139,8 @@ def merge_solutions(solutions=None, file=""):
 			intersection &= set(from_tuple_to_movement_list(solutions[i].movtuple))
 		if len(intersection) > 0:
 			new_solution_vetor = numpy.copy(solutions[0].vector)
-			new_value = apply_moves_tuple(file, new_solution_vetor, from_movement_list_to_tuple(intersection))
-			# from_list_to_tuple([0, 0], [0, 2], [1, 3], [0, 0]))
-			# TODO Aplicar os movimentos ao vector
+			apply_moves_tuple(file, new_solution_vetor, from_movement_list_to_tuple(intersection))
+			new_value = calculate_value(file, new_solution_vetor)
 			return [SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
 				from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
 				for sol in solutions], intersection
@@ -156,6 +155,16 @@ def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 		n_moves, carrays[0], carrays[1], carrays[2], carrays[3])
 
 	# return solint, resp, (cids, ciis, cjjs, ccosts)
+	# Verify it there is some invalid moves
+	carrays_size = len(carrays[0])
+	for i in xrange(len(carrays[0]) - 1, -1, -1):
+		if carrays[0][i] == 0 and carrays[1][i] == 0 and carrays[2][i] == 0 and carrays[3][i] == 0:
+			carrays_size -= 1
+		else:
+			break
+	# Removes the invalid moves
+	if not carrays_size == len(carrays[0]):
+		carrays = [numpy.resize(carrays[i], carrays_size) for i in xrange(0, 4)]
 	return solint, resp, carrays
 
 
@@ -166,7 +175,10 @@ def neigh_gpu(solution=None, file="", inimov=0):
 
 def neigh_gpu_moves(solution=None, file="", inimov=0, n_moves=0):
 	resp = best_neighbor_moves(file, solution.vector, inimov, n_moves)
-	return SolutionMovementTuple(resp[0], resp[1], resp[2])
+	temp_sol = numpy.copy(resp[0])
+	apply_moves_tuple(file, temp_sol, resp[2])
+	valor = calculate_value(file, temp_sol)
+	return SolutionMovementTuple(resp[0], valor, resp[2])
 
 
 def get_file_name(solution_index=0):
