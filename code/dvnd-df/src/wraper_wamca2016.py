@@ -10,9 +10,6 @@ from solution import SolutionVectorValue, SolutionMovementTuple
 from util import compilelib
 
 
-# os.getenv('KEY_THAT_MIGHT_EXIST', default_value)
-# wamca2016path = os.getenv('WAMCA2016ABSOLUTEPATH', "/home/rodolfo/git/wamca2016/")
-
 wamca2016path_uff = "/home/imcoelho/Rodolfo/wamca2016/"
 wamca2016path_local = "/home/rodolfo/git/wamca2016/"
 localpath_uff = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
@@ -103,13 +100,9 @@ def calculate_value(file_name="", solint=[]):
 
 
 def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False):
-	# csolint = numpy.array(solint, dtype=ctypes.c_int)
-	# csolint = solint
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, 0,#gethostcode(),
 		0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
 		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
-	# solint = list(csolint)
-	# solint = list(numpy.ctypeslib.as_array(csolint, shape=(len(solint),)))
 
 	return solint, resp
 
@@ -230,15 +223,14 @@ def no_conflict(id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
 
 def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 	impMoves = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
-	impValue = numpy.array([0], dtype=ctypes.c_int)
-	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue, maximize)
-	# impValue = impValue[0]
-	tentativas = min(tentativas, len(cids) - 1)
-
 	impMovesTemp = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
+	impValue = numpy.array([0], dtype=ctypes.c_int)
 	impValueTemp = numpy.array([0], dtype=ctypes.c_int)
+
+	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue, maximize)
+	tentativas = min(tentativas, len(cids) - 1)
 	for cont_tentativas in xrange(tentativas):
-		removeIndex = random.randint(0, nMoves)
+		removeIndex = random.randint(0, nMoves - 1)
 		removeIndex = impMoves[removeIndex]
 
 		ccosts[removeIndex] += -(10 ** 3) if maximize else (10 ** 3)
@@ -247,6 +239,7 @@ def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 			impMovesTemp, impValueTemp, maximize)
 		if (not maximize and impValue[0] > impValueTemp[0]) or \
 			(maximize and impValue[0] < impValueTemp[0]):
+			# print "trocou {} por {}".format(impValue[0], impValueTemp[0])
 			nMoves = nMovesTemp
 			impValue[0] = impValueTemp[0]
 			for x in xrange(len(cids)):
@@ -254,11 +247,8 @@ def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 
 		ccosts[removeIndex] -= -(10 ** 3) if maximize else (10 ** 3)
 
+	# Return movements on the initial order
 	impMoves = sorted(impMoves[:nMoves])
-	# return from_list_to_tuple([cids[impMoves[x]] for x in xrange(nMoves)],
-	# 	[ciis[impMoves[x]] for x in xrange(nMoves)],
-	# 	[cjjs[impMoves[x]] for x in xrange(nMoves)],
-	# 	[ccosts[impMoves[x]] for x in xrange(nMoves)])
 	return from_list_to_tuple([cids[x] for x in impMoves],
 		[ciis[x] for x in impMoves],
 		[cjjs[x] for x in impMoves],
@@ -270,8 +260,6 @@ def apply_moves_tuple(file="", solint=[], tupple=None):
 
 
 def apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
-	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves = 0,
-	#   unsigned short * ids = NULL, unsigned int * is = NULL, unsigned int * js = NULL, int * costs = NULL)
 	lenmovs = len(cids)
 	for i in xrange(len(cids) - 1, -1, -1):
 		if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
@@ -295,9 +283,6 @@ def apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None
 		else:
 			break
 	return wamca2016lib.applyMoves(file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
-	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids,ciis, cjjs, ccosts)
-	# idx = 0
-	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids[idx:], ciis[idx:], cjjs[idx:], ccosts[idx:])
 
 
 wamca_intance_path = wamca2016path + "instances/"
