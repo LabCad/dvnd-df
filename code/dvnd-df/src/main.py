@@ -6,6 +6,7 @@ from dataflow_opt import *
 
 start_time = time.time()
 solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
+# solution_index = 3
 # solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
 
 
@@ -50,8 +51,7 @@ if "tt" == problem_name.lower():
 	goal = True
 elif "ml" == problem_name.lower():
 	# from solution import SolutionVectorValue
-	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, best_neighbor_moves, \
-		get_no_conflict, merge_moves, neigh_gpu_moves, copy_solution#, apply_moves, calculate_value, best_neighbor
+	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, neigh_gpu_moves
 	# import numpy
 	file_name = get_file_name(solution_index)
 	ini_solution = create_initial_solution(solution_index, solver_param)
@@ -68,7 +68,7 @@ elif "ml" == problem_name.lower():
 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
 	# testconflict(copy_solution(ini_solution))
 
-print "Value - initial: {} - {}".format(ini_solution, ini_solution.value)
+print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 
 # TODO Versão 2 precisa do MPI enabled, bug
 # mpi_enabled = True

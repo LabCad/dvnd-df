@@ -3,6 +3,7 @@
 import ctypes
 import numpy
 import util
+import random
 import os.path
 from movement import *
 from solution import SolutionVectorValue, SolutionMovementTuple
@@ -87,6 +88,10 @@ def create_wamca2016lib():
 	mylib.applyMoves.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_uint,
 		util.array_1d_ushort, util.array_1d_uint, util.array_1d_uint, util.array_1d_int]
 
+	mylib.noConflict.restype = ctypes.c_bool
+	mylib.noConflict.argtypes = [ctypes.c_ushort, ctypes.c_uint, ctypes.c_uint,
+		ctypes.c_ushort, ctypes.c_uint, ctypes.c_uint]
+
 	return mylib
 
 
@@ -154,18 +159,17 @@ def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
 		n_moves, carrays[0], carrays[1], carrays[2], carrays[3])
 
-	# return solint, resp, (cids, ciis, cjjs, ccosts)
 	# Verify it there is some invalid moves
-	carrays_size = len(carrays[0])
-	for i in xrange(len(carrays[0]) - 1, -1, -1):
-		if carrays[0][i] == 0 and carrays[1][i] == 0 and carrays[2][i] == 0 and carrays[3][i] == 0:
-			carrays_size -= 1
-		else:
-			break
-	# Removes the invalid moves
-	if not carrays_size == len(carrays[0]):
-		carrays = [numpy.resize(carrays[i], carrays_size) for i in xrange(0, 4)]
-	return solint, resp, carrays
+	# carrays_size = len(carrays[0])
+	# for i in xrange(len(carrays[0]) - 1, -1, -1):
+	# 	if carrays[0][i] == 0 and carrays[1][i] == 0 and carrays[2][i] == 0 and carrays[3][i] == 0:
+	# 		carrays_size -= 1
+	# 	else:
+	# 		break
+	# # Removes the invalid moves
+	# if not carrays_size == len(carrays[0]):
+	# 	carrays = [numpy.resize(carrays[i], carrays_size) for i in xrange(0, 4)]
+	return solint, resp, carrays#, carrays_size
 
 
 def neigh_gpu(solution=None, file="", inimov=0):
@@ -220,28 +224,44 @@ def merge_moves(moves1=[], moves2=[]):
 			numpy.concatenate((moves1[3][:len1], moves2[3][:len2]))
 
 
-def get_no_conflict(cids, ciis, cjjs, ccosts):
-	print "Todos os movimentos"
-	for i in xrange(len(cids)):
-		print "{}-id:{}, i: {}, j: {}, cost: {}".format(i, cids[i], ciis[i], cjjs[i], ccosts[i])
-	impMoves = numpy.array([x for x in xrange(100)], dtype=ctypes.c_int)
+def no_conflict(id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
+	return wamca2016lib.noConflict(id1, i1, j1, id2, i2, j2)
+
+
+def get_no_conflict(cids, ciis, cjjs, ccosts, tentativas=3):
+	impMoves = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
 	impValue = numpy.array([0], dtype=ctypes.c_int)
 	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue)
-	impValue = impValue[0]
-	# TODO Testar se os movimentos aplicados chegam na mesma solução
-	impId = numpy.array([cids[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_ushort)
-	impI = numpy.array([ciis[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_uint)
-	impJ = numpy.array([cjjs[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_uint)
-	impCost = numpy.array([ccosts[(x + 1) % nMoves] for x in xrange(nMoves)], dtype=ctypes.c_int)
-	print "pyth selected"
-	print " ".join([str(impMoves[x]) for x in xrange(nMoves)])
-	# for i in xrange(nMoves):
-	# 	impId[i] = cids[impMoves[(i + 1) % nMoves]]
-	# 	impI[i] = ciis[impMoves[(i + 1) % nMoves]]
-	# 	impJ[i] = cjjs[impMoves[(i + 1) % nMoves]]
-	# 	impCost[i] = ccosts[impMoves[(i + 1) % nMoves]]
-	# print "Python {} moves, impvalue: {}".format(nMoves, impValue[0])
-	return impId, impI, impJ, impCost, impValue
+	# impValue = impValue[0]
+	tentativas = min(tentativas, len(cids) - 1)
+
+	impMovesTemp = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
+	impValueTemp = numpy.array([0], dtype=ctypes.c_int)
+	for cont_tentativas in xrange(tentativas):
+		faltando = list(set([x for x in xrange(len(cids))]) - set(impMoves[:nMoves]))
+		for x in xrange(len(faltando)):
+			impMoves[nMoves + x] = faltando[x]
+		removeIndex = random.randint(0, nMoves - 1)
+		cids[removeIndex], cids[len(cids) - 1] = cids[len(cids) - 1], cids[removeIndex]
+		ciis[removeIndex], ciis[len(cids) - 1] = ciis[len(cids) - 1], ciis[removeIndex]
+		cjjs[removeIndex], cjjs[len(cids) - 1] = cjjs[len(cids) - 1], cjjs[removeIndex]
+		ccosts[removeIndex], ccosts[len(cids) - 1] = ccosts[len(cids) - 1], ccosts[removeIndex]
+		nMovesTemp = wamca2016lib.getNoConflictMoves(len(cids) - 1, cids, ciis, cjjs, ccosts, impMovesTemp, impValueTemp)
+		if impValue[0] > impMovesTemp[0]:
+			nMoves = nMovesTemp
+			impValue[0] = impMovesTemp[0]
+			for x in xrange(len(cids)):
+				impMoves[x] = impMovesTemp[x]
+
+		cids[removeIndex], cids[len(cids) - 1] = cids[len(cids) - 1], cids[removeIndex]
+		ciis[removeIndex], ciis[len(cids) - 1] = ciis[len(cids) - 1], ciis[removeIndex]
+		cjjs[removeIndex], cjjs[len(cids) - 1] = cjjs[len(cids) - 1], cjjs[removeIndex]
+		ccosts[removeIndex], ccosts[len(cids) - 1] = ccosts[len(cids) - 1], ccosts[removeIndex]
+
+	return from_list_to_tuple([cids[impMoves[x]] for x in xrange(nMoves)],
+		[ciis[impMoves[x]] for x in xrange(nMoves)],
+		[cjjs[impMoves[x]] for x in xrange(nMoves)],
+		[ccosts[impMoves[x]] for x in xrange(nMoves)])
 
 
 def apply_moves_tuple(file="", solint=[], tupple=None):
@@ -251,7 +271,29 @@ def apply_moves_tuple(file="", solint=[], tupple=None):
 def apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
 	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves = 0,
 	#   unsigned short * ids = NULL, unsigned int * is = NULL, unsigned int * js = NULL, int * costs = NULL)
-	return wamca2016lib.applyMoves(file, solint, len(solint), len(cids), cids, ciis, cjjs, ccosts)
+	lenmovs = len(cids)
+	for i in xrange(len(cids) - 1, -1, -1):
+		if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+			lenmovs -= 1
+		else:
+			break
+	for i in xrange(0, lenmovs - 1):
+		if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+			cids[i], ciis[i], cjjs[i], ccosts[i], \
+				cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1] = \
+				cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1], \
+				cids[i], ciis[i], cjjs[i], ccosts[i]
+			lenmovs -= 1
+			# print "{}-{}".format(i, aa)
+		if i >= lenmovs - 1:
+			break
+	lenmovs = len(cids)
+	for i in xrange(len(cids) - 1, -1, -1):
+		if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+			lenmovs -= 1
+		else:
+			break
+	return wamca2016lib.applyMoves(file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
 	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids,ciis, cjjs, ccosts)
 	# idx = 0
 	# return wamca2016lib.applyMoves(file, solint, len(solint), 1, cids[idx:], ciis[idx:], cjjs[idx:], ccosts[idx:])

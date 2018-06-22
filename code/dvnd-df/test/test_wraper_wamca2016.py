@@ -5,7 +5,7 @@ import unittest
 import ctypes
 # import numpy
 from wraper_wamca2016 import merge_solutions, get_file_name, wamca_solution_instance_file, \
-	apply_moves_tuple, from_list_to_tuple
+	apply_moves_tuple, from_list_to_tuple, get_no_conflict, no_conflict
 
 
 if os.environ.has_key('DVND_HOME'):
@@ -185,22 +185,48 @@ class WraperWamca2016Test(unittest.TestCase):
 		bkp_vector[2], bkp_vector[3] = bkp_vector[3], bkp_vector[2]
 		self.assertTrue((resp[0][0].vector == bkp_vector).all(), "Solution 0 is as expected")
 
+	def test_no_conflict(self):
+		# Swap x Swap
+		self.assertTrue(no_conflict(0, 4, 5, 0, 7, 8), "(0, 4, 5), (0, 7, 8) Sem conflito")
+		self.assertFalse(no_conflict(0, 8, 5, 0, 7, 8), "(0, 8, 5), (0, 7, 8) conflito")
+		self.assertFalse(no_conflict(0, 8, 5, 0, 1, 8), "(0, 8, 5), (0, 1, 8) conflito")
 
-# def testconflict(ini_solution=None, nmoves=10, file_name=""):
-# 	from wraper_wamca2016 import best_neighbor_moves, get_no_conflict, merge_moves, apply_moves, calculate_value
-# 	moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
-# 	moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
-# 	moves2 = best_neighbor_moves(file_name, ini_solution.vector, 2, n_moves=nmoves)[2]
-# 	moves3 = best_neighbor_moves(file_name, ini_solution.vector, 3, n_moves=nmoves)[2]
-# 	moves4 = best_neighbor_moves(file_name, ini_solution.vector, 4, n_moves=nmoves)[2]
-# 	moves = merge_moves(merge_moves(merge_moves(moves0, moves1), merge_moves(moves2, moves3)), moves4)
-# 	no_conflict_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
-#
-# 	valor_antes = calculate_value(file_name, ini_solution.vector)
-# 	print "antes  value: {} - {}".format(valor_antes, str(ini_solution.vector))
-# 	apply_moves(file_name, ini_solution.vector, no_conflict_moves[0], no_conflict_moves[1],
-# 		no_conflict_moves[2], no_conflict_moves[3])
-# 	ini_solution.value = calculate_value(file_name, ini_solution.vector)
-# 	print "depois value: {} - {}".format(ini_solution.value, str(ini_solution.vector))
-# 	print "{}-{}={} -- {}".format(ini_solution.value, valor_antes, ini_solution.value - valor_antes, no_conflict_moves[4])
-# 	# print "moves: ", ["{}".format(str(x)) for x in moves[2]]
+		# Swap x 2-opt
+		self.assertTrue(no_conflict(0, 4, 5, 1, 7, 8), "(0, 4, 5), (1, 7, 8) Sem conflito")
+		self.assertTrue(no_conflict(0, 8, 5, 1, 7, 8), "(0, 8, 5), (1, 7, 8) Sem conflito")
+		self.assertFalse(no_conflict(0, 8, 5, 1, 1, 8), "(0, 8, 5), (1, 1, 8) conflito")
+
+		# Swap x oropt-1
+		self.assertTrue(no_conflict(0, 4, 5, 2, 7, 8), "(0, 4, 5), (2, 7, 8) Sem conflito")
+		self.assertTrue(no_conflict(0, 8, 5, 2, 7, 8), "(0, 8, 5), (2, 7, 8) Sem conflito")
+		self.assertFalse(no_conflict(0, 8, 5, 2, 1, 8), "(0, 8, 5), (2, 1, 8) conflito")
+
+		# Swap x oropt-2
+		self.assertTrue(no_conflict(0, 4, 5, 3, 7, 8), "(0, 4, 5), (3, 7, 8) Sem conflito")
+		self.assertTrue(no_conflict(0, 8, 5, 3, 7, 8), "(0, 8, 5), (3, 7, 8) Sem conflito")
+		self.assertFalse(no_conflict(0, 8, 5, 3, 1, 8), "(0, 8, 5), (3, 1, 8) conflito")
+
+		# Swap x oropt-3
+		self.assertTrue(no_conflict(0, 4, 5, 4, 7, 8), "(0, 4, 5), (4, 7, 8) Sem conflito")
+		self.assertTrue(no_conflict(0, 8, 5, 4, 7, 8), "(0, 8, 5), (4, 7, 8) Sem conflito")
+		self.assertFalse(no_conflict(0, 8, 5, 4, 1, 8), "(0, 8, 5), (4, 1, 8) conflito")
+
+	def test_get_no_conflict(self):
+		# movimentos = from_list_to_tuple([0, 0], [4, 7], [5, 8], [-10, -20])
+		# resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3])
+		#
+		# self.assertEqual(2, len(resp_movimentos[0]), "Quantidade de movimentos independentes")
+		# for x in xrange(len(resp_movimentos[0])):
+		# 	self.assertEqual(movimentos[0][x], resp_movimentos[0][x], "Tipo do movimento igual")
+		# 	self.assertEqual(movimentos[1][x], resp_movimentos[1][x], "Coordenada i igual")
+		# 	self.assertEqual(movimentos[2][x], resp_movimentos[2][x], "Coordenada j igual")
+		# 	self.assertEqual(movimentos[3][x], resp_movimentos[3][x], "Custo igual")
+
+		movimentos = from_list_to_tuple([0, 0, 0], [4, 7, 8], [5, 8, 5], [-10, -20, -1])
+		resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3])
+		self.assertEqual(2, len(resp_movimentos[0]), "Quantidade de movimentos independentes")
+		for x in xrange(len(resp_movimentos[0])):
+			self.assertEqual(movimentos[0][x], resp_movimentos[0][x], "Tipo do movimento igual")
+			self.assertEqual(movimentos[1][x], resp_movimentos[1][x], "Coordenada i igual")
+			self.assertEqual(movimentos[2][x], resp_movimentos[2][x], "Coordenada j igual")
+			self.assertEqual(movimentos[3][x], resp_movimentos[3][x], "Custo igual")

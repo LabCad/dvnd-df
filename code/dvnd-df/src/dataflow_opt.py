@@ -65,7 +65,7 @@ class DataFlowDVND(object):
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
 		"""
-		self.__maximize = maximize
+		self.maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 		self.__process_sol_before_oper = process_sol_before_oper
 
@@ -75,21 +75,22 @@ class DataFlowDVND(object):
 		# Alterar soluão antes de enviar
 		sol_param = atual[inimov] if self.__process_sol_before_oper is None \
 			else self.__process_sol_before_oper(atual[inimov])
-		atual[inimov] = max(atual[inimov], func(sol_param)) if self.__maximize \
+		atual[inimov] = max(atual[inimov], func(sol_param)) if self.maximize \
 			else min(atual[inimov], func(sol_param))
 		atual.counts[inimov] += 1
 		return atual
 
-	def best_solution(self, sol1=None, sol2=None):
+	def best_solution(self, atual=None, anterior=None, melhor=None):
 		"""
 		Decide qual é a melhor solução.
-		:param sol1: Primeira solução.
-		:param sol2: Segunda solução.
+		:param atual: Solution returned by the operation node.
+		:param anterior: Actual solution on the manager node.
+		:param melhor: Best solution on manager node.
 		:return: Melhor solução e flag indicando se a melhor é a atual.
 		"""
-		if (not self.__maximize and sol1 < sol2) or (self.__maximize and sol2 < sol1):
-			return sol1, True
-		return sol2, False
+		if (not self.maximize and atual < anterior) or (self.maximize and anterior < atual):
+			return atual, True
+		return anterior, False
 
 	def manager(self, args=[]):
 		atual = args[0]
@@ -99,7 +100,7 @@ class DataFlowDVND(object):
 		melhor.unset_all_targets()
 		# atualValue = atual[atual.source]
 
-		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source])
+		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source], melhor.get_best(self.maximize))
 		melhor[atual.source] = atual_melhor[0]
 
 		# if (not self.__maximize and atual[atual.source] < melhor[atual.source]) \
@@ -113,10 +114,10 @@ class DataFlowDVND(object):
 		else:
 			melhor.set_not_improved(atual.source)
 
-		best_sol = melhor[atual.source] = melhor.get_best(self.__maximize)
+		best_sol = melhor[atual.source] = melhor.get_best(self.maximize)
 		# Caso não tenha melhorado mas tenha aparecido uma solução melhor
 		for x in melhor.get_not_improveds():
-			if (not self.__maximize and best_sol < melhor[x]) or (self.__maximize and best_sol > melhor[x]):
+			if (not self.maximize and best_sol < melhor[x]) or (self.maximize and best_sol > melhor[x]):
 				melhor[x] = best_sol
 				melhor.set_target(x)
 				# Se vai chamar novamente remove o sinal
@@ -182,7 +183,8 @@ class DataFlowDVND(object):
 
 
 class DataFlowGDVND(DataFlowDVND):
-	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: None, merge_solutions=lambda sols=[]: sols):
+	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: None,
+			merge_solutions=lambda sols=[]: sols, combine_sol=lambda sol1, sol2: sol1):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
@@ -191,10 +193,21 @@ class DataFlowGDVND(DataFlowDVND):
 		"""
 		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled, process_sol_before_oper)
 		self.__merge_solutions = merge_solutions
+		self.__combine_sol = combine_sol
 
-	def best_solution(self, sol1=None, sol2=None):
+	def best_solution(self, atual=None, anterior=None, melhor=None):
 		# TODO Falta fazer o merge dos movimentos independentes
-		return super(DataFlowGDVND, self).best_solution(sol1, sol2)
+		# get_no_conflict(cids, ciis, cjjs, ccosts):
+		# TODO Comparar a melhor solução atual com a nova e o não conflito da melhor com a atual
+		if len(atual.movtuple) > 0 and len(melhor.movtuple) > 0:
+			combined_sol = self.__combine_sol(atual, melhor)
+			if self.maximize:
+				resp_sol = max(atual, anterior, melhor, combined_sol)
+				return resp_sol, resp_sol == atual
+			else:
+				resp_sol = min(atual, anterior, melhor, combined_sol)
+				return resp_sol, resp_sol == atual
+		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
 		resp = super(DataFlowGDVND, self).manager(args)
