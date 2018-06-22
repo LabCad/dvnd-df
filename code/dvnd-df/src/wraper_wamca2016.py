@@ -235,6 +235,7 @@ def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 	# impValue = impValue[0]
 	tentativas = min(tentativas, len(cids) - 1)
 
+	impMovesTemp = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
 	impValueTemp = numpy.array([0], dtype=ctypes.c_int)
 	for cont_tentativas in xrange(tentativas):
 		removeIndex = random.randint(0, nMoves)
