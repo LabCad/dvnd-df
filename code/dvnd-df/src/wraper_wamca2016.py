@@ -79,7 +79,7 @@ def create_wamca2016lib():
 	#   int * costs, int * selectedMoves, int * impValue)
 	mylib.getNoConflictMoves.restype = ctypes.c_int
 	mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
-		util.array_1d_uint, util.array_1d_int, util.array_1d_int, util.array_1d_int]
+		util.array_1d_uint, util.array_1d_int, util.array_1d_int, util.array_1d_int, ctypes.c_bool]
 	# ctypes.POINTER(c_int)
 
 	# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves = 0,
@@ -228,40 +228,40 @@ def no_conflict(id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
 	return wamca2016lib.noConflict(id1, i1, j1, id2, i2, j2)
 
 
-def get_no_conflict(cids, ciis, cjjs, ccosts, tentativas=3):
+def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 	impMoves = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
 	impValue = numpy.array([0], dtype=ctypes.c_int)
-	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue)
+	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue, maximize)
 	# impValue = impValue[0]
 	tentativas = min(tentativas, len(cids) - 1)
 
-	impMovesTemp = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
 	impValueTemp = numpy.array([0], dtype=ctypes.c_int)
 	for cont_tentativas in xrange(tentativas):
-		faltando = list(set([x for x in xrange(len(cids))]) - set(impMoves[:nMoves]))
-		for x in xrange(len(faltando)):
-			impMoves[nMoves + x] = faltando[x]
-		removeIndex = random.randint(0, nMoves - 1)
-		cids[removeIndex], cids[len(cids) - 1] = cids[len(cids) - 1], cids[removeIndex]
-		ciis[removeIndex], ciis[len(cids) - 1] = ciis[len(cids) - 1], ciis[removeIndex]
-		cjjs[removeIndex], cjjs[len(cids) - 1] = cjjs[len(cids) - 1], cjjs[removeIndex]
-		ccosts[removeIndex], ccosts[len(cids) - 1] = ccosts[len(cids) - 1], ccosts[removeIndex]
-		nMovesTemp = wamca2016lib.getNoConflictMoves(len(cids) - 1, cids, ciis, cjjs, ccosts, impMovesTemp, impValueTemp)
-		if impValue[0] > impMovesTemp[0]:
+		removeIndex = random.randint(0, nMoves)
+		removeIndex = impMoves[removeIndex]
+
+		ccosts[removeIndex] += -(10 ** 3) if maximize else (10 ** 3)
+
+		nMovesTemp = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts,
+			impMovesTemp, impValueTemp, maximize)
+		if (not maximize and impValue[0] > impValueTemp[0]) or \
+			(maximize and impValue[0] < impValueTemp[0]):
 			nMoves = nMovesTemp
-			impValue[0] = impMovesTemp[0]
+			impValue[0] = impValueTemp[0]
 			for x in xrange(len(cids)):
 				impMoves[x] = impMovesTemp[x]
 
-		cids[removeIndex], cids[len(cids) - 1] = cids[len(cids) - 1], cids[removeIndex]
-		ciis[removeIndex], ciis[len(cids) - 1] = ciis[len(cids) - 1], ciis[removeIndex]
-		cjjs[removeIndex], cjjs[len(cids) - 1] = cjjs[len(cids) - 1], cjjs[removeIndex]
-		ccosts[removeIndex], ccosts[len(cids) - 1] = ccosts[len(cids) - 1], ccosts[removeIndex]
+		ccosts[removeIndex] -= -(10 ** 3) if maximize else (10 ** 3)
 
-	return from_list_to_tuple([cids[impMoves[x]] for x in xrange(nMoves)],
-		[ciis[impMoves[x]] for x in xrange(nMoves)],
-		[cjjs[impMoves[x]] for x in xrange(nMoves)],
-		[ccosts[impMoves[x]] for x in xrange(nMoves)])
+	impMoves = sorted(impMoves[:nMoves])
+	# return from_list_to_tuple([cids[impMoves[x]] for x in xrange(nMoves)],
+	# 	[ciis[impMoves[x]] for x in xrange(nMoves)],
+	# 	[cjjs[impMoves[x]] for x in xrange(nMoves)],
+	# 	[ccosts[impMoves[x]] for x in xrange(nMoves)])
+	return from_list_to_tuple([cids[x] for x in impMoves],
+		[ciis[x] for x in impMoves],
+		[cjjs[x] for x in impMoves],
+		[ccosts[x] for x in impMoves])
 
 
 def apply_moves_tuple(file="", solint=[], tupple=None):

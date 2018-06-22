@@ -212,21 +212,40 @@ class WraperWamca2016Test(unittest.TestCase):
 		self.assertFalse(no_conflict(0, 8, 5, 4, 1, 8), "(0, 8, 5), (4, 1, 8) conflito")
 
 	def test_get_no_conflict(self):
-		# movimentos = from_list_to_tuple([0, 0], [4, 7], [5, 8], [-10, -20])
-		# resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3])
-		#
-		# self.assertEqual(2, len(resp_movimentos[0]), "Quantidade de movimentos independentes")
-		# for x in xrange(len(resp_movimentos[0])):
-		# 	self.assertEqual(movimentos[0][x], resp_movimentos[0][x], "Tipo do movimento igual")
-		# 	self.assertEqual(movimentos[1][x], resp_movimentos[1][x], "Coordenada i igual")
-		# 	self.assertEqual(movimentos[2][x], resp_movimentos[2][x], "Coordenada j igual")
-		# 	self.assertEqual(movimentos[3][x], resp_movimentos[3][x], "Custo igual")
-
-		movimentos = from_list_to_tuple([0, 0, 0], [4, 7, 8], [5, 8, 5], [-10, -20, -1])
+		movimentos = from_list_to_tuple([0, 0], [4, 7], [5, 8], [-10, -20])
 		resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3])
+
 		self.assertEqual(2, len(resp_movimentos[0]), "Quantidade de movimentos independentes")
+		self.assertEqual(-30, sum(resp_movimentos[3]), "Soma dos movimentos independentes")
 		for x in xrange(len(resp_movimentos[0])):
 			self.assertEqual(movimentos[0][x], resp_movimentos[0][x], "Tipo do movimento igual")
 			self.assertEqual(movimentos[1][x], resp_movimentos[1][x], "Coordenada i igual")
 			self.assertEqual(movimentos[2][x], resp_movimentos[2][x], "Coordenada j igual")
 			self.assertEqual(movimentos[3][x], resp_movimentos[3][x], "Custo igual")
+
+		movimentos = from_list_to_tuple([0, 0, 0], [4, 7, 8], [5, 8, 5], [-10, -20, -1])
+		resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3])
+		self.assertEqual(2, len(resp_movimentos[0]), "Quantidade de movimentos independentes")
+		self.assertEqual(-30, sum(resp_movimentos[3]), "Soma dos movimentos independentes")
+		for x in xrange(len(resp_movimentos[0])):
+			self.assertEqual(movimentos[0][x], resp_movimentos[0][x], "Tipo do movimento igual")
+			self.assertEqual(movimentos[1][x], resp_movimentos[1][x], "Coordenada i igual")
+			self.assertEqual(movimentos[2][x], resp_movimentos[2][x], "Coordenada j igual")
+			self.assertEqual(movimentos[3][x], resp_movimentos[3][x], "Custo igual")
+
+		movimentos = from_list_to_tuple([0, 0, 0], [4, 7, 8], [5, 8, 5], [-30, -20, -40])
+		resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3], False, 10)
+		self.assertEqual(2, len(resp_movimentos[0]), "Quantidade de movimentos independentes")
+		self.assertEqual(-50, sum(resp_movimentos[3]), "Soma dos movimentos independentes")
+		for x in xrange(len(resp_movimentos[0])):
+			self.assertEqual(movimentos[0][x], resp_movimentos[0][x], "Tipo do movimento igual")
+			self.assertEqual(movimentos[1][x], resp_movimentos[1][x], "Coordenada i igual")
+			self.assertEqual(movimentos[2][x], resp_movimentos[2][x], "Coordenada j igual")
+			self.assertEqual(movimentos[3][x], resp_movimentos[3][x], "Custo igual")
+
+		multi_size = 100000
+		movimentos = from_list_to_tuple([0, 0, 0] * multi_size, [4, 7, 8] * multi_size,
+			[5, 8, 5] * multi_size, [-30, -20, -40] * multi_size)
+		resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3], False, 10)
+		sum_values = sum(resp_movimentos[3])
+		self.assertIn(sum_values, [-40, -50], "Um dos possíveis valores")
