@@ -63,11 +63,11 @@ def create_wamca2016lib():
 
 	# unsigned int bestNeighbor(char * file, int *solution, unsigned int solutionSize, int neighborhood,
 	# 	bool justCalc = false, unsigned int hostCode = 0,
-	#   unsigned int useMoves = 0, unsigned short *ids = NULL, unsigned int *is = NULL,
+	#   unsigned int *useMoves = 0, unsigned short *ids = NULL, unsigned int *is = NULL,
 	#   unsigned int *js = NULL, unsigned int *costs = NULL) {
 	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int,
 		ctypes.c_bool, ctypes.c_uint,
-		ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
+		util.array_1d_uint, util.array_1d_ushort, util.array_1d_uint,
 		util.array_1d_uint, util.array_1d_int]
 	# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
 	mylib.bestNeighbor.restype = ctypes.c_uint
@@ -101,10 +101,32 @@ def calculate_value(file_name="", solint=[]):
 
 def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False):
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, 0,#gethostcode(),
-		0, numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
+		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
 		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
 
 	return solint, resp
+
+
+def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
+	carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
+		[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
+	n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
+
+	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
+		n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3])
+
+	# Verify it there is some invalid moves
+	# carrays_size = len(carrays[0])
+	# for i in xrange(len(carrays[0]) - 1, -1, -1):
+	# 	if carrays[0][i] == 0 and carrays[1][i] == 0 and carrays[2][i] == 0 and carrays[3][i] == 0:
+	# 		carrays_size -= 1
+	# 	else:
+	# 		break
+	# # Removes the invalid moves
+	# if not carrays_size == len(carrays[0]):
+	# 	carrays = [numpy.resize(carrays[i], carrays_size) for i in xrange(0, 4)]
+	carrays = [numpy.resize(x, int(n_moves_array[0])) for x in carrays]
+	return solint, resp, carrays#, carrays_size
 
 
 def from_list_to_tuple(ids=[], iis=[], jjs=[], costs=[]):
@@ -143,26 +165,6 @@ def merge_solutions(solutions=None, file=""):
 				from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
 				for sol in solutions], intersection
 	return solutions, None
-
-
-def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
-	carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
-		[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
-
-	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
-		n_moves, carrays[0], carrays[1], carrays[2], carrays[3])
-
-	# Verify it there is some invalid moves
-	# carrays_size = len(carrays[0])
-	# for i in xrange(len(carrays[0]) - 1, -1, -1):
-	# 	if carrays[0][i] == 0 and carrays[1][i] == 0 and carrays[2][i] == 0 and carrays[3][i] == 0:
-	# 		carrays_size -= 1
-	# 	else:
-	# 		break
-	# # Removes the invalid moves
-	# if not carrays_size == len(carrays[0]):
-	# 	carrays = [numpy.resize(carrays[i], carrays_size) for i in xrange(0, 4)]
-	return solint, resp, carrays#, carrays_size
 
 
 def neigh_gpu(solution=None, file="", inimov=0):

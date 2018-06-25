@@ -86,7 +86,7 @@ elif "vnd" == solver_param:
 elif "gdvnd" == solver_param:
 	assert "ml" == problem_name.lower(), "Merge solutions not implemented for TTP"
 	print("number_of_moves: {}".format(number_of_moves))
-	from wraper_wamca2016 import merge_solutions, apply_moves_tuple
+	from wraper_wamca2016 import merge_solutions, apply_moves_tuple, calculate_value
 
 	def apply_moves_to_sol_on_oper(sol):
 		"""
@@ -96,6 +96,7 @@ elif "gdvnd" == solver_param:
 		"""
 		if len(sol.movtuple[0]) > 0:
 			apply_moves_tuple(file_name, sol.vector, sol.movtuple)
+			sol.value = calculate_value(file_name, sol.vector)
 		return sol
 
 	solver = DataFlowGDVND(goal, mpi_enabled,
