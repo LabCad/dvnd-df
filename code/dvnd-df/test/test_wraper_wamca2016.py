@@ -5,8 +5,7 @@ import unittest
 import ctypes
 # import numpy
 from wraper_wamca2016 import merge_solutions, get_file_name, wamca_solution_instance_file, \
-	apply_moves_tuple, from_list_to_tuple, get_no_conflict, no_conflict
-
+	apply_moves_tuple, from_list_to_tuple, get_no_conflict, no_conflict, neigh_gpu_moves, calculate_value
 
 if os.environ.has_key('DVND_HOME'):
 	sys.path.append(os.environ['DVND_HOME'])
@@ -256,3 +255,37 @@ class WraperWamca2016Test(unittest.TestCase):
 		resp_movimentos = get_no_conflict(movimentos[0], movimentos[1], movimentos[2], movimentos[3], False, 10)
 		sum_values = sum(resp_movimentos[3])
 		self.assertIn(sum_values, [-40, -50], "Um dos possíveis valores")
+
+	def test_gdvnd_one_step(self):
+		solution_index = 0
+		sol_info = wamca_solution_instance_file[solution_index]
+		tam = sol_info[1]
+		file_name = get_file_name(solution_index)
+		number_of_moves = 10
+
+		sol_list = numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int)
+		sol_value = calculate_value(file_name, sol_list)
+		# No moves
+		sol = list()
+		for x in xrange(5):
+			sol.append(SolutionMovementTuple(numpy.copy(sol_list), sol_value, from_list_to_tuple([], [], [], [])))
+
+		resp = list()
+		for x in xrange(len(sol)):
+			resp.append(neigh_gpu_moves(sol[x], file_name, x, number_of_moves))
+
+		self.assertEqual(len(sol), len(resp), "No other alternative")
+		print "Found solutions"
+		for x in xrange(len(resp)):
+			print "{}: {}\n{}".format(x, resp[x].movtuple, resp[x])
+
+		moves = list()
+		for i in xrange(4):
+			moves.append(resp[0].movtuple[i])
+		for x in xrange(1, len(resp)):
+			for i in xrange(4):
+				moves[i] = numpy.concatenate((moves[i], resp[x].movtuple[i]))
+		self.assertIsNotNone(moves)
+
+		resp_moves = get_no_conflict(moves[0], moves[1], moves[2], moves[3])
+		self.assertIsNotNone(resp_moves)
