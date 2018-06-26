@@ -73,6 +73,7 @@ class DataFlowDVND(object):
 		atual = args[0]
 		atual.source = inimov
 		# Alterar soluão antes de enviar
+		# print "{} - __neighborhood".format(type(self).__name__)
 		sol_param = atual[inimov] if self.__process_sol_before_oper is None \
 			else self.__process_sol_before_oper(atual[inimov])
 		atual[inimov] = max(atual[inimov], func(sol_param)) if self.maximize \
@@ -139,6 +140,7 @@ class DataFlowDVND(object):
 
 		# Nó final Cria n
 		number_of_opers = len(oper_funtions)
+		# End node only processed when there is no improvement
 		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].counts), 1,
 			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
@@ -199,18 +201,20 @@ class DataFlowGDVND(DataFlowDVND):
 		# TODO Falta fazer o merge dos movimentos independentes
 		# get_no_conflict(cids, ciis, cjjs, ccosts):
 		# TODO Comparar a melhor solução atual com a nova e o não conflito da melhor com a atual
+		# print "{} - best_solution".format(type(self).__name__)
 		if len(atual.movtuple) > 0 and len(melhor.movtuple) > 0:
 			combined_sol = self.__combine_sol(atual, melhor)
 			if self.maximize:
 				resp_sol = max(atual, anterior, melhor, combined_sol)
-				return resp_sol, resp_sol == atual
+				return resp_sol, resp_sol == atual and resp_sol > melhor
 			else:
 				resp_sol = min(atual, anterior, melhor, combined_sol)
-				return resp_sol, resp_sol == atual
+				return resp_sol, resp_sol == atual and resp_sol < melhor
 		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
 		resp = super(DataFlowGDVND, self).manager(args)
+		# print "{} - manager\n{}".format(type(self).__name__, resp.get_best())
 		# TODO fazer o merge de duas soluções e pegar a melhor
 		resp_sol = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
 		for x in xrange(len(resp)):

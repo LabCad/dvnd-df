@@ -158,6 +158,7 @@ def merge_solutions(solutions=None, file=""):
 		for i in xrange(1, len(solutions)):
 			intersection &= set(from_tuple_to_movement_list(solutions[i].movtuple))
 		if len(intersection) > 0:
+			# print "merge_solutions({}): {}".format(len(intersection), solutions)
 			new_solution_vetor = numpy.copy(solutions[0].vector)
 			apply_moves_tuple(file, new_solution_vetor, from_movement_list_to_tuple(intersection))
 			new_value = calculate_value(file, new_solution_vetor)
@@ -231,11 +232,17 @@ def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 
 	nMoves = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue, maximize)
 	tentativas = min(tentativas, len(cids) - 1)
+	removed_moves = set()
 	for cont_tentativas in xrange(tentativas):
-		removeIndex = random.randint(0, nMoves - 1)
+		random_list = list(set([x for x in xrange(nMoves)]) - removed_moves)
+		if len(random_list) == 0:
+			break
+		random.shuffle(random_list)
+		removeIndex = random_list[0]
+		removed_moves.add(removeIndex)
 		removeIndex = impMoves[removeIndex]
 
-		ccosts[removeIndex] += -(10 ** 3) if maximize else (10 ** 3)
+		ccosts[removeIndex] *= -1
 
 		nMovesTemp = wamca2016lib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts,
 			impMovesTemp, impValueTemp, maximize)
@@ -247,7 +254,7 @@ def get_no_conflict(cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 			for x in xrange(len(cids)):
 				impMoves[x] = impMovesTemp[x]
 
-		ccosts[removeIndex] -= -(10 ** 3) if maximize else (10 ** 3)
+		ccosts[removeIndex] *= -1
 
 	# Return movements on the initial order
 	impMoves = sorted(impMoves[:nMoves])

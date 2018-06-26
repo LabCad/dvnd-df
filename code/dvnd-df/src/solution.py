@@ -41,6 +41,9 @@ class SolutionMovementTuple(SolutionVectorValue):
 	# 	newtuple = SimpleMovement.from_list_to_tuple(list(newtuple))
 	# 	return SolutionMovementTuple(deepcopy(self.vector), self.value, newtuple)
 
+	def __str__(self):
+		return "{}-movtuple: []".format(super(SolutionMovementTuple, self).__str__(), self.movtuple)
+
 
 class SolutionTTP(SolutionVectorValue):
 	def __init__(self, vector, value, knapsack):

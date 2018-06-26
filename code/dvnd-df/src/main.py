@@ -39,6 +39,7 @@ solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvn
 
 # FIXME Remover
 solver_param = "gdvnd"
+# solver_param = "vnd"
 neigh_op = []
 ini_solution = None
 # problem_name = "tt"
