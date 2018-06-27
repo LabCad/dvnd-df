@@ -4,8 +4,31 @@ import time
 import sys
 from dataflow_opt import *
 
+
+def hasparam(short_name=None, long_name=None):
+	if short_name is not None:
+		return "-{}".format(short_name) in sys.argv
+	elif long_name is not None:
+		return "--{}".format(long_name) in sys.argv
+	return False
+
+
+def getparam(short_name=None, long_name=None, default_value=None):
+	if short_name is not None:
+		short_name = "-{}".format(short_name)
+	if long_name is not None:
+		long_name = "--{}".format(long_name)
+
+	if long_name is not None and long_name in sys.argv:
+		return sys.argv[sys.argv.index(long_name) + 1]
+	elif short_name is not None and short_name in sys.argv:
+		return sys.argv[sys.argv.index(short_name) + 1]
+	else:
+		return default_value
+
+
 start_time = time.time()
-solution_index = int(0 if "-in" not in sys.argv else sys.argv[sys.argv.index("-in") + 1])
+solution_index = int(getparam("in", None, 0))
 # solution_index = 3
 # solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
 
@@ -32,10 +55,14 @@ def print_final_solution(args=[], counts=[], ini_sol=None):
 		ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts, imp_value)
 
 
-goal = (sys.argv[sys.argv.index("--goal") + 1] if "--goal" in sys.argv else "min").lower() == "max"
-problem_name = sys.argv[sys.argv.index("-p") + 1] if "-p" in sys.argv else "ml"
-number_of_moves = int(sys.argv[sys.argv.index("--number_of_moves") + 1]) if "--number_of_moves" in sys.argv else 10
-solver_param = (sys.argv[sys.argv.index("-s") + 1] if "-s" in sys.argv else "dvnd").lower()
+multi_gpu = hasparam("mg", "multi_gpu")
+# TODO Remover
+# multi_gpu = True
+goal = getparam(None, "goal", "min").lower() == "max"
+problem_name = getparam("p", None, "ml")
+number_of_moves = int(getparam(None, "number_of_moves", 10))
+device_count = int(getparam("dc", "device_count", 1))
+solver_param = getparam("s", "solver", "dvnd").lower()
 
 # FIXME Remover
 # solver_param = "gdvnd"
@@ -55,12 +82,12 @@ elif "ml" == problem_name.lower():
 	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, neigh_gpu_moves
 	# import numpy
 	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index, solver_param)
+	ini_solution = create_initial_solution(solution_index, solver_param, multi_gpu)
 
 	if "gdvnd" == solver_param:
-		neigh_op = [lambda ab, y=mv: neigh_gpu_moves(ab, file_name, y, number_of_moves) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: neigh_gpu_moves(ab, file_name, y, number_of_moves, multi_gpu, device_count) for mv in xrange(5)]
 	else:
-		neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y, multi_gpu, device_count) for mv in xrange(5)]
 	# nmoves = 10
 	# moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
 	# moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
@@ -73,9 +100,9 @@ print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 
 # TODO Versão 2 precisa do MPI enabled, bug
 # mpi_enabled = True
-mpi_enabled = "-mpi" in sys.argv
+mpi_enabled = hasparam("mpi")
 
-workers = int(sys.argv[sys.argv.index("-n") + 1] if "-n" in sys.argv else 1)
+workers = int(getparam("n", None, 1))
 
 solver = None
 if "dvnd" == solver_param:

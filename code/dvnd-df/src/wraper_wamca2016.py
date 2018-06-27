@@ -68,7 +68,7 @@ def create_wamca2016lib():
 	mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int,
 		ctypes.c_bool, ctypes.c_uint,
 		util.array_1d_uint, util.array_1d_ushort, util.array_1d_uint,
-		util.array_1d_uint, util.array_1d_int]
+		util.array_1d_uint, util.array_1d_int, ctypes.c_bool, ctypes.c_uint]
 	# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
 	mylib.bestNeighbor.restype = ctypes.c_uint
 
@@ -95,25 +95,38 @@ def create_wamca2016lib():
 wamca2016lib = create_wamca2016lib()
 
 
-def calculate_value(file_name="", solint=[]):
-	return best_neighbor(file_name, solint, 1, True)[1]
+def calculate_value(file_name="", solint=[], useMultipleGpu=False):
+	return best_neighbor(file_name, solint, 1, True, useMultipleGpu)[1]
 
 
-def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False):
-	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, 0,#gethostcode(),
+def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False, useMultipleGpu=False, device_count=1):
+	hostcode = 0
+	if useMultipleGpu:
+		pass
+		# from mpi4py import MPI
+		# comm = MPI.COMM_WORLD
+		# hostcode = comm.rank
+	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, hostcode,#0,#gethostcode(),
 		numpy.array([0], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
-		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
+		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int), useMultipleGpu, device_count)
 
 	return solint, resp
 
 
-def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0):
+def best_neighbor_moves(file="", solint=[], neighborhood=0, n_moves=0, useMultipleGpu=False, device_count=1):
 	carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 		[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
 	n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
 
-	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, 0,#gethostcode(),
-		n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3])
+	hostcode = 0
+	if useMultipleGpu:
+		pass
+		# from mpi4py import MPI
+		# comm = MPI.COMM_WORLD
+		# hostcode = comm.rank
+
+	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, False, hostcode,#0,#gethostcode(),
+		n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3], useMultipleGpu, device_count)
 
 	# Verify it there is some invalid moves
 	# carrays_size = len(carrays[0])
@@ -168,14 +181,14 @@ def merge_solutions(solutions=None, file=""):
 	return solutions, None
 
 
-def neigh_gpu(solution=None, file="", inimov=0):
-	resp = best_neighbor(file, solution.vector, inimov)
+def neigh_gpu(solution=None, file="", inimov=0, useMultipleGpu=False, device_count=1):
+	resp = best_neighbor(file, solution.vector, inimov, False, useMultipleGpu, device_count)
 	return SolutionVectorValue(resp[0], resp[1])
 	# return SolutionVectorValue(solution.vector, solution.value)
 
 
-def neigh_gpu_moves(solution=None, file="", inimov=0, n_moves=0):
-	resp = best_neighbor_moves(file, solution.vector, inimov, n_moves)
+def neigh_gpu_moves(solution=None, file="", inimov=0, n_moves=0, useMultipleGpu=False, device_count=1):
+	resp = best_neighbor_moves(file, solution.vector, inimov, n_moves, useMultipleGpu, device_count)
 	temp_sol = numpy.copy(resp[0])
 	apply_moves_tuple(file, temp_sol, resp[2])
 	valor = calculate_value(file, temp_sol)
@@ -190,16 +203,16 @@ def copy_solution(ini_solution):
 	return SolutionVectorValue(numpy.copy(ini_solution.vector), ini_solution.value)
 
 
-def create_initial_solution(solution_index=0, solver_param=""):
+def create_initial_solution(solution_index=0, solver_param="", useMultipleGpu=False):
 	sol_info = wamca_solution_instance_file[solution_index]
 
 	# solint = [x for x in xrange(sol_info[1])]
 	solint = numpy.array([x for x in xrange(sol_info[1])], dtype=ctypes.c_int)
 	print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 	if "gdvnd" == solver_param:
-		return SolutionMovementTuple(solint, calculate_value(get_file_name(solution_index), solint), ([], [], [], []))
+		return SolutionMovementTuple(solint, calculate_value(get_file_name(solution_index), solint, useMultipleGpu), ([], [], [], []))
 	else:
-		return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint))
+		return SolutionVectorValue(solint, calculate_value(get_file_name(solution_index), solint, useMultipleGpu))
 
 
 def merge_moves(moves1=[], moves2=[]):
