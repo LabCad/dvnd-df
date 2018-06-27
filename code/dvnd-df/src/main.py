@@ -1,30 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import time
-import sys
+from util import hasparam, getparam
 from dataflow_opt import *
-
-
-def hasparam(short_name=None, long_name=None):
-	if short_name is not None:
-		return "-{}".format(short_name) in sys.argv
-	elif long_name is not None:
-		return "--{}".format(long_name) in sys.argv
-	return False
-
-
-def getparam(short_name=None, long_name=None, default_value=None):
-	if short_name is not None:
-		short_name = "-{}".format(short_name)
-	if long_name is not None:
-		long_name = "--{}".format(long_name)
-
-	if long_name is not None and long_name in sys.argv:
-		return sys.argv[sys.argv.index(long_name) + 1]
-	elif short_name is not None and short_name in sys.argv:
-		return sys.argv[sys.argv.index(short_name) + 1]
-	else:
-		return default_value
+from wraper_wamca2016 import WamcaWraper
 
 
 start_time = time.time()
@@ -56,20 +35,16 @@ def print_final_solution(args=[], counts=[], ini_sol=None):
 
 
 multi_gpu = hasparam("mg", "multi_gpu")
-# TODO Remover
-# multi_gpu = True
 goal = getparam(None, "goal", "min").lower() == "max"
 problem_name = getparam("p", None, "ml")
 number_of_moves = int(getparam(None, "number_of_moves", 10))
 device_count = int(getparam("dc", "device_count", 1))
 solver_param = getparam("s", "solver", "dvnd").lower()
 
-# FIXME Remover
-# solver_param = "gdvnd"
-# solver_param = "vnd"
 neigh_op = []
 ini_solution = None
 # problem_name = "tt"
+mylib = None
 if "tt" == problem_name.lower():
 	from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
 	file_name = get_file_name(solution_index)
@@ -79,15 +54,16 @@ if "tt" == problem_name.lower():
 	goal = True
 elif "ml" == problem_name.lower():
 	# from solution import SolutionVectorValue
-	from wraper_wamca2016 import create_initial_solution, neigh_gpu, get_file_name, neigh_gpu_moves
+	from wraper_wamca2016 import get_file_name
 	# import numpy
 	file_name = get_file_name(solution_index)
-	ini_solution = create_initial_solution(solution_index, solver_param, multi_gpu)
+	mylib = WamcaWraper(file_name)
+	ini_solution = mylib.create_initial_solution(solution_index, solver_param, multi_gpu)
 
 	if "gdvnd" == solver_param:
-		neigh_op = [lambda ab, y=mv: neigh_gpu_moves(ab, file_name, y, number_of_moves, multi_gpu, device_count) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, number_of_moves, multi_gpu, device_count) for mv in xrange(5)]
 	else:
-		neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y, multi_gpu, device_count) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y, multi_gpu, device_count) for mv in xrange(5)]
 	# nmoves = 10
 	# moves0 = best_neighbor_moves(file_name, ini_solution.vector, 0, n_moves=nmoves)[2]
 	# moves1 = best_neighbor_moves(file_name, ini_solution.vector, 1, n_moves=nmoves)[2]
@@ -114,7 +90,6 @@ elif "vnd" == solver_param:
 elif "gdvnd" == solver_param:
 	assert "ml" == problem_name.lower(), "Merge solutions not implemented for TTP"
 	print("number_of_moves: {}".format(number_of_moves))
-	from wraper_wamca2016 import merge_solutions, apply_moves_tuple, calculate_value
 
 	def apply_moves_to_sol_on_oper(sol):
 		"""
@@ -123,13 +98,13 @@ elif "gdvnd" == solver_param:
 		:return: Solution with the moves applied.
 		"""
 		if len(sol.movtuple[0]) > 0:
-			apply_moves_tuple(file_name, sol.vector, sol.movtuple)
-			sol.value = calculate_value(file_name, sol.vector)
+			mylib.apply_moves_tuple(sol.vector, sol.movtuple)
+			sol.value = mylib.calculate_value(sol.vector)
 		return sol
 
 	solver = DataFlowGDVND(goal, mpi_enabled,
 		lambda sol: apply_moves_to_sol_on_oper(sol),
-		lambda sols, file=file_name: merge_solutions(sols, file)[0])
+		lambda sols: mylib.merge_solutions(sols)[0])
 
 print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)
 start_time = time.time()

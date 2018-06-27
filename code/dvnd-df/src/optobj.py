@@ -6,7 +6,16 @@ from pyDF import Node, Oper
 
 
 class DecisionNode(Node):
+	"""
+	Decision node is a generalization of the default node that lets decide to process or not its input.
+	"""
 	def __init__(self, f=lambda x: None, inputn=1, should_run=lambda x: True, keep_going=lambda x, y: True):
+		"""
+		:param f: Function to be called for processing.
+		:param inputn: Number of inputs.
+		:param should_run: Lambda indicating if the function f has to be called.
+		:param keep_going: Lambada indicating if comes back to the graph.
+		"""
 		super(DecisionNode, self).__init__(f, inputn)
 		self.__should_run = should_run
 		self.__keep_going = keep_going
@@ -27,7 +36,16 @@ class DecisionNode(Node):
 
 
 class OptMessage(object):
+	"""
+	History for the DVND.
+	"""
 	def __init__(self, solmap={}, source=0, target=[], not_improved=[]):
+		"""
+		:param solmap: Map os solutions (node code, actual solution).
+		:param source: Source of the history.
+		:param target: Targets to the history.
+		:param not_improved: Nodes that couldn't improve the solution.
+		"""
 		self.__solmap = solmap
 		self.__source = source
 		self.__target = target
@@ -44,6 +62,10 @@ class OptMessage(object):
 		return len(self.__solmap)
 
 	def get_best(self, maximize=False):
+		"""
+		:param maximize: Indicates is is a maximization o minimization problem.
+		:return: Get the best solution on the history.
+		"""
 		return min(self.__solmap.values()) if not maximize else max(self.__solmap.values())
 
 	@property

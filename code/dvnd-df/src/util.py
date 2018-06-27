@@ -7,6 +7,7 @@ import socket
 import numpy
 import ctypes
 import include_lib
+import sys
 include_lib.include_simple_pycuda()
 from simplepycuda import SimpleSourceModule, SimplePyCuda
 
@@ -18,6 +19,28 @@ array_1d_short = numpy.ctypeslib.ndpointer(dtype=ctypes.c_short, ndim=1, flags='
 array_1d_ushort = numpy.ctypeslib.ndpointer(dtype=ctypes.c_ushort, ndim=1, flags='CONTIGUOUS')
 
 
+def hasparam(short_name=None, long_name=None):
+	if short_name is not None:
+		return "-{}".format(short_name) in sys.argv
+	elif long_name is not None:
+		return "--{}".format(long_name) in sys.argv
+	return False
+
+
+def getparam(short_name=None, long_name=None, default_value=None):
+	if short_name is not None:
+		short_name = "-{}".format(short_name)
+	if long_name is not None:
+		long_name = "--{}".format(long_name)
+
+	if long_name is not None and long_name in sys.argv:
+		return sys.argv[sys.argv.index(long_name) + 1]
+	elif short_name is not None and short_name in sys.argv:
+		return sys.argv[sys.argv.index(short_name) + 1]
+	else:
+		return default_value
+
+
 def gethostcode():
 	hostname = socket.gethostname()
 	hostname_pattern = re.compile("\D*(\d*)")
@@ -26,10 +49,11 @@ def gethostcode():
 	return hostcode
 
 
-def compilelib(files=[], localpath="", mylibname="", options=[], compiler_options=[]):
+def compilelib(files=[], localpath="", mylibname="", options=[], compiler_options=[], verbose=True):
 	if not os.path.isfile(localpath + mylibname + '.so'):
 		import time
-		print "Creating file: ", mylibname + '.so'
+		if verbose:
+			print "Creating file: ", mylibname + '.so'
 		cmple_start_time = time.time()
 		nvccFile = 'nvcc'
 		if os.path.isfile('/usr/local/cuda-8.0/bin/nvcc'):
@@ -39,8 +63,9 @@ def compilelib(files=[], localpath="", mylibname="", options=[], compiler_option
 
 		SimpleSourceModule.compile_files(nvccFile, files, options, localpath + mylibname, compiler_options)
 		cmple_end_time = time.time()
-		print "File: {}.so created in {}s".format(mylibname, cmple_end_time - cmple_start_time)
-	else:
+		if verbose:
+			print "File: {}.so created in {}s".format(mylibname, cmple_end_time - cmple_start_time)
+	elif verbose:
 		print "Using already created file: ", mylibname + '.so'
 
 
