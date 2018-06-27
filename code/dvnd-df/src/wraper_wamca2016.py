@@ -101,7 +101,7 @@ def calculate_value(file_name="", solint=[]):
 
 def best_neighbor(file="", solint=[], neighborhood=0, justcalc=False):
 	resp = wamca2016lib.bestNeighbor(file, solint, len(solint), neighborhood, justcalc, 0,#gethostcode(),
-		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
+		numpy.array([0], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_ushort), numpy.array([], dtype=ctypes.c_uint),
 		numpy.array([], dtype=ctypes.c_uint), numpy.array([], dtype=ctypes.c_int))
 
 	return solint, resp
@@ -171,6 +171,7 @@ def merge_solutions(solutions=None, file=""):
 def neigh_gpu(solution=None, file="", inimov=0):
 	resp = best_neighbor(file, solution.vector, inimov)
 	return SolutionVectorValue(resp[0], resp[1])
+	# return SolutionVectorValue(solution.vector, solution.value)
 
 
 def neigh_gpu_moves(solution=None, file="", inimov=0, n_moves=0):
