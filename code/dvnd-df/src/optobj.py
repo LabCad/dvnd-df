@@ -51,6 +51,8 @@ class OptMessage(object):
 		self.__target = target
 		self.__not_improved = not_improved
 		self.counts = [0 for x in target]
+		self.combine_count = [0 for x in target]
+		self.merge_count = 0
 
 	def __getitem__(self, item=0):
 		return self.__solmap[item]
@@ -66,7 +68,7 @@ class OptMessage(object):
 		:param maximize: Indicates is is a maximization o minimization problem.
 		:return: Get the best solution on the history.
 		"""
-		return min(self.__solmap.values()) if not maximize else max(self.__solmap.values())
+		return max(self.__solmap.values()) if maximize else min(self.__solmap.values())
 
 	@property
 	def source(self):

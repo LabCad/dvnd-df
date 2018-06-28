@@ -90,8 +90,8 @@ class DataFlowDVND(object):
 		:return: Melhor solução e flag indicando se a melhor é a atual.
 		"""
 		if (not self.maximize and atual < anterior) or (self.maximize and anterior < atual):
-			return atual, True
-		return anterior, False
+			return atual, True, False
+		return anterior, False, False
 
 	def manager(self, args=[]):
 		atual = args[0]
@@ -114,6 +114,9 @@ class DataFlowDVND(object):
 			melhor.set_target(atual.source)
 		else:
 			melhor.set_not_improved(atual.source)
+
+		if atual_melhor[2]:
+			melhor.combine_count[atual.source] += 1
 
 		best_sol = melhor[atual.source] = melhor.get_best(self.maximize)
 		# Caso não tenha melhorado mas tenha aparecido uma solução melhor
@@ -141,7 +144,8 @@ class DataFlowDVND(object):
 		# Nó final Cria n
 		number_of_opers = len(oper_funtions)
 		# End node only processed when there is no improvement
-		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].counts), 1,
+		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].counts,
+			y[0].merge_count, y[0].combine_count), 1,
 			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
@@ -202,21 +206,39 @@ class DataFlowGDVND(DataFlowDVND):
 		# get_no_conflict(cids, ciis, cjjs, ccosts):
 		# TODO Comparar a melhor solução atual com a nova e o não conflito da melhor com a atual
 		# print "{} - best_solution".format(type(self).__name__)
-		if len(atual.movtuple) > 0 and len(melhor.movtuple) > 0:
-			combined_sol = self.__combine_sol(atual, melhor)
+		if len(atual.movtuple[0]) > 0 and len(melhor.movtuple[0]) > 0:
+			combined_sol_resp = self.__combine_sol(atual, melhor)
+			combined_sol = combined_sol_resp[0]
 			if self.maximize:
 				resp_sol = max(atual, anterior, melhor, combined_sol)
-				return resp_sol, resp_sol == atual and resp_sol > melhor
+				# if resp_sol == combined_sol and combined_sol_resp[1]:
+					# TODO Remover debug
+					# print("Combinou: v:{}-{}={}({}%)".format(anterior.value, combined_sol.value,
+					# 	anterior.value - combined_sol.value,
+					# 	100.0 * (anterior.value - combined_sol.value) / anterior.value))
+				return resp_sol, resp_sol > melhor, combined_sol_resp[1]
 			else:
 				resp_sol = min(atual, anterior, melhor, combined_sol)
-				return resp_sol, resp_sol == atual and resp_sol < melhor
+				# if resp_sol == combined_sol and combined_sol_resp[1]:
+					# TODO Remover debug
+					# print("Combinou: v:{}-{}={}({}%)".format(anterior.value, combined_sol.value,
+					# 	anterior.value - combined_sol.value,
+					# 	100.0 * (anterior.value - combined_sol.value) / anterior.value))
+				return resp_sol, resp_sol < melhor, combined_sol_resp[1]
 		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
 		resp = super(DataFlowGDVND, self).manager(args)
 		# print "{} - manager\n{}".format(type(self).__name__, resp.get_best())
 		# TODO fazer o merge de duas soluções e pegar a melhor
-		resp_sol = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
+		# print(",".join(["{{v:{},mt:{}}}".format(resp[x].value, len(resp[x].movtuple[0])) for x in xrange(len(resp))]))
+		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
+		resp_sol = resp_tuple[0]
+		if resp_tuple[1] is not None:
+			resp.merge_count += 1
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
+
+		# print(",".join(["{{v:{},mt:{}}}".format(resp[x].value, len(resp[x].movtuple[0])) for x in xrange(len(resp))]))
+		# print("")
 		return resp

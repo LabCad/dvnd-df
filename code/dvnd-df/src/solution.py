@@ -3,7 +3,11 @@ import numpy
 
 
 class SolutionVectorValue(object):
-	def __init__(self, vector, value):
+	"""
+	Solution representation by vector and value.
+	Value is used to avoid calculate the objective function each time it is needed.
+	"""
+	def __init__(self, vector, value=0):
 		if type(vector) is not numpy.ndarray:
 			raise ValueError('Use a numpy array in the vector, for performance reasons')
 		self.vector = vector
@@ -26,12 +30,21 @@ class SolutionVectorValue(object):
 
 
 class SolutionMovementTuple(SolutionVectorValue):
+	"""
+	Solution that includes the list of movements.
+	"""
 	def __init__(self, vector, value, movtuple):
 		super(SolutionMovementTuple, self).__init__(vector, value)
 		self.movtuple = movtuple
 
 	def can_merge(self, other):
-		return super(SolutionMovementTuple, self).__eq__(other)
+		"""
+		Indicates if this solution can merge the other.
+		:param other: Solution to merge.
+		:return: True if the solution can merge.
+		"""
+		# return super(SolutionMovementTuple, self).__eq__(other)
+		return (other.vector == self.vector).all()
 
 	# def merge(self, other):
 	# 	newtuple = set(SimpleMovement.from_tuple_to_list(self.movtuple)) - \
@@ -44,6 +57,9 @@ class SolutionMovementTuple(SolutionVectorValue):
 
 
 class SolutionTTP(SolutionVectorValue):
+	"""
+	Solution representation for the Traveling Thief Problem.
+	"""
 	def __init__(self, vector, value, knapsack):
 		super(SolutionTTP, self).__init__(vector, value)
 		self.knapsack = knapsack

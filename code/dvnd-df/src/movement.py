@@ -2,6 +2,33 @@
 from copy import deepcopy
 
 
+class MLMove(object):
+	"""
+	typedef enum {
+		MLMI_SWAP,
+		MLMI_2OPT,
+		MLMI_OROPT1,
+		MLMI_OROPT2,
+		MLMI_OROPT3,
+	} MLMoveId;
+
+	struct MLMove {
+		MLMoveId  id;
+		int       i;
+		int       j;
+		int       cost;
+	};
+	"""
+	def __init__(self, id=0, i=0, j=0, cost=0):
+		self.id = id
+		self.i = i
+		self.j = j
+		self.cost = cost
+
+	def __str__(self):
+		return "{{id:{},i:{},j:{},cost:{}}}".format(self.id, self.i, self.j, self.cost)
+
+
 class SimpleMovement(object):
 	def __init__(self, movtype=0, value_i=0, value_j=0, cost=0):
 		self.movtype = movtype

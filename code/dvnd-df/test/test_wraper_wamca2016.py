@@ -30,7 +30,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		sol1.vector[0], sol1.vector[1] = sol1.vector[1], sol1.vector[0]
 		sols = [sol0, sol1]
 
-		merged_sols = self.__mylib.merge_solutions(sols)[0]
+		merged_sols = self.__mylib.merge_common_movs(sols)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(merged_sols[i], sols[i], "Solução {} diferente do esperado".format(i))
@@ -42,7 +42,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([], [], [], []))
 		sols = [sol0, sol1]
 
-		merged_sols = self.__mylib.merge_solutions(sols)[0]
+		merged_sols = self.__mylib.merge_common_movs(sols)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(merged_sols[i], sols[i], "Solução {} diferente do esperado".format(i))
@@ -57,7 +57,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([0], [1], [2], [2]))
 		sols = [sol0, sol1]
 
-		merged_sols = self.__mylib.merge_solutions(sols)[0]
+		merged_sols = self.__mylib.merge_common_movs(sols)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			sols[i].vector[1], sols[i].vector[2] = sols[i].vector[2], sols[i].vector[1]
@@ -66,44 +66,43 @@ class WraperWamca2016Test(unittest.TestCase):
 
 		sol1.movtuple = [1], [1], [2], [2]
 
-		merged_sols = self.__mylib.merge_solutions(sols)[0]
+		merged_sols = self.__mylib.merge_common_movs(sols)[0]
 		self.assertEquals(2, len(merged_sols), "Tamanho incorreto")
 		for i in xrange(len(merged_sols)):
 			self.assertEquals(1, len(merged_sols[i].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(i))
 
 		sol1.movtuple = [1, 0], [1, 1], [2, 2], [2, 2]
-		merged_sols = self.__mylib.merge_solutions(sols)[0]
+		merged_sols = self.__mylib.merge_common_movs(sols)[0]
 		self.assertEquals(0, len(merged_sols[0].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(0))
 		self.assertEquals(1, len(merged_sols[1].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(1))
 
 		sol0.movtuple = [1, 2, 3, 0], [3, 4, 1, 1], [4, 5, 2, 2], [7, 9, 2, 2]
-		merged_sols = self.__mylib.merge_solutions(sols)[0]
+		merged_sols = self.__mylib.merge_common_movs(sols)[0]
 		self.assertEquals(3, len(merged_sols[0].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(0))
 		self.assertEquals(1, len(merged_sols[1].movtuple[0]), "Solução {} Quantidade de movimentos restantes".format(1))
 
 	def test_apply_moves(self):
 		# apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
-		solution_index = 0
-		sol_info = wamca_solution_instance_file[solution_index]
-		tam = sol_info[1]
-		sol_vector = numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int)
-		sol_vector_copy = numpy.copy(sol_vector)
-		file_name = get_file_name(solution_index)
-		self.__mylib.apply_moves_tuple(sol_vector, from_list_to_tuple([], [], [], []))
+		solution = SolutionMovementTuple(numpy.array([x for x in xrange(self.__tam)], dtype=ctypes.c_int), 0,
+			from_list_to_tuple([], [], [], []))
+		sol_vector_copy = numpy.copy(solution.vector)
+		self.__mylib.apply_moves(solution)
 
-		self.assertTrue((sol_vector_copy == sol_vector).all(), "Todos iguais quando não há movimento")
+		self.assertTrue((sol_vector_copy == solution.vector).all(), "Todos iguais quando não há movimento")
 
 		# Swap
-		self.__mylib.apply_moves_tuple(sol_vector, from_list_to_tuple([0], [1], [2], [0]))
+		solution.movtuple = from_list_to_tuple([0], [1], [2], [0])
+		self.__mylib.apply_moves(solution)
 		sol_vector_copy[2], sol_vector_copy[1] = sol_vector_copy[1], sol_vector_copy[2]
-		self.assertTrue((sol_vector_copy == sol_vector).all(), "Swap 1-2")
+		self.assertTrue((sol_vector_copy == solution.vector).all(), "Swap 1-2")
 
-		sol_vector = numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int)
-		sol_vector_copy = numpy.copy(sol_vector)
-		self.__mylib.apply_moves_tuple(sol_vector, from_list_to_tuple([0, 0], [4, 2], [5, 3], [0, 0]))
+		solution.vector = numpy.array([x for x in xrange(self.__tam)], dtype=ctypes.c_int)
+		solution.movtuple = from_list_to_tuple([0, 0], [4, 2], [5, 3], [0, 0])
+		sol_vector_copy = numpy.copy(solution.vector)
+		self.__mylib.apply_moves(solution)
 		sol_vector_copy[4], sol_vector_copy[5] = sol_vector_copy[5], sol_vector_copy[4]
 		sol_vector_copy[2], sol_vector_copy[3] = sol_vector_copy[3], sol_vector_copy[2]
-		self.assertTrue((sol_vector_copy == sol_vector).all(), "Swap 4-5, Swap 2-3")
+		self.assertTrue((sol_vector_copy == solution.vector).all(), "Swap 4-5, Swap 2-3")
 
 	def test_merge_SolutionMovementTuple(self):
 		solution_index = 0
@@ -119,7 +118,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		bkp_vector = numpy.copy(sol0.vector)
 
 		quest = [sol0, sol1]
-		resp = self.__mylib.merge_solutions(quest)
+		resp = self.__mylib.merge_common_movs(quest)
 		self.assertEqual(len(quest), len(resp[0]), "Mesma quantidade de soluções")
 		self.assertTrue((resp[0][0].vector == resp[0][1].vector).all(), "Solution 0 equals to solution 1")
 		self.assertTrue((resp[0][0].vector == bkp_vector).all(), "Solution 0 is as expected")
@@ -132,7 +131,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		bkp_vector = numpy.copy(sol0.vector)
 
 		quest = [sol0, sol1]
-		resp = self.__mylib.merge_solutions(quest)
+		resp = self.__mylib.merge_common_movs(quest)
 		self.assertEqual(len(quest), len(resp[0]), "Mesma quantidade de soluções")
 		self.assertEqual(1, len(resp[1]), "Mesma quantidade de movimentos")
 		self.assertEqual(0, len(resp[0][0].movtuple[0]), "Solution 0 - all moviments are equal")
@@ -148,7 +147,7 @@ class WraperWamca2016Test(unittest.TestCase):
 			from_list_to_tuple([0, 0], [4, 2], [5, 3], [0, 0]))
 		bkp_vector = numpy.copy(sol0.vector)
 		quest = [sol0, sol1]
-		resp = self.__mylib.merge_solutions(quest)
+		resp = self.__mylib.merge_common_movs(quest)
 		self.assertEqual(len(quest), len(resp[0]), "Mesma quantidade de soluções")
 		self.assertEqual(2, len(resp[1]), "Mesma quantidade de movimentos")
 		self.assertEqual(0, len(resp[0][0].movtuple[0]), "Solution 0 - all moviments are equal")
@@ -165,7 +164,7 @@ class WraperWamca2016Test(unittest.TestCase):
 			from_list_to_tuple([0, 0], [6, 2], [7, 3], [0, 0]))
 		bkp_vector = numpy.copy(sol0.vector)
 		quest = [sol0, sol1]
-		resp = self.__mylib.merge_solutions(quest)
+		resp = self.__mylib.merge_common_movs(quest)
 		self.assertEqual(len(quest), len(resp[0]), "Mesma quantidade de soluções")
 		self.assertEqual(2, len(resp[1]), "Mesma quantidade de movimentos")
 		self.assertEqual(1, len(resp[0][0].movtuple[0]), "Solution 0 - all moviments are equal")
@@ -182,7 +181,7 @@ class WraperWamca2016Test(unittest.TestCase):
 			from_list_to_tuple([0, 0, 0], [8, 6, 2], [9, 7, 3], [0, 0, 0]))
 		bkp_vector = numpy.copy(sol0.vector)
 		quest = [sol0, sol1]
-		resp = self.__mylib.merge_solutions(quest)
+		resp = self.__mylib.merge_common_movs(quest)
 		self.assertEqual(len(quest), len(resp[0]), "Mesma quantidade de soluções")
 		self.assertEqual(2, len(resp[1]), "Mesma quantidade de movimentos")
 		self.assertEqual(1, len(resp[0][0].movtuple[0]), "Solution 0 - all moviments are equal")
@@ -283,9 +282,9 @@ class WraperWamca2016Test(unittest.TestCase):
 			resp.append(self.__mylib.neigh_gpu_moves(sol[x], x, number_of_moves))
 
 		self.assertEqual(len(sol), len(resp), "No other alternative")
-		print "Found solutions"
-		for x in xrange(len(resp)):
-			print "{}: {}\n{}".format(x, resp[x].movtuple, resp[x])
+		# print "Found solutions"
+		# for x in xrange(len(resp)):
+		# 	print "{}: {}\n{}".format(x, resp[x].movtuple, resp[x])
 
 		moves = list()
 		for i in xrange(4):

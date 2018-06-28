@@ -24,40 +24,13 @@ print("localpath: {}".format(localpath))
 print "WAMCAPATH:" + wamca2016path
 
 
-class MLMove(object):
-	"""
-	typedef enum {
-		MLMI_SWAP,
-		MLMI_2OPT,
-		MLMI_OROPT1,
-		MLMI_OROPT2,
-		MLMI_OROPT3,
-	} MLMoveId;
-
-	struct MLMove {
-		MLMoveId  id;
-		int       i;
-		int       j;
-		int       cost;
-	};
-	"""
-	def __init__(self, id=0, i=0, j=0, cost=0):
-		self.id = id
-		self.i = i
-		self.j = j
-		self.cost = cost
-
-	def __str__(self):
-		return "{{id:{},i:{},j:{},cost:{}}}".format(self.id, self.i, self.j, self.cost)
-
-
 class WamcaWraper(object):
 	def __init__(self, instancefile, mylibname='wamca2016lib', options=["-lgomp"], compiler_options=["-fopenmp"],
-		verbose=True):
+		verbose=True, libpath=wamca2016path):
 		assert instancefile is not None, "The file is mandatory"
 		self.__file = instancefile
 
-		files = [wamca2016path + "source/*.cu", wamca2016path + "source/*.cpp"]
+		files = [libpath + "source/*.cu", libpath + "source/*.cpp"]
 		compilelib(files, localpath, mylibname, options, compiler_options, verbose)
 		self.__mylib = ctypes.cdll.LoadLibrary("{}{}.so".format(localpath, mylibname))
 
@@ -90,7 +63,12 @@ class WamcaWraper(object):
 		self.__mylib.noConflict.argtypes = [ctypes.c_ushort, ctypes.c_uint, ctypes.c_uint,
 			ctypes.c_ushort, ctypes.c_uint, ctypes.c_uint]
 
-	def apply_moves(self, solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
+		# extern "C" unsigned int bestNeighborSimple(char * file, int *solution, unsigned int solutionSize,
+		# int neighborhood)
+		self.__mylib.bestNeighborSimple.restype = ctypes.c_uint
+		self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
+
+	def __apply_moves(self, solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
 		lenmovs = len(cids)
 		for i in xrange(len(cids) - 1, -1, -1):
 			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
@@ -115,14 +93,19 @@ class WamcaWraper(object):
 				break
 		return self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
 
-	def apply_moves_tuple(self, solint=[], tupple=None):
-		return self.apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
+	def __apply_moves_tuple(self, solint=[], tupple=None):
+		return self.__apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
 
-	def best_neighbor(self, solint=[], neighborhood=0, justcalc=False, useMultipleGpu=False, device_count=1):
-		return self.best_neighbor_moves(solint, neighborhood, 0, useMultipleGpu, device_count, justcalc)
+	def apply_moves(self, solution=None):
+		self.__apply_moves_tuple(solution.vector, solution.movtuple)
+		solution.value = self.calculate_value(solution.vector)
 
-	def best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, useMultipleGpu=False, device_count=1,
-		justcalc=False):
+	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False, useMultipleGpu=False, device_count=1):
+		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
+		return self.__best_neighbor_moves(solint, neighborhood, 0, useMultipleGpu, device_count, justcalc)
+
+	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, useMultipleGpu=False, device_count=1,
+			justcalc=False):
 		carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 			[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
 		n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
@@ -141,20 +124,23 @@ class WamcaWraper(object):
 		return solint, resp, carrays  # , carrays_size
 
 	def calculate_value(self, solint=[], useMultipleGpu=False):
-		return self.best_neighbor(solint, 1, True, useMultipleGpu)[1]
+		return self.__best_neighbor(solint, 1, True, useMultipleGpu)[1]
 
-	def create_initial_solution(self, solution_index=0, solver_param="", useMultipleGpu=False):
+	def create_initial_solution(self, solution_index=0, solver_param="", useMultipleGpu=False,
+			solution_instance_index=-1):
 		sol_info = wamca_solution_instance_file[solution_index]
 
 		# solint = [x for x in xrange(sol_info[1])]
 		solint = numpy.array([x for x in xrange(sol_info[1])], dtype=ctypes.c_int)
+		if solution_instance_index == -2:
+			random.shuffle(solint)
 		print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 		if "gdvnd" == solver_param:
 			return SolutionMovementTuple(solint, self.calculate_value(solint, useMultipleGpu), ([], [], [], []))
 		else:
 			return SolutionVectorValue(solint, self.calculate_value(solint, useMultipleGpu))
 
-	def merge_solutions(self, solutions=None):
+	def merge_common_movs(self, solutions=None):
 		if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
 			intersection = set(from_tuple_to_movement_list(solutions[0].movtuple))
 			for i in xrange(1, len(solutions)):
@@ -162,26 +148,43 @@ class WamcaWraper(object):
 			if len(intersection) > 0:
 				# print "merge_solutions({}): {}".format(len(intersection), solutions)
 				new_solution_vetor = numpy.copy(solutions[0].vector)
-				self.apply_moves_tuple(new_solution_vetor, from_movement_list_to_tuple(intersection))
+				old_value = self.calculate_value(new_solution_vetor)
+				self.__apply_moves_tuple(new_solution_vetor, from_movement_list_to_tuple(intersection))
 				new_value = self.calculate_value(new_solution_vetor)
+				# TODO Remove debug
+				# print("merge {} movements, value: {} -> {}".format(len(intersection), old_value, new_value))
 				return [SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
 					from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
 					for sol in solutions], intersection
 		return solutions, None
 
 	def neigh_gpu(self, solution=None, inimov=0, useMultipleGpu=False, device_count=1):
-		resp = self.best_neighbor(solution.vector, inimov, False, useMultipleGpu, device_count)
+		resp = self.__best_neighbor(solution.vector, inimov, False, useMultipleGpu, device_count)
 		return SolutionVectorValue(resp[0], resp[1])
 
 	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0, useMultipleGpu=False, device_count=1):
-		resp = self.best_neighbor_moves(solution.vector, inimov, n_moves, useMultipleGpu, device_count)
+		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, useMultipleGpu, device_count)
 		temp_sol = numpy.copy(resp[0])
-		self.apply_moves_tuple(temp_sol, resp[2])
+		self.__apply_moves_tuple(temp_sol, resp[2])
 		valor = self.calculate_value(temp_sol)
 		return SolutionMovementTuple(resp[0], valor, resp[2])
 
 	def no_conflict(self, id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
 		return self.__mylib.noConflict(id1, i1, j1, id2, i2, j2)
+
+	def merge_independent_movements(self, sol1, sol2):
+		if sol1.can_merge(sol2):
+			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
+			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
+			cjjs = numpy.concatenate((sol1.movtuple[2], sol2.movtuple[2]))
+			ccosts = numpy.concatenate((sol1.movtuple[3], sol2.movtuple[3]))
+			independent_movs = self.get_no_conflict(cids, ciis, cjjs, ccosts)
+			resp = SolutionMovementTuple(numpy.copy(sol1.vector), 0, independent_movs)
+			self.apply_moves(resp)
+			for i in xrange(len(sol1)):
+				resp.vector[i] = sol1.vector[i]
+			return resp, True
+		return sol1, False
 
 	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
 		impMoves = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
@@ -271,7 +274,6 @@ def merge_moves(moves1=[], moves2=[]):
 			numpy.concatenate((moves1[1][:len1], moves2[1][:len2])), \
 			numpy.concatenate((moves1[2][:len1], moves2[2][:len2])), \
 			numpy.concatenate((moves1[3][:len1], moves2[3][:len2]))
-
 
 
 wamca_intance_path = wamca2016path + "instances/"
