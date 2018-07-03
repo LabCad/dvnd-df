@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import random
+import time
 # from mpi4py import MPI
 from optobj import DecisionNode, OptMessage
 from pyDF import DFGraph, Feeder, Scheduler
@@ -60,7 +61,7 @@ class DataFlowVND(object):
 
 
 class DataFlowDVND(object):
-	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: arg):
+	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: arg, use_metadata=False):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
@@ -68,17 +69,35 @@ class DataFlowDVND(object):
 		self.maximize = maximize
 		self.__mpi_enabled = mpi_enabled
 		self.__process_sol_before_oper = process_sol_before_oper
+		self.use_metadata = use_metadata
 
 	def __neighborhood(self, func=lambda arg: None, args=[], inimov=0):
 		atual = args[0]
+		if self.use_metadata:
+			atual.metadata.neighbor_time = time.time()
 		atual.source = inimov
 		# Alterar soluão antes de enviar
 		# print "{} - __neighborhood".format(type(self).__name__)
+		if self.use_metadata:
+			neighbor_proc_before_time = time.time()
 		sol_param = atual[inimov] if self.__process_sol_before_oper is None \
 			else self.__process_sol_before_oper(atual[inimov])
+		if self.use_metadata:
+			atual.metadata.neighbor_proc_before_time = time.time() - neighbor_proc_before_time
+
+		if self.use_metadata:
+			atual.metadata.neighbor_func_time = time.time()
 		atual[inimov] = max(atual[inimov], func(sol_param)) if self.maximize \
 			else min(atual[inimov], func(sol_param))
-		atual.counts[inimov] += 1
+		if self.use_metadata:
+			atual.metadata.neighbor_func_time = time.time() - atual.metadata.neighbor_func_time
+
+		if self.use_metadata:
+			atual.metadata.counts[inimov] += 1
+			atual.metadata.neighbor_time = time.time() - atual.metadata.neighbor_time
+			# print("neighborhood;{};{};process_before;{}".format(inimov, atual.metadata.neighbor_time,
+			# 	atual.metadata.neighbor_proc_before_time))
+
 		return atual
 
 	def best_solution(self, atual=None, anterior=None, melhor=None):
@@ -94,6 +113,9 @@ class DataFlowDVND(object):
 		return anterior, False, False
 
 	def manager(self, args=[]):
+		ini_time = 0
+		if self.use_metadata:
+			ini_time = time.time()
 		atual = args[0]
 		melhor = args[1]
 
@@ -116,9 +138,14 @@ class DataFlowDVND(object):
 			melhor.set_not_improved(atual.source)
 
 		if atual_melhor[2]:
-			melhor.combine_count[atual.source] += 1
+			melhor.metadata.combine_count[atual.source] += 1
 
+		ini_man_get_best = 0
+		if self.use_metadata:
+			ini_man_get_best = time.time()
 		best_sol = melhor[atual.source] = melhor.get_best(self.maximize)
+		if self.use_metadata:
+			melhor.metadata.man_get_best_time = time.time() - ini_man_get_best
 		# Caso não tenha melhorado mas tenha aparecido uma solução melhor
 		for x in melhor.get_not_improveds():
 			if (not self.maximize and best_sol < melhor[x]) or (self.maximize and best_sol > melhor[x]):
@@ -127,12 +154,21 @@ class DataFlowDVND(object):
 				# Se vai chamar novamente remove o sinal
 				melhor.set_not_improved(x, False)
 
-		for i in xrange(len(melhor.counts)):
-			melhor.counts[i] = max(atual.counts[i], melhor.counts[i])
+		for i in xrange(len(melhor.metadata.counts)):
+			melhor.metadata.counts[i] = max(atual.metadata.counts[i], melhor.metadata.counts[i])
+
+		if self.use_metadata:
+			melhor.metadata.age += 1
+			melhor.metadata.neighbor_time += atual.metadata.neighbor_time
+			melhor.metadata.neighbor_proc_before_time += atual.metadata.neighbor_proc_before_time
+			melhor.metadata.neighbor_func_time += atual.metadata.neighbor_func_time
+			total_time = time.time() - ini_time
+			melhor.metadata.man_time += total_time
+			# print("manager;{};{}".format(melhor.metadata.age, total_time))
 
 		return melhor
 
-	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x: True):
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
 		"""
 		:param number_of_workers: Número de workers Sucuri.
 		:param initial_solution: Solução inicial.
@@ -144,8 +180,7 @@ class DataFlowDVND(object):
 		# Nó final Cria n
 		number_of_opers = len(oper_funtions)
 		# End node only processed when there is no improvement
-		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].counts,
-			y[0].merge_count, y[0].combine_count), 1,
+		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].metadata), 1,
 			lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
@@ -190,14 +225,14 @@ class DataFlowDVND(object):
 
 class DataFlowGDVND(DataFlowDVND):
 	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: None,
-			merge_solutions=lambda sols=[]: sols, combine_sol=lambda sol1, sol2: sol1):
+			merge_solutions=lambda sols=[]: sols, combine_sol=lambda sol1, sol2: sol1, use_metadata=False):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
 		:param merge_solutions: The merge solution function.
 		:param process_sol_before_oper: Process the solution before it is sent to the operation node.
 		"""
-		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled, process_sol_before_oper)
+		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled, process_sol_before_oper, use_metadata)
 		self.__merge_solutions = merge_solutions
 		self.__combine_sol = combine_sol
 
@@ -232,12 +267,21 @@ class DataFlowGDVND(DataFlowDVND):
 		# print "{} - manager\n{}".format(type(self).__name__, resp.get_best())
 		# TODO fazer o merge de duas soluções e pegar a melhor
 		# print(",".join(["{{v:{},mt:{}}}".format(resp[x].value, len(resp[x].movtuple[0])) for x in xrange(len(resp))]))
+		ini_time = 0
+		if self.use_metadata:
+			ini_time = time.time()
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
+		if self.use_metadata:
+			resp.metadata.man_merge_time = time.time() - ini_time
+			resp.metadata.man_merge_sum_time += resp.metadata.man_merge_time
 		resp_sol = resp_tuple[0]
 		if resp_tuple[1] is not None:
-			resp.merge_count += 1
+			resp.metadata.merge_count += 1
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
+
+		# print("---{} --- {}---".format([len(resp[x].movtuple[0]) for x in xrange(len(resp))], 
+		# 	[[y for y in resp[x].movtuple[0]] for x in xrange(len(resp))]))
 
 		# print(",".join(["{{v:{},mt:{}}}".format(resp[x].value, len(resp[x].movtuple[0])) for x in xrange(len(resp))]))
 		# print("")

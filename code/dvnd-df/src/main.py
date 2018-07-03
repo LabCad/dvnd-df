@@ -22,7 +22,7 @@ mpi_enabled = hasparam("mpi")
 workers = int(getparam("n", None, 1))
 
 
-def print_final_solution(solutions=[], counts=[], ini_sol=None, initial_time=0, merge_count=0, combine_count=[]):
+def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
 	"""
 	:param solutions: Lista de soluções encontradas por cada estratégia.
 	:param counts: Lista com quantidade de vizinhanças exploradas por estratégia.
@@ -31,7 +31,7 @@ def print_final_solution(solutions=[], counts=[], ini_sol=None, initial_time=0, 
 	"""
 	end_time = time.time()
 	values_vec = [x.value for x in solutions]
-	print "solutions: {}, counts: {}".format(values_vec, counts)
+	print "solutions: {}, counts: {}".format(values_vec, metadata.counts)
 	print "Initial: {}".format(ini_sol)
 	final_solution = min(solutions)
 	elapsed_time = end_time - initial_time
@@ -43,11 +43,23 @@ def print_final_solution(solutions=[], counts=[], ini_sol=None, initial_time=0, 
 		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
 	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
-		ini_value, fin_value, elapsed_time, sum(counts), values_vec, counts, imp_value)
+		ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
 	if "gdvnd" == solver_param:
-		linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, merge_count,
-			combine_count, sum(combine_count))
+		linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
+			metadata.combine_count, sum(metadata.combine_count))
 	print linha
+	if metadata is not None:
+		print("\nage;{};\nmanager_time;{};manager_merge_time;{}".format(
+			metadata.age, metadata.man_time, metadata.man_merge_time))
+		print("neighbor_time;{};neighbor_proc_before;{};neighbor_func;{}".format(
+			metadata.neighbor_time, metadata.neighbor_proc_before_time, metadata.neighbor_func_time))
+		print("%;manager_time/total_time;{};neighbor_time/total_time;{}".format(100.0 * metadata.man_time / elapsed_time,
+			100.0 * metadata.neighbor_time / elapsed_time))
+		print("%;merge/manager;{}".format(100.0 * metadata.man_merge_time / metadata.man_time))
+		print("%;process/neighbor;{};func/neighbor;{}".format(
+			100.0 * metadata.neighbor_proc_before_time / metadata.neighbor_time,
+			100.0 * metadata.neighbor_func_time / metadata.neighbor_time))
+	print ""
 
 
 neigh_op = []
@@ -72,9 +84,10 @@ elif "ml" == problem_name.lower():
 		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y, multi_gpu, device_count) for mv in xrange(5)]
 
 print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
+is_use_metadata = True
 solver = None
 if "dvnd" == solver_param:
-	solver = DataFlowDVND(goal, mpi_enabled)
+	solver = DataFlowDVND(goal, mpi_enabled, use_metadata=is_use_metadata)
 elif "rvnd" == solver_param:
 	solver = DataFlowVND(goal, mpi_enabled, True)
 elif "vnd" == solver_param:
@@ -99,10 +112,10 @@ elif "gdvnd" == solver_param:
 	solver = DataFlowGDVND(goal, mpi_enabled,
 		lambda sol: apply_moves_to_sol_on_oper(sol),
 		lambda sols: mylib.merge_common_movs(sols),
-		lambda sol1, sol2: combine_solutions(sol1, sol2))
+		lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
 
 print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)
 start_time = time.time()
 solver.run(workers, ini_solution, neigh_op,
-	lambda args, counts, merge_count, combine_count, inisol=ini_solution:
-		print_final_solution(args, counts, inisol, start_time, merge_count, combine_count))
+	lambda args, metadata, inisol=ini_solution:
+		print_final_solution(args, inisol, start_time, metadata))

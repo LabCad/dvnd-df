@@ -35,6 +35,35 @@ class DecisionNode(Node):
 			self.sendops(opers, operq)
 
 
+class Metadata(object):
+	def __init__(self):
+		"""Number of called localseaches."""
+		self.age = 0
+
+		"""Total time elapsed on the manager node."""
+		self.man_time = 0
+		"""Time elapsed on a single merge operation."""
+		self.man_merge_time = 0
+		"""Total time on all already executed merge operations."""
+		self.man_merge_sum_time = 0
+		"""Time getting best solution"""
+		self.man_get_best_time = 0
+
+		"""Time taken by neighborhood process."""
+		self.neighbor_time = 0
+		"""Time elapsed processing solution before it is sent to the localsearch."""
+		self.neighbor_proc_before_time = 0
+		"""Time elapsed on the localsearch itself."""
+		self.neighbor_func_time = 0
+
+		"""Vector of neighborhoods calls count."""
+		self.counts = None
+		"""Vector with the number of comibined solutions count."""
+		self.combine_count = None
+		"""Count of merges on the movements."""
+		self.merge_count = 0
+
+
 class OptMessage(object):
 	"""
 	History for the DVND.
@@ -50,9 +79,9 @@ class OptMessage(object):
 		self.__source = source
 		self.__target = target
 		self.__not_improved = not_improved
-		self.counts = [0 for x in target]
-		self.combine_count = [0 for x in target]
-		self.merge_count = 0
+		self.metadata = Metadata()
+		self.metadata.counts = [0 for x in target]
+		self.metadata.combine_count = [0 for x in target]
 
 	def __getitem__(self, item=0):
 		return self.__solmap[item]
