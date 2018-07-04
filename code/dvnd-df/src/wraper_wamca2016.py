@@ -71,37 +71,38 @@ class WamcaWraper(object):
 
 	def __apply_moves(self, solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
 		lenmovs = len(cids)
-		if lenmovs > 0:
-			for i in xrange(len(cids) - 1, -1, -1):
-				if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
-					lenmovs -= 1
-				else:
-					break
-			for i in xrange(0, lenmovs - 1):
-				if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
-					cids[i], ciis[i], cjjs[i], ccosts[i], \
-					cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1] = \
-						cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1], \
-						cids[i], ciis[i], cjjs[i], ccosts[i]
-					lenmovs -= 1
-				# print "{}-{}".format(i, aa)
-				if i >= lenmovs - 1:
-					break
-			lenmovs = len(cids)
-			for i in xrange(len(cids) - 1, -1, -1):
-				if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
-					lenmovs -= 1
-				else:
-					break
+		# if lenmovs > 0:
+		for i in xrange(len(cids) - 1, -1, -1):
+			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+				lenmovs -= 1
+			else:
+				break
+		for i in xrange(0, lenmovs - 1):
+			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+				cids[i], ciis[i], cjjs[i], ccosts[i], \
+				cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1] = \
+					cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1], \
+					cids[i], ciis[i], cjjs[i], ccosts[i]
+				lenmovs -= 1
+			# print "{}-{}".format(i, aa)
+			if i >= lenmovs - 1:
+				break
+		lenmovs = len(cids)
+		for i in xrange(len(cids) - 1, -1, -1):
+			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+				lenmovs -= 1
+			else:
+				break
 
-			return self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
+		return self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
 
 	def __apply_moves_tuple(self, solint=[], tupple=None):
 		return self.__apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
 
 	def apply_moves(self, solution=None):
-		self.__apply_moves_tuple(solution.vector, solution.movtuple)
-		solution.value = self.calculate_value(solution.vector)
+		solution.value = self.__apply_moves_tuple(solution.vector, solution.movtuple)
+		# solution.value = self.calculate_value(solution.vector)
+		# print("resp;{};sol_value;{}".format(resp, solution.value))
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False, useMultipleGpu=False, device_count=1):
 		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
@@ -159,7 +160,7 @@ class WamcaWraper(object):
 			if len(intersection) > 0:
 				# print "merge_solutions({}): {}".format(len(intersection), solutions)
 				new_solution_vetor = numpy.copy(solutions[0].vector)
-				old_value = self.calculate_value(new_solution_vetor)
+				# old_value = self.calculate_value(new_solution_vetor)
 				self.__apply_moves_tuple(new_solution_vetor, from_movement_list_to_tuple(intersection))
 				new_value = self.calculate_value(new_solution_vetor)
 				# TODO Remove debug
