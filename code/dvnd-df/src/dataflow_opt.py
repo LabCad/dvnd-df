@@ -87,14 +87,20 @@ class DataFlowDVND(object):
 
 		if self.use_metadata:
 			atual.metadata.neighbor_func_time = time.time()
-		atual[inimov] = max(atual[inimov], func(sol_param)) if self.maximize \
-			else min(atual[inimov], func(sol_param))
+		func_resp = func(sol_param)
+		atual[inimov] = max(atual[inimov], func_resp[0]) if self.maximize \
+			else min(atual[inimov], func_resp[0])
 		if self.use_metadata:
 			atual.metadata.neighbor_func_time = time.time() - atual.metadata.neighbor_func_time
 
 		if self.use_metadata:
 			atual.metadata.counts[inimov] += 1
 			atual.metadata.neighbor_time = time.time() - atual.metadata.neighbor_time
+			atual.metadata.neighbor_func_inner_time = func_resp[1][0]
+			atual.metadata.neighbor_func_numpy_alloc_time = func_resp[1][1]
+			atual.metadata.neighbor_func_mpi_time = func_resp[1][2]
+			atual.metadata.neighbor_func_numpy_resize_time = func_resp[1][3]
+			atual.metadata.neighbor_func_rest = func_resp[1][4]
 			# print("neighborhood;{};{};process_before;{}".format(inimov, atual.metadata.neighbor_time,
 			# 	atual.metadata.neighbor_proc_before_time))
 
@@ -162,6 +168,11 @@ class DataFlowDVND(object):
 			melhor.metadata.neighbor_time += atual.metadata.neighbor_time
 			melhor.metadata.neighbor_proc_before_time += atual.metadata.neighbor_proc_before_time
 			melhor.metadata.neighbor_func_time += atual.metadata.neighbor_func_time
+			melhor.metadata.neighbor_func_inner_time += atual.metadata.neighbor_func_inner_time
+			melhor.metadata.neighbor_func_numpy_alloc_time += atual.metadata.neighbor_func_numpy_alloc_time
+			melhor.metadata.neighbor_func_numpy_resize_time += atual.metadata.neighbor_func_numpy_resize_time
+			melhor.metadata.neighbor_func_mpi_time += atual.metadata.neighbor_func_mpi_time
+			melhor.metadata.neighbor_func_rest += atual.metadata.neighbor_func_rest
 			total_time = time.time() - ini_time
 			melhor.metadata.man_time += total_time
 			# print("manager;{};{}".format(melhor.metadata.age, total_time))
@@ -272,8 +283,7 @@ class DataFlowGDVND(DataFlowDVND):
 			ini_time = time.time()
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
 		if self.use_metadata:
-			resp.metadata.man_merge_time = time.time() - ini_time
-			resp.metadata.man_merge_sum_time += resp.metadata.man_merge_time
+			resp.metadata.man_merge_time += time.time() - ini_time
 		resp_sol = resp_tuple[0]
 		if resp_tuple[1] is not None:
 			resp.metadata.merge_count += 1

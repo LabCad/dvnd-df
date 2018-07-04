@@ -36,6 +36,7 @@ class SolutionMovementTuple(SolutionVectorValue):
 	def __init__(self, vector, value, movtuple):
 		super(SolutionMovementTuple, self).__init__(vector, value)
 		self.movtuple = movtuple
+		# self.temp_vector = numpy.copy(vector)
 
 	def can_merge(self, other):
 		"""

@@ -5,6 +5,7 @@ import numpy
 import util
 import random
 import os.path
+import time
 from movement import *
 from solution import SolutionVectorValue, SolutionMovementTuple
 from util import compilelib
@@ -70,28 +71,30 @@ class WamcaWraper(object):
 
 	def __apply_moves(self, solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
 		lenmovs = len(cids)
-		for i in xrange(len(cids) - 1, -1, -1):
-			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
-				lenmovs -= 1
-			else:
-				break
-		for i in xrange(0, lenmovs - 1):
-			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
-				cids[i], ciis[i], cjjs[i], ccosts[i], \
-				cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1] = \
-					cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1], \
-					cids[i], ciis[i], cjjs[i], ccosts[i]
-				lenmovs -= 1
-			# print "{}-{}".format(i, aa)
-			if i >= lenmovs - 1:
-				break
-		lenmovs = len(cids)
-		for i in xrange(len(cids) - 1, -1, -1):
-			if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
-				lenmovs -= 1
-			else:
-				break
-		return self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
+		if lenmovs > 0:
+			for i in xrange(len(cids) - 1, -1, -1):
+				if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+					lenmovs -= 1
+				else:
+					break
+			for i in xrange(0, lenmovs - 1):
+				if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+					cids[i], ciis[i], cjjs[i], ccosts[i], \
+					cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1] = \
+						cids[lenmovs - 1], ciis[lenmovs - 1], cjjs[lenmovs - 1], ccosts[lenmovs - 1], \
+						cids[i], ciis[i], cjjs[i], ccosts[i]
+					lenmovs -= 1
+				# print "{}-{}".format(i, aa)
+				if i >= lenmovs - 1:
+					break
+			lenmovs = len(cids)
+			for i in xrange(len(cids) - 1, -1, -1):
+				if cids[i] == 0 and ciis[i] == 0 and cjjs[i] == 0 and ccosts[i] == 0:
+					lenmovs -= 1
+				else:
+					break
+
+			return self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
 
 	def __apply_moves_tuple(self, solint=[], tupple=None):
 		return self.__apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
@@ -106,22 +109,30 @@ class WamcaWraper(object):
 
 	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, useMultipleGpu=False, device_count=1,
 			justcalc=False):
+		alloc_numpy_time = time.time()
 		carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 			[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
 		n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
+		alloc_numpy_time = time.time() - alloc_numpy_time
 
+		mpi_call_time = time.time()
 		hostcode = 0
 		if useMultipleGpu:
 			from mpi4py import MPI
 			comm = MPI.COMM_WORLD
 			hostcode = comm.rank
+		mpi_call_time = time.time() - mpi_call_time
 
+		time_func_inner = time.time()
 		resp = self.__mylib.bestNeighbor(self.__file, solint, len(solint), neighborhood, justcalc, hostcode,# 0,#gethostcode(),
 			n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3], useMultipleGpu,
 			device_count)
+		time_func_inner = time.time() - time_func_inner
 
+		numpy_resize_time = time.time()
 		carrays = [numpy.resize(x, int(n_moves_array[0])) for x in carrays]
-		return solint, resp, carrays  # , carrays_size
+		numpy_resize_time = time.time() - numpy_resize_time
+		return solint, resp, carrays, (time_func_inner, alloc_numpy_time, mpi_call_time, numpy_resize_time)# , carrays_size
 
 	def calculate_value(self, solint=[], useMultipleGpu=False):
 		return self.__best_neighbor(solint, 1, True, useMultipleGpu)[1]
@@ -159,21 +170,28 @@ class WamcaWraper(object):
 		return solutions, None
 
 	def neigh_gpu(self, solution=None, inimov=0, useMultipleGpu=False, device_count=1):
+		ini_time = time.time()
 		resp = self.__best_neighbor(solution.vector, inimov, False, useMultipleGpu, device_count)
-		return SolutionVectorValue(resp[0], resp[1])
+		ini_time = time.time() - ini_time
+		return SolutionVectorValue(resp[0], resp[1]), (ini_time, 0, 0, 0, 0)
 
 	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0, useMultipleGpu=False, device_count=1):
 		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, useMultipleGpu, device_count)
-		temp_sol = numpy.copy(resp[0])
-		self.__apply_moves_tuple(temp_sol, resp[2])
-		valor = self.calculate_value(temp_sol)
-		return SolutionMovementTuple(resp[0], valor, resp[2])
+		time_fora = time.time()
+		# temp_sol = numpy.copy(resp[0])
+		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2])
+		# self.apply_moves(resp_sol)
+		time_fora = time.time() - time_fora
+		# resp_sol.vector = temp_sol
+		meta = resp[3][0], resp[3][1], resp[3][2], resp[3][3], time_fora
+		return SolutionMovementTuple(resp[0], resp[1], resp[2]), meta
 
 	def no_conflict(self, id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
 		return self.__mylib.noConflict(id1, i1, j1, id2, i2, j2)
 
 	def merge_independent_movements(self, sol1, sol2):
 		if sol1.can_merge(sol2):
+			# TODO Melhorar usando apenas um movtuple sem precisar gerar novos
 			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
 			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
 			cjjs = numpy.concatenate((sol1.movtuple[2], sol2.movtuple[2]))
@@ -181,8 +199,7 @@ class WamcaWraper(object):
 			independent_movs = self.get_no_conflict(cids, ciis, cjjs, ccosts)
 			resp = SolutionMovementTuple(numpy.copy(sol1.vector), 0, independent_movs)
 			self.apply_moves(resp)
-			for i in xrange(len(sol1)):
-				resp.vector[i] = sol1.vector[i]
+			numpy.copyto(resp.vector, sol1.vector)
 			return resp, True
 		return sol1, False
 

@@ -49,12 +49,21 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 			metadata.combine_count, sum(metadata.combine_count))
 	print linha
 	if metadata is not None:
-		print("\nage;{};\nmanager_time;{};manager_merge_time;{}".format(
-			metadata.age, metadata.man_time, metadata.man_merge_time))
-		print("neighbor_time;{};neighbor_proc_before;{};neighbor_func;{}".format(
+		print("\nage;{};".format(metadata.age))
+		print("\nmanager_time;{};manager_merge_time;{}".format(metadata.man_time, metadata.man_merge_time))
+
+		print("\nneighbor_time;{};neighbor_proc_before;{};neighbor_func;{}".format(
 			metadata.neighbor_time, metadata.neighbor_proc_before_time, metadata.neighbor_func_time))
-		print("%;manager_time/total_time;{};neighbor_time/total_time;{}".format(100.0 * metadata.man_time / elapsed_time,
+		print("neighbor_func_inner_time;{};neighbor_func_numpy_alloc_time;{}".format(
+			metadata.neighbor_func_inner_time, metadata.neighbor_func_numpy_alloc_time))
+		print("neighbor_func_mpi_time;{};neighbor_func_numpy_resize_time;{}".format(
+			metadata.neighbor_func_mpi_time, metadata.neighbor_func_numpy_resize_time))
+		print("neighbor_func_rest;{}".format(
+			metadata.neighbor_func_rest))
+
+		print("\n%;manager_time/total_time;{};neighbor_time/total_time;{}".format(100.0 * metadata.man_time / elapsed_time,
 			100.0 * metadata.neighbor_time / elapsed_time))
+
 		print("%;merge/manager;{}".format(100.0 * metadata.man_merge_time / metadata.man_time))
 		print("%;process/neighbor;{};func/neighbor;{}".format(
 			100.0 * metadata.neighbor_proc_before_time / metadata.neighbor_time,
