@@ -134,7 +134,7 @@ class OptMessage(object):
 		return item in self.__solmap
 
 	def __str__(self):
-		return "sol: {}, s: {}, t: {}, ni: {}".format(self.__solmap, self.__source,
+		return "sol: {}, s: {}, t: {}, ni: {}".format(str(self.__solmap), self.__source,
 			self.__target, self.__not_improved)
 
 	def get_not_improveds(self):

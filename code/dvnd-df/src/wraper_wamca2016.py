@@ -42,7 +42,7 @@ class WamcaWraper(object):
 		self.__mylib.bestNeighbor.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int,
 			ctypes.c_bool, ctypes.c_uint,
 			util.array_1d_uint, util.array_1d_ushort, util.array_1d_uint,
-			util.array_1d_uint, util.array_1d_int, ctypes.c_bool, ctypes.c_uint]
+			util.array_1d_uint, util.array_1d_int, ctypes.c_bool, ctypes.c_uint, util.array_1d_int]
 		# char * file, int *solution, unsigned int solutionSize, int neighborhood, bool justCalc = false
 		self.__mylib.bestNeighbor.restype = ctypes.c_uint
 
@@ -101,38 +101,40 @@ class WamcaWraper(object):
 
 	def apply_moves(self, solution=None):
 		solution.value = self.__apply_moves_tuple(solution.vector, solution.movtuple)
-		# solution.value = self.calculate_value(solution.vector)
-		# print("resp;{};sol_value;{}".format(resp, solution.value))
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False, useMultipleGpu=False, device_count=1):
 		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
-		return self.__best_neighbor_moves(solint, neighborhood, 0, useMultipleGpu, device_count, justcalc)
+		return self.__best_neighbor_moves(solint, neighborhood, 0, useMultipleGpu, device_count, justcalc,
+			numpy.array([], dtype=ctypes.c_int))
 
 	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, useMultipleGpu=False, device_count=1,
-			justcalc=False):
+			justcalc=False, solintResp=None):
 		alloc_numpy_time = time.time()
 		carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 			[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
 		n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
 		alloc_numpy_time = time.time() - alloc_numpy_time
 
-		mpi_call_time = time.time()
-		hostcode = 0
-		if useMultipleGpu:
-			from mpi4py import MPI
-			comm = MPI.COMM_WORLD
-			hostcode = comm.rank
-		mpi_call_time = time.time() - mpi_call_time
+		mpi_call_time = 0
+		hostcode = 0 if not useMultipleGpu else neighborhood
+		# mpi_call_time = time.time()
+		# hostcode = 0
+		# if useMultipleGpu:
+			# from mpi4py import MPI
+			# comm = MPI.COMM_WORLD
+			# hostcode = comm.rank
+		# mpi_call_time = time.time() - mpi_call_time
 
 		time_func_inner = time.time()
 		resp = self.__mylib.bestNeighbor(self.__file, solint, len(solint), neighborhood, justcalc, hostcode,# 0,#gethostcode(),
 			n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3], useMultipleGpu,
-			device_count)
+			device_count, solintResp)
 		time_func_inner = time.time() - time_func_inner
 
 		numpy_resize_time = time.time()
 		carrays = [numpy.resize(x, int(n_moves_array[0])) for x in carrays]
 		numpy_resize_time = time.time() - numpy_resize_time
+		# print("{}-{}".format(resp, solint))
 		return solint, resp, carrays, (time_func_inner, alloc_numpy_time, mpi_call_time, numpy_resize_time)# , carrays_size
 
 	def calculate_value(self, solint=[], useMultipleGpu=False):
@@ -177,7 +179,8 @@ class WamcaWraper(object):
 		return SolutionVectorValue(resp[0], resp[1]), (ini_time, 0, 0, 0, 0)
 
 	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0, useMultipleGpu=False, device_count=1):
-		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, useMultipleGpu, device_count)
+		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, useMultipleGpu, device_count,
+			False, solution.movvector)
 		time_fora = time.time()
 		# temp_sol = numpy.copy(resp[0])
 		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2])
