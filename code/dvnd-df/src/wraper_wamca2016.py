@@ -27,9 +27,11 @@ print "WAMCAPATH:" + wamca2016path
 
 class WamcaWraper(object):
 	def __init__(self, instancefile, mylibname='wamca2016lib', options=["-lgomp"], compiler_options=["-fopenmp"],
-		verbose=True, libpath=wamca2016path):
+		verbose=True, useMultipleGpu=False, deviceCount=1, libpath=wamca2016path):
 		assert instancefile is not None, "The file is mandatory"
 		self.__file = instancefile
+		self.__use_multiple_gpu = useMultipleGpu
+		self.__device_count = deviceCount
 
 		files = [libpath + "source/*.cu", libpath + "source/*.cpp"]
 		compilelib(files, localpath, mylibname, options, compiler_options, verbose)
@@ -102,13 +104,11 @@ class WamcaWraper(object):
 	def apply_moves(self, solution=None):
 		solution.value = self.__apply_moves_tuple(solution.vector, solution.movtuple)
 
-	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False, useMultipleGpu=False, device_count=1):
+	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False):
 		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
-		return self.__best_neighbor_moves(solint, neighborhood, 0, useMultipleGpu, device_count, justcalc,
-			numpy.array([], dtype=ctypes.c_int))
+		return self.__best_neighbor_moves(solint, neighborhood, 0, justcalc, numpy.array([], dtype=ctypes.c_int))
 
-	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, useMultipleGpu=False, device_count=1,
-			justcalc=False, solintResp=None):
+	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, justcalc=False, solintResp=None):
 		alloc_numpy_time = time.time()
 		carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 			[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
@@ -116,7 +116,7 @@ class WamcaWraper(object):
 		alloc_numpy_time = time.time() - alloc_numpy_time
 
 		mpi_call_time = 0
-		hostcode = 0 if not useMultipleGpu else neighborhood
+		hostcode = 0 if not self.__use_multiple_gpu else neighborhood
 		# mpi_call_time = time.time()
 		# hostcode = 0
 		# if useMultipleGpu:
@@ -127,8 +127,8 @@ class WamcaWraper(object):
 
 		time_func_inner = time.time()
 		resp = self.__mylib.bestNeighbor(self.__file, solint, len(solint), neighborhood, justcalc, hostcode,# 0,#gethostcode(),
-			n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3], useMultipleGpu,
-			device_count, solintResp)
+			n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3], self.__use_multiple_gpu,
+			self.__device_count, solintResp)
 		time_func_inner = time.time() - time_func_inner
 
 		numpy_resize_time = time.time()
@@ -137,11 +137,10 @@ class WamcaWraper(object):
 		# print("{}-{}".format(resp, solint))
 		return solint, resp, carrays, (time_func_inner, alloc_numpy_time, mpi_call_time, numpy_resize_time)# , carrays_size
 
-	def calculate_value(self, solint=[], useMultipleGpu=False):
-		return self.__best_neighbor(solint, 1, True, useMultipleGpu)[1]
+	def calculate_value(self, solint=[]):
+		return self.__best_neighbor(solint, 1, True)[1]
 
-	def create_initial_solution(self, solution_index=0, solver_param="", useMultipleGpu=False,
-			solution_instance_index=-1):
+	def create_initial_solution(self, solution_index=0, solver_param="", solution_instance_index=-1):
 		sol_info = wamca_solution_instance_file[solution_index]
 
 		# solint = [x for x in xrange(sol_info[1])]
@@ -150,9 +149,9 @@ class WamcaWraper(object):
 			random.shuffle(solint)
 		print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 		if "gdvnd" == solver_param:
-			return SolutionMovementTuple(solint, self.calculate_value(solint, useMultipleGpu), ([], [], [], []))
+			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
 		else:
-			return SolutionVectorValue(solint, self.calculate_value(solint, useMultipleGpu))
+			return SolutionVectorValue(solint, self.calculate_value(solint))
 
 	def merge_common_movs(self, solutions=None):
 		if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
@@ -172,15 +171,14 @@ class WamcaWraper(object):
 					for sol in solutions], intersection
 		return solutions, None
 
-	def neigh_gpu(self, solution=None, inimov=0, useMultipleGpu=False, device_count=1):
+	def neigh_gpu(self, solution=None, inimov=0):
 		ini_time = time.time()
-		resp = self.__best_neighbor(solution.vector, inimov, False, useMultipleGpu, device_count)
+		resp = self.__best_neighbor(solution.vector, inimov, False)
 		ini_time = time.time() - ini_time
 		return SolutionVectorValue(resp[0], resp[1]), (ini_time, 0, 0, 0, 0)
 
-	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0, useMultipleGpu=False, device_count=1):
-		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, useMultipleGpu, device_count,
-			False, solution.movvector)
+	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0):
+		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, False, solution.movvector)
 		time_fora = time.time()
 		# temp_sol = numpy.copy(resp[0])
 		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2])
@@ -272,29 +270,6 @@ def from_movement_list_to_tuple(values_tuple=[]):
 
 def get_file_name(solution_index=0):
 	return wamca_intance_path + wamca_solution_instance_file[solution_index][0]
-
-
-def copy_solution(ini_solution):
-	return SolutionVectorValue(numpy.copy(ini_solution.vector), ini_solution.value)
-
-
-def merge_moves(moves1=[], moves2=[]):
-	len1 = len(moves1[0])
-	for i in xrange(len1):
-		if moves1[3][i] >= 0:
-			len1 = i
-			break
-
-	len2 = len(moves2[0])
-	for i in xrange(len2):
-		if moves2[3][i] >= 0:
-			len2 = i
-			break
-
-	return numpy.concatenate((moves1[0][:len1], moves2[0][:len2])), \
-			numpy.concatenate((moves1[1][:len1], moves2[1][:len2])), \
-			numpy.concatenate((moves1[2][:len1], moves2[2][:len2])), \
-			numpy.concatenate((moves1[3][:len1], moves2[3][:len2]))
 
 
 wamca_intance_path = wamca2016path + "instances/"

@@ -84,13 +84,13 @@ if "tt" == problem_name.lower():
 elif "ml" == problem_name.lower():
 	from wraper_wamca2016 import get_file_name
 	file_name = get_file_name(solution_index)
-	mylib = WamcaWraper(file_name)
-	ini_solution = mylib.create_initial_solution(solution_index, solver_param, multi_gpu, solution_instance_index)
+	mylib = WamcaWraper(file_name, useMultipleGpu=multi_gpu, deviceCount=device_count)
+	ini_solution = mylib.create_initial_solution(solution_index, solver_param, solution_instance_index)
 
 	if "gdvnd" == solver_param:
-		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, number_of_moves, multi_gpu, device_count) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, number_of_moves) for mv in xrange(5)]
 	else:
-		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y, multi_gpu, device_count) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
 
 print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 is_use_metadata = True
