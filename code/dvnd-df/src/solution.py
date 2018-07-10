@@ -33,10 +33,10 @@ class SolutionMovementTuple(SolutionVectorValue):
 	"""
 	Solution that includes the list of movements.
 	"""
-	def __init__(self, vector, value, movtuple):
+	def __init__(self, vector, value, movtuple, movvector=None):
 		super(SolutionMovementTuple, self).__init__(vector, value)
-		self.movtuple = movtuple
-		self.movvector = numpy.copy(vector)
+		self.__movtuple = movtuple
+		self.movvector = movvector if movvector is not None else numpy.copy(vector)
 		self.movapplied = False
 
 	def can_merge(self, other):
@@ -47,6 +47,15 @@ class SolutionMovementTuple(SolutionVectorValue):
 		"""
 		# return super(SolutionMovementTuple, self).__eq__(other)
 		return (other.vector == self.vector).all()
+
+	@property
+	def movtuple(self):
+		return self.__movtuple
+
+	@movtuple.setter
+	def movtuple(self, value):
+		self.__movtuple = value
+		self.movapplied = False
 
 	# def merge(self, other):
 	# 	newtuple = set(SimpleMovement.from_tuple_to_list(self.movtuple)) - \

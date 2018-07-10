@@ -248,9 +248,7 @@ class DataFlowGDVND(DataFlowDVND):
 		self.__combine_sol = combine_sol
 
 	def best_solution(self, atual=None, anterior=None, melhor=None):
-		# TODO Falta fazer o merge dos movimentos independentes
 		# get_no_conflict(cids, ciis, cjjs, ccosts):
-		# TODO Comparar a melhor solução atual com a nova e o não conflito da melhor com a atual
 		# print "{} - best_solution".format(type(self).__name__)
 		if len(atual.movtuple[0]) > 0 and len(melhor.movtuple[0]) > 0:
 			combined_sol_resp = self.__combine_sol(atual, melhor)
@@ -258,7 +256,6 @@ class DataFlowGDVND(DataFlowDVND):
 			if self.maximize:
 				resp_sol = max(atual, anterior, melhor, combined_sol)
 				# if resp_sol == combined_sol and combined_sol_resp[1]:
-					# TODO Remover debug
 					# print("Combinou: v:{}-{}={}({}%)".format(anterior.value, combined_sol.value,
 					# 	anterior.value - combined_sol.value,
 					# 	100.0 * (anterior.value - combined_sol.value) / anterior.value))
@@ -266,7 +263,6 @@ class DataFlowGDVND(DataFlowDVND):
 			else:
 				resp_sol = min(atual, anterior, melhor, combined_sol)
 				# if resp_sol == combined_sol and combined_sol_resp[1]:
-					# TODO Remover debug
 					# print("Combinou: v:{}-{}={}({}%)".format(anterior.value, combined_sol.value,
 					# 	anterior.value - combined_sol.value,
 					# 	100.0 * (anterior.value - combined_sol.value) / anterior.value))

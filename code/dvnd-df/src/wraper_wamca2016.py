@@ -27,7 +27,7 @@ print "WAMCAPATH:" + wamca2016path
 
 class WamcaWraper(object):
 	def __init__(self, instancefile, mylibname='wamca2016lib', options=["-lgomp"], compiler_options=["-fopenmp"],
-		verbose=True, useMultipleGpu=False, deviceCount=1, libpath=wamca2016path):
+			verbose=True, useMultipleGpu=False, deviceCount=1, libpath=wamca2016path):
 		assert instancefile is not None, "The file is mandatory"
 		self.__file = instancefile
 		self.__use_multiple_gpu = useMultipleGpu
@@ -102,7 +102,11 @@ class WamcaWraper(object):
 		return self.__apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
 
 	def apply_moves(self, solution=None):
-		solution.value = self.__apply_moves_tuple(solution.vector, solution.movtuple)
+		if not solution.movapplied and len(solution.movtuple[0]) > 0:
+			numpy.copyto(solution.movvector, solution.vector)
+			solution.value = self.__apply_moves_tuple(solution.movvector, solution.movtuple)
+			solution.movapplied = True
+			solution.vector, solution.movvector = solution.movvector, solution.vector
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False):
 		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
@@ -120,9 +124,9 @@ class WamcaWraper(object):
 		# mpi_call_time = time.time()
 		# hostcode = 0
 		# if useMultipleGpu:
-			# from mpi4py import MPI
-			# comm = MPI.COMM_WORLD
-			# hostcode = comm.rank
+		# from mpi4py import MPI
+		# comm = MPI.COMM_WORLD
+		# hostcode = comm.rank
 		# mpi_call_time = time.time() - mpi_call_time
 
 		time_func_inner = time.time()
@@ -135,7 +139,8 @@ class WamcaWraper(object):
 		carrays = [numpy.resize(x, int(n_moves_array[0])) for x in carrays]
 		numpy_resize_time = time.time() - numpy_resize_time
 		# print("{}-{}".format(resp, solint))
-		return solint, resp, carrays, (time_func_inner, alloc_numpy_time, mpi_call_time, numpy_resize_time)# , carrays_size
+		return solint, resp, carrays, (time_func_inner, alloc_numpy_time, mpi_call_time, numpy_resize_time), \
+			solintResp  #, carrays_size
 
 	def calculate_value(self, solint=[]):
 		return self.__best_neighbor(solint, 1, True)[1]
@@ -164,7 +169,6 @@ class WamcaWraper(object):
 				# old_value = self.calculate_value(new_solution_vetor)
 				self.__apply_moves_tuple(new_solution_vetor, from_movement_list_to_tuple(intersection))
 				new_value = self.calculate_value(new_solution_vetor)
-				# TODO Remove debug
 				# print("merge {} movements, value: {} -> {}".format(len(intersection), old_value, new_value))
 				return [SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
 					from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
@@ -178,15 +182,34 @@ class WamcaWraper(object):
 		return SolutionVectorValue(resp[0], resp[1]), (ini_time, 0, 0, 0, 0)
 
 	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0):
-		resp = self.__best_neighbor_moves(solution.vector, inimov, n_moves, False, solution.movvector)
 		time_fora = time.time()
+		# sol_copy = SolutionMovementTuple(numpy.copy(solution.vector), solution.value,
+		# 	([], [], [], []), numpy.copy(solution.movvector))
+		copy_sol = None
+		# self.apply_moves(sol_copy)
+		if len(solution.movtuple[0]) > 0:
+			if not solution.movapplied:
+				copy_sol = numpy.copy(solution.vector)
+				self.__apply_moves_tuple(solution.movvector, solution.movtuple)
+			else:
+				copy_sol = numpy.copy(solution.movvector)
+		else:
+			copy_sol = numpy.copy(solution.vector)
+		resp = self.__best_neighbor_moves(copy_sol, inimov, n_moves, False, numpy.copy(solution.movvector))
 		# temp_sol = numpy.copy(resp[0])
 		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2])
 		# self.apply_moves(resp_sol)
 		time_fora = time.time() - time_fora
 		# resp_sol.vector = temp_sol
 		meta = resp[3][0], resp[3][1], resp[3][2], resp[3][3], time_fora
-		return SolutionMovementTuple(resp[0], resp[1], resp[2]), meta
+		# return SolutionMovementTuple(resp[0], resp[1], resp[2]), meta
+		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2], solution.movvector)
+		resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2], resp[4])
+		# resp_sol = sol_copy
+		# resp_sol.value = resp[1]
+		# resp_sol.movtuple = resp[2]
+		resp_sol.movapplied = True
+		return resp_sol, meta
 
 	def no_conflict(self, id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
 		return self.__mylib.noConflict(id1, i1, j1, id2, i2, j2)

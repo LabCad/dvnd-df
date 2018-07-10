@@ -267,7 +267,6 @@ class WraperWamca2016Test(unittest.TestCase):
 		solution_index = 0
 		sol_info = wamca_solution_instance_file[solution_index]
 		tam = sol_info[1]
-		file_name = get_file_name(solution_index)
 		number_of_moves = 10
 
 		sol_list = numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int)
@@ -279,7 +278,7 @@ class WraperWamca2016Test(unittest.TestCase):
 
 		resp = list()
 		for x in xrange(len(sol)):
-			resp.append(self.__mylib.neigh_gpu_moves(sol[x], x, number_of_moves))
+			resp.append(self.__mylib.neigh_gpu_moves(sol[x], x, number_of_moves)[0])
 
 		self.assertEqual(len(sol), len(resp), "No other alternative")
 		# print "Found solutions"
