@@ -94,15 +94,15 @@ class WraperWamca2016Test(unittest.TestCase):
 		solution.movtuple = from_list_to_tuple([0], [1], [2], [0])
 		self.__mylib.apply_moves(solution)
 		sol_vector_copy[2], sol_vector_copy[1] = sol_vector_copy[1], sol_vector_copy[2]
-		self.assertTrue((sol_vector_copy == solution.vector).all(), "Swap 1-2")
+		self.assertTrue((sol_vector_copy == solution.movvector).all(), "Swap 1-2")
 
-		solution.vector = numpy.array([x for x in xrange(self.__tam)], dtype=ctypes.c_int)
+		# solution.vector = numpy.array([x for x in xrange(self.__tam)], dtype=ctypes.c_int)
 		solution.movtuple = from_list_to_tuple([0, 0], [4, 2], [5, 3], [0, 0])
 		sol_vector_copy = numpy.copy(solution.vector)
 		self.__mylib.apply_moves(solution)
 		sol_vector_copy[4], sol_vector_copy[5] = sol_vector_copy[5], sol_vector_copy[4]
 		sol_vector_copy[2], sol_vector_copy[3] = sol_vector_copy[3], sol_vector_copy[2]
-		self.assertTrue((sol_vector_copy == solution.vector).all(), "Swap 4-5, Swap 2-3")
+		self.assertTrue((sol_vector_copy == solution.movvector).all(), "Swap 4-5, Swap 2-3")
 
 	def test_merge_SolutionMovementTuple(self):
 		solution_index = 0
