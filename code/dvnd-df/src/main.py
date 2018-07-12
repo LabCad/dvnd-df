@@ -61,13 +61,13 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 		print("neighbor_func_rest;{}".format(
 			metadata.neighbor_func_rest))
 
-		print("\n%;manager_time/total_time;{};neighbor_time/total_time;{}".format(100.0 * metadata.man_time / elapsed_time,
-			100.0 * metadata.neighbor_time / elapsed_time))
-
-		print("%;merge/manager;{}".format(100.0 * metadata.man_merge_time / metadata.man_time))
-		print("%;process/neighbor;{};func/neighbor;{}".format(
-			100.0 * metadata.neighbor_proc_before_time / metadata.neighbor_time,
-			100.0 * metadata.neighbor_func_time / metadata.neighbor_time))
+		# print("\n%;manager_time/total_time;{};neighbor_time/total_time;{}".format(100.0 * metadata.man_time / elapsed_time,
+		# 	100.0 * metadata.neighbor_time / elapsed_time))
+		#
+		# print("%;merge/manager;{}".format(100.0 * metadata.man_merge_time / metadata.man_time))
+		# print("%;process/neighbor;{};func/neighbor;{}".format(
+		# 	100.0 * metadata.neighbor_proc_before_time / metadata.neighbor_time,
+		# 	100.0 * metadata.neighbor_func_time / metadata.neighbor_time))
 	print ""
 
 
