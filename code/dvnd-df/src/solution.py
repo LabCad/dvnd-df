@@ -10,7 +10,7 @@ class SolutionVectorValue(object):
 	def __init__(self, vector, value=0):
 		if type(vector) is not numpy.ndarray:
 			raise ValueError('Use a numpy array in the vector, for performance reasons')
-		self.vector = vector
+		self.__vector = vector
 		self.value = value
 
 	def __lt__(self, other):
@@ -27,6 +27,14 @@ class SolutionVectorValue(object):
 
 	def __hash__(self):
 		return self.value + self.vector[0]
+
+	@property
+	def vector(self):
+		return self.__vector
+
+	@vector.setter
+	def vector(self, value):
+		self.__vector = value
 
 
 class SolutionMovementTuple(SolutionVectorValue):
@@ -57,11 +65,14 @@ class SolutionMovementTuple(SolutionVectorValue):
 		self.__movtuple = value
 		self.movapplied = False
 
-	# def merge(self, other):
-	# 	newtuple = set(SimpleMovement.from_tuple_to_list(self.movtuple)) - \
-	# 		set(SimpleMovement.from_tuple_to_list(other.movtuple))
-	# 	newtuple = SimpleMovement.from_list_to_tuple(list(newtuple))
-	# 	return SolutionMovementTuple(deepcopy(self.vector), self.value, newtuple)
+	@property
+	def vector(self):
+		return super(SolutionMovementTuple, self).vector
+
+	@SolutionVectorValue.vector.setter
+	def vector(self, value):
+		SolutionVectorValue.vector.fset(self, value)
+		self.movapplied = False
 
 	def __str__(self):
 		return "{}-movtuple: []".format(super(SolutionMovementTuple, self).__str__(), self.movtuple)

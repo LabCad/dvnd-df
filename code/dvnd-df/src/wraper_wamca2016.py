@@ -106,7 +106,10 @@ class WamcaWraper(object):
 			numpy.copyto(solution.movvector, solution.vector)
 			solution.value = self.__apply_moves_tuple(solution.movvector, solution.movtuple)
 			solution.movapplied = True
-			solution.vector, solution.movvector = solution.movvector, solution.vector
+			# solution.vector, solution.movvector = solution.movvector, solution.vector
+		# else:
+		# 	if solution.movapplied:
+		# 		print "economizou apply_moves"
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False):
 		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
