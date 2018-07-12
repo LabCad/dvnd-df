@@ -46,6 +46,7 @@ class Metadata(object):
 		self.man_merge_time = 0
 		"""Time getting best solution"""
 		self.man_get_best_time = 0
+		self.man_update_data_time = 0
 
 		"""Time taken by neighborhood process."""
 		self.neighbor_time = 0

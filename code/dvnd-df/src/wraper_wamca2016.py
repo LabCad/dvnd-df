@@ -6,7 +6,7 @@ import util
 import random
 import os.path
 import time
-from movement import *
+# from movement import *
 from solution import SolutionVectorValue, SolutionMovementTuple
 from util import compilelib
 
@@ -122,15 +122,15 @@ class WamcaWraper(object):
 		n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
 		alloc_numpy_time = time.time() - alloc_numpy_time
 
-		mpi_call_time = 0
-		hostcode = 0 if not self.__use_multiple_gpu else neighborhood
-		# mpi_call_time = time.time()
-		# hostcode = 0
-		# if useMultipleGpu:
-		# from mpi4py import MPI
-		# comm = MPI.COMM_WORLD
-		# hostcode = comm.rank
-		# mpi_call_time = time.time() - mpi_call_time
+		# mpi_call_time = 0
+		# hostcode = 0 if not self.__use_multiple_gpu else neighborhood
+		mpi_call_time = time.time()
+		hostcode = 0
+		if self.__use_multiple_gpu:
+			from mpi4py import MPI
+			comm = MPI.COMM_WORLD
+			hostcode = comm.rank
+		mpi_call_time = time.time() - mpi_call_time
 
 		time_func_inner = time.time()
 		resp = self.__mylib.bestNeighbor(self.__file, solint, len(solint), neighborhood, justcalc, hostcode,# 0,#gethostcode(),
@@ -167,15 +167,20 @@ class WamcaWraper(object):
 			for i in xrange(1, len(solutions)):
 				intersection &= set(from_tuple_to_movement_list(solutions[i].movtuple))
 			if len(intersection) > 0:
-				# print "merge_solutions({}): {}".format(len(intersection), solutions)
 				new_solution_vetor = numpy.copy(solutions[0].vector)
-				# old_value = self.calculate_value(new_solution_vetor)
 				self.__apply_moves_tuple(new_solution_vetor, from_movement_list_to_tuple(intersection))
 				new_value = self.calculate_value(new_solution_vetor)
-				# print("merge {} movements, value: {} -> {}".format(len(intersection), old_value, new_value))
-				return [SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
-					from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
-					for sol in solutions], intersection
+
+				# Optimization for the case where all the solutions are the same
+				if len(intersection) == len(solutions[0].movtuple[0]) and len(set(solutions)) == 1:
+					localsolution = SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
+						from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(solutions[0].movtuple)) - intersection)))
+					return [localsolution for sol in solutions], intersection
+				else:
+					return [SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
+						from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(sol.movtuple)) - intersection)))
+						for sol in solutions], intersection
+
 		return solutions, None
 
 	def neigh_gpu(self, solution=None, inimov=0):
@@ -278,20 +283,30 @@ def from_list_to_tuple(ids=[], iis=[], jjs=[], costs=[]):
 		numpy.array(costs, dtype=ctypes.c_int)
 
 
-def from_tuple_to_movement(value_tuple):
-	return SimpleMovement(value_tuple[0], value_tuple[1], value_tuple[2], value_tuple[3])
+# def from_tuple_to_movement(value_tuple):
+# 	return SimpleMovement(value_tuple[0], value_tuple[1], value_tuple[2], value_tuple[3])
 
 
 def from_tuple_to_movement_list(values_tuple):
-	return [SimpleMovement(values_tuple[0][x], values_tuple[1][x], values_tuple[2][x], values_tuple[3][x])
+	# return [SimpleMovement(values_tuple[0][x], values_tuple[1][x], values_tuple[2][x], values_tuple[3][x])
+	# 	for x in xrange(len(values_tuple[0]))]
+
+	# [(solutions[i].movtuple[0][x], solutions[i].movtuple[1][x],
+	# solutions[i].movtuple[2][x], solutions[i].movtuple[3][x])
+	# for x in xrange(len(solutions[i].movtuple[0]))]
+	return [(values_tuple[0][x], values_tuple[1][x], values_tuple[2][x], values_tuple[3][x])
 		for x in xrange(len(values_tuple[0]))]
 
 
 def from_movement_list_to_tuple(values_tuple=[]):
-	return numpy.array([x.movtype for x in values_tuple], dtype=ctypes.c_ushort), \
-		numpy.array([x.value_i for x in values_tuple], dtype=ctypes.c_uint), \
-		numpy.array([x.value_j for x in values_tuple], dtype=ctypes.c_uint), \
-		numpy.array([x.cost for x in values_tuple], dtype=ctypes.c_int)
+	# return numpy.array([x.movtype for x in values_tuple], dtype=ctypes.c_ushort), \
+	# 	numpy.array([x.value_i for x in values_tuple], dtype=ctypes.c_uint), \
+	# 	numpy.array([x.value_j for x in values_tuple], dtype=ctypes.c_uint), \
+	# 	numpy.array([x.cost for x in values_tuple], dtype=ctypes.c_int)
+	return numpy.array([x[0] for x in values_tuple], dtype=ctypes.c_ushort), \
+		numpy.array([x[1] for x in values_tuple], dtype=ctypes.c_uint), \
+		numpy.array([x[2] for x in values_tuple], dtype=ctypes.c_uint), \
+		numpy.array([x[3] for x in values_tuple], dtype=ctypes.c_int)
 
 
 def get_file_name(solution_index=0):

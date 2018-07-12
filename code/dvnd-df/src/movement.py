@@ -2,46 +2,19 @@
 from copy import deepcopy
 
 
-class MLMove(object):
-	"""
-	typedef enum {
-		MLMI_SWAP,
-		MLMI_2OPT,
-		MLMI_OROPT1,
-		MLMI_OROPT2,
-		MLMI_OROPT3,
-	} MLMoveId;
-
-	struct MLMove {
-		MLMoveId  id;
-		int       i;
-		int       j;
-		int       cost;
-	};
-	"""
-	def __init__(self, id=0, i=0, j=0, cost=0):
-		self.id = id
-		self.i = i
-		self.j = j
-		self.cost = cost
-
-	def __str__(self):
-		return "{{id:{},i:{},j:{},cost:{}}}".format(self.id, self.i, self.j, self.cost)
-
-
-class SimpleMovement(object):
-	def __init__(self, movtype=0, value_i=0, value_j=0, cost=0):
-		self.movtype = movtype
-		self.value_i = value_i
-		self.value_j = value_j
-		self.cost = cost
-
-	def __hash__(self):
-		return hash((self.movtype, self.value_i, self.value_j, self.cost))
-
-	def __eq__(self, other):
-		return self.movtype == other.movtype and self.value_i == other.value_i \
-			and self.value_j == other.value_j and self.cost == other.cost
+# class SimpleMovement(object):
+# 	def __init__(self, movtype=0, value_i=0, value_j=0, cost=0):
+# 		self.movtype = movtype
+# 		self.value_i = value_i
+# 		self.value_j = value_j
+# 		self.cost = cost
+#
+# 	def __hash__(self):
+# 		return hash((self.movtype, self.value_i, self.value_j, self.cost))
+#
+# 	def __eq__(self, other):
+# 		return self.movtype == other.movtype and self.value_i == other.value_i \
+# 			and self.value_j == other.value_j and self.cost == other.cost
 
 
 class MovementType(object):
@@ -106,35 +79,3 @@ class Movement(object):
 				return (max(self.x, self.y) + self.k < min(mov.x, mov.y)) \
 					or (min(self.x, self.y) > max(mov.x, mov.y) + mov.k)
 		return True
-
-
-def neigh_mov(args=[], inimov=Movement()):
-	atual = args[0]
-	# antes = atual[oper_idx]
-	# str_antes = "oper{} - sv: {}".format(oper_idx, solvalue)
-
-	# movs = {0: MovementType.SWAP, 1: MovementType.TWO_OPT, 2: MovementType.OR_OPT_K}
-	# movtype = movs[oper_idx]
-	movsinv = {MovementType.SWAP: 0, MovementType.TWO_OPT: 1, MovementType.OR_OPT_K: 2}
-	oper_idx = movsinv[inimov.movtype]
-	atual.source = oper_idx
-	sol = atual[oper_idx]
-	best_val = sol.value
-	best_sol = deepcopy(sol)
-	sol_copy = deepcopy(sol)
-	mov = inimov
-	for i in xrange(len(sol)):
-		for j in xrange(i + 1, len(sol)):
-			mov.x, mov.y = i, j
-			# TODO Melhorar implementação com desfazer movimento
-			sol_copy.set_route(sol.get_route)
-			sol_copy.accept(mov)
-			sol_val = sol_copy.value
-			if sol_val < best_val:
-				best_val = sol_val
-				best_sol.set_route(sol_copy.get_route)
-
-	atual[oper_idx] = best_sol
-	# print "{}:{}-{}".format(oper_idx, sol, best_sol)
-
-	return atual

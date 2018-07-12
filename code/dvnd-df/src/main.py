@@ -50,7 +50,8 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	print linha
 	if metadata is not None:
 		print("\nage;{};".format(metadata.age))
-		print("\nmanager_time;{};manager_merge_time;{}".format(metadata.man_time, metadata.man_merge_time))
+		print("\nmanager_time;{};man_get_best_time;{};man_update_data_time;{}\nmanager_merge_time;{}".
+			format(metadata.man_time, metadata.man_get_best_time, metadata.man_update_data_time, metadata.man_merge_time))
 
 		print("\nneighbor_time;{};neighbor_proc_before;{};neighbor_func;{}".format(
 			metadata.neighbor_time, metadata.neighbor_proc_before_time, metadata.neighbor_func_time))
@@ -119,8 +120,8 @@ elif "gdvnd" == solver_param:
 		return mylib.merge_independent_movements(sol1, sol2)
 
 	solver = DataFlowGDVND(goal, mpi_enabled,
-		lambda sol: apply_moves_to_sol_on_oper(sol),
-		lambda sols: mylib.merge_common_movs(sols),
+		apply_moves_to_sol_on_oper,
+		mylib.merge_common_movs,
 		lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
 
 print "Solver: {}, number of workers: {}".format(solver_param.upper(), workers)

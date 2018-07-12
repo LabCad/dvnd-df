@@ -108,7 +108,6 @@ class WraperWamca2016Test(unittest.TestCase):
 		solution_index = 0
 		sol_info = wamca_solution_instance_file[solution_index]
 		tam = sol_info[1]
-		file_name = get_file_name(solution_index)
 
 		# No moves
 		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,

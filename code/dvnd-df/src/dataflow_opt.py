@@ -119,9 +119,9 @@ class DataFlowDVND(object):
 		return anterior, False, False
 
 	def manager(self, args=[]):
-		ini_time = 0
+		ini_time = ini_best_time = int_update_time = 0
 		if self.use_metadata:
-			ini_time = time.time()
+			int_update_time = ini_best_time = ini_time = time.time()
 		atual = args[0]
 		melhor = args[1]
 
@@ -131,6 +131,8 @@ class DataFlowDVND(object):
 
 		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source], melhor.get_best(self.maximize))
 		melhor[atual.source] = atual_melhor[0]
+		if self.use_metadata:
+			ini_best_time = time.time() - ini_best_time
 
 		# if (not self.__maximize and atual[atual.source] < melhor[atual.source]) \
 		# 		or (self.__maximize and melhor[atual.source] < atual[atual.source]):
@@ -138,6 +140,8 @@ class DataFlowDVND(object):
 		# 	melhor.set_target(atual.source)
 		# else:
 		# 	melhor.set_not_improved(atual.source)
+		if self.use_metadata:
+			int_update_time = time.time()
 		if atual_melhor[1]:
 			melhor.set_target(atual.source)
 		else:
@@ -162,6 +166,8 @@ class DataFlowDVND(object):
 
 		for i in xrange(len(melhor.metadata.counts)):
 			melhor.metadata.counts[i] = max(atual.metadata.counts[i], melhor.metadata.counts[i])
+		if self.use_metadata:
+			int_update_time = time.time() - int_update_time
 
 		if self.use_metadata:
 			melhor.metadata.age += 1
@@ -174,7 +180,10 @@ class DataFlowDVND(object):
 			melhor.metadata.neighbor_func_mpi_time += atual.metadata.neighbor_func_mpi_time
 			melhor.metadata.neighbor_func_rest += atual.metadata.neighbor_func_rest
 			total_time = time.time() - ini_time
+
 			melhor.metadata.man_time += total_time
+			melhor.metadata.man_get_best_time += ini_best_time
+			melhor.metadata.man_update_data_time += int_update_time
 			# print("manager;{};{}".format(melhor.metadata.age, total_time))
 
 		return melhor
@@ -278,13 +287,14 @@ class DataFlowGDVND(DataFlowDVND):
 		if self.use_metadata:
 			ini_time = time.time()
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
-		if self.use_metadata:
-			resp.metadata.man_merge_time += time.time() - ini_time
+
 		resp_sol = resp_tuple[0]
 		if resp_tuple[1] is not None:
 			resp.metadata.merge_count += 1
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
+		if self.use_metadata:
+			resp.metadata.man_merge_time += time.time() - ini_time
 
 		# print("---{} --- {}---".format([len(resp[x].movtuple[0]) for x in xrange(len(resp))], 
 		# 	[[y for y in resp[x].movtuple[0]] for x in xrange(len(resp))]))
