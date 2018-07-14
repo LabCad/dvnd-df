@@ -75,7 +75,7 @@ class SolutionMovementTuple(SolutionVectorValue):
 		self.movapplied = False
 
 	def __str__(self):
-		return "{}-movtuple: []".format(super(SolutionMovementTuple, self).__str__(), self.movtuple)
+		return "{}-movtuple: {}".format(super(SolutionMovementTuple, self).__str__(), self.movtuple)
 
 
 class SolutionTTP(SolutionVectorValue):

@@ -172,7 +172,8 @@ class WamcaWraper(object):
 				new_value = self.calculate_value(new_solution_vetor)
 
 				# Optimization for the case where all the solutions are the same
-				if len(intersection) == len(solutions[0].movtuple[0]) and len(set(solutions)) == 1:
+				# len(intersection) == len(solutions[0].movtuple[0])
+				if all([len(intersection) == len(x.movtuple[0]) for x in solutions]) and len(set(solutions)) == 1:
 					localsolution = SolutionMovementTuple(numpy.copy(new_solution_vetor), new_value,
 						from_movement_list_to_tuple(list(set(from_tuple_to_movement_list(solutions[0].movtuple)) - intersection)))
 					return [localsolution for sol in solutions], intersection
