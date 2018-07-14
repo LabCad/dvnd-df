@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import time
+# import time
 from dataflow_opt import *
 from wraper_wamca2016 import WamcaWraper
 from cmdparam import CommandParams
 
 
 # Command line parameters
-param = CommandParams()
+param = CommandParams(solver="vnd")
 
 
 def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -30,8 +30,8 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	if abs(fin_value * 1.0) > 0.00001:
 		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
-	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
-		ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
+	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{};age;{}".format(
+		ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value, metadata.age)
 	if "gdvnd" == param.solver:
 		linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
 			metadata.combine_count, sum(metadata.combine_count))
@@ -85,11 +85,11 @@ print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 is_use_metadata = True
 solver = None
 if "dvnd" == param.solver:
-	solver = DataFlowDVND(goal, param.mpi_enabled, use_metadata=is_use_metadata)
+	solver = DataFlowDVND(param.goal, param.mpi_enabled, use_metadata=is_use_metadata)
 elif "rvnd" == param.solver:
-	solver = DataFlowVND(goal, param.mpi_enabled, True)
+	solver = DataFlowVND(param.goal, param.mpi_enabled, True)
 elif "vnd" == param.solver:
-	solver = DataFlowVND(goal, param.mpi_enabled)
+	solver = DataFlowVND(param.goal, param.mpi_enabled)
 elif "gdvnd" == param.solver:
 	assert "ml" == param.problem_name, "Merge solutions not implemented for TTP"
 	print("number_of_moves: {}".format(param.number_of_moves))
