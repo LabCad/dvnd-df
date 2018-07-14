@@ -25,8 +25,8 @@ class WraperWamca2016Test(unittest.TestCase):
 
 	def test_merge_distinct_solutions(self):
 		tam = 5
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([], [], [], []))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([], [], [], []))
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10, ([], [], [], []))
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10, ([], [], [], []))
 		sol1.vector[0], sol1.vector[1] = sol1.vector[1], sol1.vector[0]
 		sols = [sol0, sol1]
 
@@ -38,8 +38,8 @@ class WraperWamca2016Test(unittest.TestCase):
 
 	def test_merge_solutions_no_moves(self):
 		tam = 5
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([], [], [], []))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([], [], [], []))
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10, ([], [], [], []))
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10, ([], [], [], []))
 		sols = [sol0, sol1]
 
 		merged_sols = self.__mylib.merge_common_movs(sols)[0]
@@ -53,8 +53,8 @@ class WraperWamca2016Test(unittest.TestCase):
 		sol_info = wamca_solution_instance_file[solution_index]
 		tam = sol_info[1]
 
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([0], [1], [2], [2]))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10, ([0], [1], [2], [2]))
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10, ([0], [1], [2], [2]))
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10, ([0], [1], [2], [2]))
 		sols = [sol0, sol1]
 
 		merged_sols = self.__mylib.merge_common_movs(sols)[0]
@@ -83,7 +83,7 @@ class WraperWamca2016Test(unittest.TestCase):
 
 	def test_apply_moves(self):
 		# apply_moves(file="", solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
-		solution = SolutionMovementTuple(numpy.array([x for x in xrange(self.__tam)], dtype=ctypes.c_int), 0,
+		solution = SolutionMovementTuple(numpy.arange(0, self.__tam, dtype=ctypes.c_int), 0,
 			from_list_to_tuple([], [], [], []))
 		sol_vector_copy = numpy.copy(solution.vector)
 		self.__mylib.apply_moves(solution)
@@ -110,9 +110,9 @@ class WraperWamca2016Test(unittest.TestCase):
 		tam = sol_info[1]
 
 		# No moves
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([], [], [], []))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([], [], [], []))
 		bkp_vector = numpy.copy(sol0.vector)
 
@@ -123,9 +123,9 @@ class WraperWamca2016Test(unittest.TestCase):
 		self.assertTrue((resp[0][0].vector == bkp_vector).all(), "Solution 0 is as expected")
 
 		# Swap 4-5, Swap 2-3
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0], [4], [5], [0]))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0], [4], [5], [0]))
 		bkp_vector = numpy.copy(sol0.vector)
 
@@ -140,9 +140,9 @@ class WraperWamca2016Test(unittest.TestCase):
 		self.assertTrue((resp[0][0].vector == bkp_vector).all(), "Solution 0 is as expected")
 
 		# Swap 4-5, Swap 2-3
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0, 0], [4, 2], [5, 3], [0, 0]))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0, 0], [4, 2], [5, 3], [0, 0]))
 		bkp_vector = numpy.copy(sol0.vector)
 		quest = [sol0, sol1]
@@ -157,9 +157,9 @@ class WraperWamca2016Test(unittest.TestCase):
 		self.assertTrue((resp[0][0].vector == bkp_vector).all(), "Solution 0 is as expected")
 
 		# Sol0 has more moves
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0, 0, 0], [6, 2, 4], [7, 3, 5], [0, 0, 0]))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0, 0], [6, 2], [7, 3], [0, 0]))
 		bkp_vector = numpy.copy(sol0.vector)
 		quest = [sol0, sol1]
@@ -174,9 +174,9 @@ class WraperWamca2016Test(unittest.TestCase):
 		self.assertTrue((resp[0][0].vector == bkp_vector).all(), "Solution 0 is as expected")
 
 		# Two common moviments
-		sol0 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol0 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0, 0, 0], [8, 2, 4], [9, 3, 5], [0, 0, 0]))
-		sol1 = SolutionMovementTuple(numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int), 10,
+		sol1 = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 10,
 			from_list_to_tuple([0, 0, 0], [8, 6, 2], [9, 7, 3], [0, 0, 0]))
 		bkp_vector = numpy.copy(sol0.vector)
 		quest = [sol0, sol1]
@@ -268,7 +268,7 @@ class WraperWamca2016Test(unittest.TestCase):
 		tam = sol_info[1]
 		number_of_moves = 10
 
-		sol_list = numpy.array([x for x in xrange(tam)], dtype=ctypes.c_int)
+		sol_list = numpy.arange(0, tam, dtype=ctypes.c_int)
 		sol_value = self.__mylib.calculate_value(sol_list)
 		# No moves
 		sol = list()

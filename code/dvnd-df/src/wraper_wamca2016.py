@@ -151,8 +151,7 @@ class WamcaWraper(object):
 	def create_initial_solution(self, solution_index=0, solver_param="", solution_instance_index=-1):
 		sol_info = wamca_solution_instance_file[solution_index]
 
-		# solint = [x for x in xrange(sol_info[1])]
-		solint = numpy.array([x for x in xrange(sol_info[1])], dtype=ctypes.c_int)
+		solint = numpy.arange(0, sol_info[1], dtype=ctypes.c_int)
 		if solution_instance_index == -2:
 			random.shuffle(solint)
 		print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
@@ -238,8 +237,8 @@ class WamcaWraper(object):
 		return sol1, False
 
 	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
-		impMoves = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
-		impMovesTemp = numpy.array([x for x in xrange(len(cids))], dtype=ctypes.c_int)
+		impMoves = numpy.arange(0, len(cids), dtype=ctypes.c_int)
+		impMovesTemp = numpy.arange(0, len(cids), dtype=ctypes.c_int)
 		impValue = numpy.array([0], dtype=ctypes.c_int)
 		impValueTemp = numpy.array([0], dtype=ctypes.c_int)
 
