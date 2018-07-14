@@ -6,27 +6,16 @@ import time
 import numpy
 from copy import deepcopy
 from wraper_wamca2016 import WamcaWraper, get_file_name
-from util import hasparam, getparam
+from cmdparam import CommandParams
 
 # Command line parameters
-solution_index = int(getparam("in", None, 0))
-solution_instance_index = int(getparam("sii", "solution_instance_index", -1))
-# solution_in_index = None if "-sn" not in sys.argv else int(sys.argv[sys.argv.index("-sn") + 1])
-multi_gpu = hasparam("mg", "multi_gpu")
-goal = getparam(None, "goal", "min").lower() == "max"
-problem_name = getparam("p", None, "ml")
-number_of_moves = int(getparam(None, "number_of_moves", 10))
-device_count = int(getparam("dc", "device_count", 1))
-solver_param = getparam("s", "solver", "dvnd").lower()
-mpi_enabled = hasparam("mpi")
-workers = int(getparam("n", None, 1))
+param = CommandParams(solver="dvnd")
 
 start_time = time.time()
 
-file_name = get_file_name(solution_index)
-mylib = WamcaWraper(file_name, useMultipleGpu=multi_gpu, deviceCount=device_count)
-file_name = get_file_name(solution_index)
-ini_solution = mylib.create_initial_solution(solution_index, solver_param, solution_instance_index)
+file_name = get_file_name(param.solution_index)
+mylib = WamcaWraper(file_name, useMultipleGpu=param.multi_gpu, deviceCount=param.device_count)
+ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
 
 neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
 print "ns: ", neigh_op
