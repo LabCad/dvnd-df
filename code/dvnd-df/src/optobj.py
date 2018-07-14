@@ -36,7 +36,7 @@ class DecisionNode(Node):
 
 
 class Metadata(object):
-	def __init__(self):
+	def __init__(self, counts=None):
 		"""Number of called localseaches."""
 		self.age = 0
 
@@ -63,7 +63,7 @@ class Metadata(object):
 		self.neighbor_func_rest = 0
 
 		"""Vector of neighborhoods calls count."""
-		self.counts = None
+		self.counts = counts
 		"""Vector with the number of comibined solutions count."""
 		self.combine_count = None
 		"""Count of merges on the movements."""
