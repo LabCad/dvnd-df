@@ -3,7 +3,7 @@
 import random
 import time
 # from mpi4py import MPI
-from optobj import DecisionNode, OptMessage
+from optobj import DecisionNode, OptMessage, Metadata
 from pyDF import DFGraph, Feeder, Scheduler
 
 
@@ -20,11 +20,11 @@ class DataFlowVND(object):
 
 	@staticmethod
 	def __neighborhood(func=lambda args: None, args=[], maximize=False):
-		resp = func(args[0][0])
+		resp = func(args[0][0])[0]
 		return [max(resp, args[0][0]) if maximize else min(resp, args[0][0]),
 			resp < args[0][0] if not maximize else args[0][0] < resp, args[0][2] + 1]
 
-	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x: True):
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
 		"""
 		:param number_of_workers: Número de workers Sucuri.
 		:param initial_solution: Solução inicial.
@@ -36,7 +36,7 @@ class DataFlowVND(object):
 		ini_node = Feeder([initial_solution, True, 0])
 		graph.add(ini_node)
 
-		fim_node = DecisionNode(lambda y: result_callback([y[0][0]], [y[0][2]]), 1, lambda a: not a[0][1])
+		fim_node = DecisionNode(lambda y: result_callback([y[0][0]], Metadata(counts=[y[0][2]])), 1, lambda a: not a[0][1])
 		graph.add(fim_node)
 
 		if self.__is_rvnd:
