@@ -279,22 +279,28 @@ class DataFlowGDVND(DataFlowDVND):
 		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
-		resp = super(DataFlowGDVND, self).manager(args)
-		# print "{} - manager\n{}".format(type(self).__name__, resp.get_best())
-		# TODO fazer o merge de duas soluções e pegar a melhor
-		# print(",".join(["{{v:{},mt:{}}}".format(resp[x].value, len(resp[x].movtuple[0])) for x in xrange(len(resp))]))
+		if self.use_metadata:
+			time_before = args[1].metadata.man_merge_time
 		ini_time = 0
 		if self.use_metadata:
 			ini_time = time.time()
+		resp = super(DataFlowGDVND, self).manager(args)
+
+		if self.use_metadata:
+			merge_time = time.time()
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
+		if self.use_metadata:
+			merge_time = time.time() - merge_time
 
 		resp_sol = resp_tuple[0]
 		if resp_tuple[1] is not None:
 			resp.metadata.merge_count += 1
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
+
 		if self.use_metadata:
-			resp.metadata.man_merge_time += time.time() - ini_time
+			resp.metadata.man_time = time_before + time.time() - ini_time
+			resp.metadata.man_merge_time += merge_time
 
 		# print("---{} --- {}---".format([len(resp[x].movtuple[0]) for x in xrange(len(resp))], 
 		# 	[[y for y in resp[x].movtuple[0]] for x in xrange(len(resp))]))

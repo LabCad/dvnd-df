@@ -35,6 +35,7 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	if "gdvnd" == param.solver:
 		linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
 			metadata.combine_count, sum(metadata.combine_count))
+	linha = "{};type;{};inum;{};w;{}".format(linha, param.solver, param.solution_index, param.workers)
 	print linha
 	if metadata is not None:
 		print("\nage;{};".format(metadata.age))

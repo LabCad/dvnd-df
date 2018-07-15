@@ -148,11 +148,11 @@ class WamcaWraper(object):
 	def calculate_value(self, solint=[]):
 		return self.__best_neighbor(solint, 1, True)[1]
 
-	def create_initial_solution(self, solution_index=0, solver_param="", solution_instance_index=-1):
+	def create_initial_solution(self, solution_index=0, solver_param="", solution_instance_index=None):
 		sol_info = wamca_solution_instance_file[solution_index]
 
 		solint = numpy.arange(0, sol_info[1], dtype=ctypes.c_int)
-		if solution_instance_index == -2:
+		if solution_instance_index == -1:
 			random.shuffle(solint)
 		print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 		if "gdvnd" == solver_param:
@@ -281,10 +281,6 @@ def from_list_to_tuple(ids=[], iis=[], jjs=[], costs=[]):
 		numpy.array(iis, dtype=ctypes.c_uint), \
 		numpy.array(jjs, dtype=ctypes.c_uint), \
 		numpy.array(costs, dtype=ctypes.c_int)
-
-
-# def from_tuple_to_movement(value_tuple):
-# 	return SimpleMovement(value_tuple[0], value_tuple[1], value_tuple[2], value_tuple[3])
 
 
 def from_tuple_to_movement_list(values_tuple):
