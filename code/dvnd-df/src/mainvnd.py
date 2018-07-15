@@ -27,7 +27,9 @@ start_time = time.time()
 solution = deepcopy(ini_solution)
 solution2 = deepcopy(solution)
 k = 0
+counts = 0
 while k < len(neigh_op):
+	counts += 1
 	# print "Start k=", k, " f=", solution.value,
 	# for i in xrange(len(solution.vector)):
 	# 	solution2.vector[i] = solution.vector[i]
@@ -47,5 +49,5 @@ while k < len(neigh_op):
 
 end_time = time.time()
 print "finished rvnd in {}s".format(end_time - start_time)
-print "initial_solution={};final_solution={};improveup={};time;{}".format(ini_solution.value, solution.value,
-	1.0 * ini_solution.value / solution.value, end_time - start_time)
+print "data-line;initial_solution;{};final_solution;{};time;{};counts;{};fv;{};cv;{};imp;{}".format(ini_solution.value, solution.value,
+	end_time - start_time, counts, [], [], 1.0 * ini_solution.value / solution.value)
