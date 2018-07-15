@@ -9,6 +9,10 @@ if [ $# -gt 3 ]; then
 	solver_name=$4
 	file_list=()
 	problem=
+	home_p="/home/rodolfo/git/dvnd-df/"
+	home_script=$home_p"code/dvnd-df/script/"
+	home_src=$home_p"code/dvnd-df/src/"
+	home_doc=$home_p"doc/"
 
 	if [ $# -lt 5 ]; then
 		if [ "$host_num" = '1' ]; then
@@ -57,12 +61,13 @@ if [ $# -gt 3 ]; then
 			echo $file_name
 			if [ "$solver_name" = "rvnd_no_df" ]; then
 				# echo rvnd_no_df
-				time python mainvnd.py -in $filei > "results/"$file_name".out" 2> "results/"$file_name".log"
+				time python $home_src"mainvnd.py" -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			elif [ "$solver_name" = "rvnd_no_mpi" ]; then
-				python main.py -n $num_workes -in $filei -s $solver_name -p $problem > "results/"$file_name".out" 2> "results/"$file_name".log"
+				solver_name = "rvnd"
+				python $home_src"main.py" -n $num_workes -in $filei -s $solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			else
 				# echo $solver_name
-				time mpirun -np $num_proc --hostfile $host_file python main.py -mpi -n $num_workes -in $filei -s $solver_name -p $problem > "results/"$file_name".out" 2> "results/"$file_name".log"
+				time mpirun -np $num_proc --hostfile $home_script""$host_file python $home_src"main.py" -sii -1 -mpi -n $num_workes -in $filei -s $solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			fi
 		done
 	done
