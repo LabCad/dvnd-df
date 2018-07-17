@@ -73,6 +73,7 @@ class DataFlowDVND(object):
 
 	def __neighborhood(self, func=lambda arg: None, args=[], inimov=0):
 		atual = args[0]
+		atual.metadata.neigh_time = -time.time()
 		atual.source = inimov
 		sol_param = atual[inimov] if self.__process_sol_before_oper is None \
 			else self.__process_sol_before_oper(atual[inimov])
@@ -81,6 +82,7 @@ class DataFlowDVND(object):
 		atual[inimov] = max(atual[inimov], func_resp[0]) if self.maximize \
 			else min(atual[inimov], func_resp[0])
 
+		atual.metadata.neigh_time += time.time()
 		return atual
 
 	def best_solution(self, atual=None, anterior=None, melhor=None):
@@ -96,6 +98,7 @@ class DataFlowDVND(object):
 		return anterior, False, False
 
 	def manager(self, args=[]):
+		man_time = time.time()
 		atual = args[0]
 		melhor = args[1]
 
@@ -120,6 +123,8 @@ class DataFlowDVND(object):
 				# Se vai chamar novamente remove o sinal
 				melhor.set_not_improved(x, False)
 
+		melhor.metadata.man_time += time.time() - man_time
+		melhor.metadata.neigh_time += atual.metadata.neigh_time
 		return melhor
 
 	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
@@ -196,6 +201,8 @@ class DataFlowGDVND(DataFlowDVND):
 		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
+		man_time_before = args[1].metadata.man_time
+		man_time = time.time()
 		resp = super(DataFlowGDVND, self).manager(args)
 
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
@@ -204,4 +211,5 @@ class DataFlowGDVND(DataFlowDVND):
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
 
+		resp.metadata.man_time = man_time_before + time.time() - man_time
 		return resp

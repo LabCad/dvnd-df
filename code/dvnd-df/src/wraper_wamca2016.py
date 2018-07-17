@@ -116,34 +116,24 @@ class WamcaWraper(object):
 		return self.__best_neighbor_moves(solint, neighborhood, 0, justcalc, numpy.array([], dtype=ctypes.c_int))
 
 	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, justcalc=False, solintResp=None):
-		alloc_numpy_time = time.time()
 		carrays = from_list_to_tuple([0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)],
 			[0 for x in xrange(n_moves)], [0 for x in xrange(n_moves)])
 		n_moves_array = numpy.array([n_moves], dtype=ctypes.c_uint)
-		alloc_numpy_time = time.time() - alloc_numpy_time
 
 		# mpi_call_time = 0
 		# hostcode = 0 if not self.__use_multiple_gpu else neighborhood
-		mpi_call_time = time.time()
 		hostcode = 0
 		if self.__use_multiple_gpu:
 			from mpi4py import MPI
 			comm = MPI.COMM_WORLD
 			hostcode = comm.rank
-		mpi_call_time = time.time() - mpi_call_time
 
-		time_func_inner = time.time()
 		resp = self.__mylib.bestNeighbor(self.__file, solint, len(solint), neighborhood, justcalc, hostcode,# 0,#gethostcode(),
 			n_moves_array, carrays[0], carrays[1], carrays[2], carrays[3], self.__use_multiple_gpu,
 			self.__device_count, solintResp)
-		time_func_inner = time.time() - time_func_inner
 
-		numpy_resize_time = time.time()
 		carrays = [numpy.resize(x, int(n_moves_array[0])) for x in carrays]
-		numpy_resize_time = time.time() - numpy_resize_time
-		# print("{}-{}".format(resp, solint))
-		return solint, resp, carrays, (time_func_inner, alloc_numpy_time, mpi_call_time, numpy_resize_time), \
-			solintResp  #, carrays_size
+		return solint, resp, carrays, (0, 0, 0, 0), solintResp
 
 	def calculate_value(self, solint=[]):
 		return self.__best_neighbor(solint, 1, True)[1]
@@ -158,7 +148,8 @@ class WamcaWraper(object):
 		if "gdvnd" == solver_param:
 			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
 		else:
-			return SolutionVectorValue(solint, self.calculate_value(solint))
+			# return SolutionVectorValue(solint, self.calculate_value(solint))
+			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
 
 	def merge_common_movs(self, solutions=None):
 		if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
@@ -184,17 +175,12 @@ class WamcaWraper(object):
 		return solutions, None
 
 	def neigh_gpu(self, solution=None, inimov=0):
-		ini_time = time.time()
 		resp = self.__best_neighbor(solution.vector, inimov, False)
-		ini_time = time.time() - ini_time
-		return SolutionVectorValue(resp[0], resp[1]), (ini_time, 0, 0, 0, 0)
+		# return SolutionVectorValue(resp[0], resp[1]), (0, 0, 0, 0, 0)
+
+		return SolutionMovementTuple(resp[0], resp[1], ([], [], [], [])), (0, 0, 0, 0, 0)
 
 	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0):
-		time_fora = time.time()
-		# sol_copy = SolutionMovementTuple(numpy.copy(solution.vector), solution.value,
-		# 	([], [], [], []), numpy.copy(solution.movvector))
-		copy_sol = None
-		# self.apply_moves(sol_copy)
 		if len(solution.movtuple[0]) > 0:
 			if not solution.movapplied:
 				copy_sol = numpy.copy(solution.vector)
@@ -204,18 +190,8 @@ class WamcaWraper(object):
 		else:
 			copy_sol = numpy.copy(solution.vector)
 		resp = self.__best_neighbor_moves(copy_sol, inimov, n_moves, False, numpy.copy(solution.movvector))
-		# temp_sol = numpy.copy(resp[0])
-		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2])
-		# self.apply_moves(resp_sol)
-		time_fora = time.time() - time_fora
-		# resp_sol.vector = temp_sol
-		meta = resp[3][0], resp[3][1], resp[3][2], resp[3][3], time_fora
-		# return SolutionMovementTuple(resp[0], resp[1], resp[2]), meta
-		# resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2], solution.movvector)
+		meta = resp[3][0], resp[3][1], resp[3][2], resp[3][3], 0
 		resp_sol = SolutionMovementTuple(resp[0], resp[1], resp[2], resp[4])
-		# resp_sol = sol_copy
-		# resp_sol.value = resp[1]
-		# resp_sol.movtuple = resp[2]
 		resp_sol.movapplied = True
 		return resp_sol, meta
 

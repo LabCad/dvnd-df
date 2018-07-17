@@ -19,7 +19,7 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	"""
 	end_time = time.time()
 	values_vec = [x.value for x in solutions]
-	print "solutions: {}, counts: {}".format(values_vec, metadata.counts)
+	# print "solutions: {}, counts: {}".format(values_vec, metadata.counts)
 	print "Initial: {}".format(ini_sol)
 	final_solution = min(solutions)
 	elapsed_time = end_time - initial_time
@@ -30,14 +30,18 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	if abs(fin_value * 1.0) > 0.00001:
 		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
-	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{};age;{}".format(
-		ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value, metadata.age)
-	if "gdvnd" == param.solver:
-		linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
-			metadata.combine_count, sum(metadata.combine_count))
+	# linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
+		# ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
+	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
+		ini_value, fin_value, elapsed_time, sum([-1, -1]), values_vec, -1, imp_value)
+	# if "gdvnd" == param.solver:
+	# 	linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
+	# 		metadata.combine_count, sum(metadata.combine_count))
 	linha = "{};type;{};inum;{};w;{}".format(linha, param.solver, param.solution_index, param.workers)
 	print ""
 	print linha
+	print ""
+	print "time;{};man_time;{};neigh_time;{}".format(elapsed_time, metadata.man_time, metadata.neigh_time)
 	print ""
 
 
