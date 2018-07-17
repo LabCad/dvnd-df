@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class CommandParams(object):
-	def __init__(self, solution_index=0, solution_instance_index=-1, goal="min",
+	def __init__(self, solution_index=0, solution_instance_index=-2, goal="min",
 			problem_name="ml", number_of_moves=10, device_count=1, solver="gdvnd", workers=1):
 		from util import getparam, hasparam
 		self.solution_index = int(getparam("in", None, solution_index))

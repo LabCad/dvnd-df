@@ -73,36 +73,13 @@ class DataFlowDVND(object):
 
 	def __neighborhood(self, func=lambda arg: None, args=[], inimov=0):
 		atual = args[0]
-		if self.use_metadata:
-			atual.metadata.neighbor_time = time.time()
 		atual.source = inimov
-		# Alterar soluão antes de enviar
-		# print "{} - __neighborhood".format(type(self).__name__)
-		if self.use_metadata:
-			neighbor_proc_before_time = time.time()
 		sol_param = atual[inimov] if self.__process_sol_before_oper is None \
 			else self.__process_sol_before_oper(atual[inimov])
-		if self.use_metadata:
-			atual.metadata.neighbor_proc_before_time = time.time() - neighbor_proc_before_time
 
-		if self.use_metadata:
-			atual.metadata.neighbor_func_time = time.time()
 		func_resp = func(sol_param)
 		atual[inimov] = max(atual[inimov], func_resp[0]) if self.maximize \
 			else min(atual[inimov], func_resp[0])
-		if self.use_metadata:
-			atual.metadata.neighbor_func_time = time.time() - atual.metadata.neighbor_func_time
-
-		if self.use_metadata:
-			atual.metadata.counts[inimov] += 1
-			atual.metadata.neighbor_time = time.time() - atual.metadata.neighbor_time
-			atual.metadata.neighbor_func_inner_time = func_resp[1][0]
-			atual.metadata.neighbor_func_numpy_alloc_time = func_resp[1][1]
-			atual.metadata.neighbor_func_mpi_time = func_resp[1][2]
-			atual.metadata.neighbor_func_numpy_resize_time = func_resp[1][3]
-			atual.metadata.neighbor_func_rest = func_resp[1][4]
-			# print("neighborhood;{};{};process_before;{}".format(inimov, atual.metadata.neighbor_time,
-			# 	atual.metadata.neighbor_proc_before_time))
 
 		return atual
 
@@ -119,9 +96,6 @@ class DataFlowDVND(object):
 		return anterior, False, False
 
 	def manager(self, args=[]):
-		ini_time = ini_best_time = int_update_time = 0
-		if self.use_metadata:
-			int_update_time = ini_best_time = ini_time = time.time()
 		atual = args[0]
 		melhor = args[1]
 
@@ -131,31 +105,13 @@ class DataFlowDVND(object):
 
 		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source], melhor.get_best(self.maximize))
 		melhor[atual.source] = atual_melhor[0]
-		if self.use_metadata:
-			ini_best_time = time.time() - ini_best_time
 
-		# if (not self.__maximize and atual[atual.source] < melhor[atual.source]) \
-		# 		or (self.__maximize and melhor[atual.source] < atual[atual.source]):
-		# 	melhor[atual.source] = atual[atual.source]
-		# 	melhor.set_target(atual.source)
-		# else:
-		# 	melhor.set_not_improved(atual.source)
-		if self.use_metadata:
-			int_update_time = time.time()
 		if atual_melhor[1]:
 			melhor.set_target(atual.source)
 		else:
 			melhor.set_not_improved(atual.source)
 
-		if atual_melhor[2]:
-			melhor.metadata.combine_count[atual.source] += 1
-
-		ini_man_get_best = 0
-		if self.use_metadata:
-			ini_man_get_best = time.time()
 		best_sol = melhor[atual.source] = melhor.get_best(self.maximize)
-		if self.use_metadata:
-			melhor.metadata.man_get_best_time = time.time() - ini_man_get_best
 		# Caso não tenha melhorado mas tenha aparecido uma solução melhor
 		for x in melhor.get_not_improveds():
 			if (not self.maximize and best_sol < melhor[x]) or (self.maximize and best_sol > melhor[x]):
@@ -163,28 +119,6 @@ class DataFlowDVND(object):
 				melhor.set_target(x)
 				# Se vai chamar novamente remove o sinal
 				melhor.set_not_improved(x, False)
-
-		for i in xrange(len(melhor.metadata.counts)):
-			melhor.metadata.counts[i] = max(atual.metadata.counts[i], melhor.metadata.counts[i])
-		if self.use_metadata:
-			int_update_time = time.time() - int_update_time
-
-		if self.use_metadata:
-			melhor.metadata.age += 1
-			melhor.metadata.neighbor_time += atual.metadata.neighbor_time
-			melhor.metadata.neighbor_proc_before_time += atual.metadata.neighbor_proc_before_time
-			melhor.metadata.neighbor_func_time += atual.metadata.neighbor_func_time
-			melhor.metadata.neighbor_func_inner_time += atual.metadata.neighbor_func_inner_time
-			melhor.metadata.neighbor_func_numpy_alloc_time += atual.metadata.neighbor_func_numpy_alloc_time
-			melhor.metadata.neighbor_func_numpy_resize_time += atual.metadata.neighbor_func_numpy_resize_time
-			melhor.metadata.neighbor_func_mpi_time += atual.metadata.neighbor_func_mpi_time
-			melhor.metadata.neighbor_func_rest += atual.metadata.neighbor_func_rest
-			total_time = time.time() - ini_time
-
-			melhor.metadata.man_time += total_time
-			melhor.metadata.man_get_best_time += ini_best_time
-			melhor.metadata.man_update_data_time += int_update_time
-			# print("manager;{};{}".format(melhor.metadata.age, total_time))
 
 		return melhor
 
@@ -226,13 +160,6 @@ class DataFlowDVND(object):
 			man_node.add_edge(x, 0)
 			x.add_edge(man_node, 0)
 
-		# if self.__mpi_enabled:
-		# 	comm = MPI.COMM_WORLD
-		# 	nprocs = comm.Get_size()
-		# 	print "MPI {}/{}".format(comm.Get_rank(), nprocs)
-		# 	for i in xrange(len(oper_node)):
-		# 		# oper_node[i].pin([i % nprocs])
-
 		# Nós que inicializam nós de operação
 		ini_node = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(number_of_opers)],
 			[False for i in xrange(number_of_opers)])) for x in xrange(number_of_opers)]
@@ -257,54 +184,24 @@ class DataFlowGDVND(DataFlowDVND):
 		self.__combine_sol = combine_sol
 
 	def best_solution(self, atual=None, anterior=None, melhor=None):
-		# get_no_conflict(cids, ciis, cjjs, ccosts):
-		# print "{} - best_solution".format(type(self).__name__)
 		if len(atual.movtuple[0]) > 0 and len(melhor.movtuple[0]) > 0:
 			combined_sol_resp = self.__combine_sol(atual, melhor)
 			combined_sol = combined_sol_resp[0]
 			if self.maximize:
 				resp_sol = max(atual, anterior, melhor, combined_sol)
-				# if resp_sol == combined_sol and combined_sol_resp[1]:
-					# print("Combinou: v:{}-{}={}({}%)".format(anterior.value, combined_sol.value,
-					# 	anterior.value - combined_sol.value,
-					# 	100.0 * (anterior.value - combined_sol.value) / anterior.value))
 				return resp_sol, resp_sol > melhor, combined_sol_resp[1]
 			else:
 				resp_sol = min(atual, anterior, melhor, combined_sol)
-				# if resp_sol == combined_sol and combined_sol_resp[1]:
-					# print("Combinou: v:{}-{}={}({}%)".format(anterior.value, combined_sol.value,
-					# 	anterior.value - combined_sol.value,
-					# 	100.0 * (anterior.value - combined_sol.value) / anterior.value))
 				return resp_sol, resp_sol < melhor, combined_sol_resp[1]
 		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
-		if self.use_metadata:
-			time_before = args[1].metadata.man_merge_time
-		ini_time = 0
-		if self.use_metadata:
-			ini_time = time.time()
 		resp = super(DataFlowGDVND, self).manager(args)
 
-		if self.use_metadata:
-			merge_time = time.time()
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
-		if self.use_metadata:
-			merge_time = time.time() - merge_time
 
 		resp_sol = resp_tuple[0]
-		if resp_tuple[1] is not None:
-			resp.metadata.merge_count += 1
 		for x in xrange(len(resp)):
 			resp[x] = resp_sol[x]
 
-		if self.use_metadata:
-			resp.metadata.man_time = time_before + time.time() - ini_time
-			resp.metadata.man_merge_time += merge_time
-
-		# print("---{} --- {}---".format([len(resp[x].movtuple[0]) for x in xrange(len(resp))], 
-		# 	[[y for y in resp[x].movtuple[0]] for x in xrange(len(resp))]))
-
-		# print(",".join(["{{v:{},mt:{}}}".format(resp[x].value, len(resp[x].movtuple[0])) for x in xrange(len(resp))]))
-		# print("")
 		return resp
