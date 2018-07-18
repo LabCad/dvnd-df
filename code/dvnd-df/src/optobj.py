@@ -45,7 +45,7 @@ class OptMessage(object):
 	"""
 	History for the DVND.
 	"""
-	def __init__(self, solmap={}, source=0, target=[], not_improved=[]):
+	def __init__(self, solmap={}, source=0, target=[], not_improved=[], maximize=False):
 		"""
 		:param solmap: Map os solutions (node code, actual solution).
 		:param source: Source of the history.
@@ -56,12 +56,13 @@ class OptMessage(object):
 		self.__source = source
 		self.__target = target
 		self.__not_improved = not_improved
+		self.__maximize = maximize
 		self.metadata = Metadata()
 		self.metadata.counts = [0 for x in target]
 		self.metadata.combine_count = [0 for x in target]
 
 	def __getitem__(self, item=0):
-		return self.__solmap[item]
+		return self.__solmap[item] if item < len(self) else self.get_best()
 
 	def __setitem__(self, item=0, val=None):
 		self.__solmap[item] = val
@@ -69,12 +70,12 @@ class OptMessage(object):
 	def __len__(self):
 		return len(self.__solmap)
 
-	def get_best(self, maximize=False):
+	def get_best(self):
 		"""
 		:param maximize: Indicates is is a maximization o minimization problem.
 		:return: Get the best solution on the history.
 		"""
-		return max(self.__solmap.values()) if maximize else min(self.__solmap.values())
+		return max(self.__solmap.values()) if self.__maximize else min(self.__solmap.values())
 
 	@property
 	def source(self):

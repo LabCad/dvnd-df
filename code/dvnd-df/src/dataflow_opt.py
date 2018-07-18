@@ -4,7 +4,7 @@ import random
 import time
 # from mpi4py import MPI
 from optobj import DecisionNode, OptMessage, Metadata
-from pyDF import DFGraph, Feeder, Scheduler
+from pyDF import DFGraph, Feeder, Scheduler, SelectOutputNode, Node
 
 
 class DataFlowVND(object):
@@ -106,7 +106,7 @@ class DataFlowDVND(object):
 		melhor.unset_all_targets()
 		# atualValue = atual[atual.source]
 
-		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source], melhor.get_best(self.maximize))
+		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source], melhor.get_best())
 		melhor[atual.source] = atual_melhor[0]
 
 		if atual_melhor[1]:
@@ -114,7 +114,7 @@ class DataFlowDVND(object):
 		else:
 			melhor.set_not_improved(atual.source)
 
-		best_sol = melhor[atual.source] = melhor.get_best(self.maximize)
+		best_sol = melhor[atual.source] = melhor.get_best()
 		# Caso não tenha melhorado mas tenha aparecido uma solução melhor
 		for x in melhor.get_not_improveds():
 			if (not self.maximize and best_sol < melhor[x]) or (self.maximize and best_sol > melhor[x]):
@@ -125,7 +125,17 @@ class DataFlowDVND(object):
 
 		melhor.metadata.man_time += time.time() - man_time
 		melhor.metadata.neigh_time += atual.metadata.neigh_time
-		return melhor
+		# return melhor
+		return DataFlowDVND.create_response_map(melhor, len(melhor))
+
+	@staticmethod
+	def create_response_map(optmessage, number_of_opers):
+		if optmessage.no_improvement():
+			return {number_of_opers + 1: optmessage}
+		else:
+			resp = {x: optmessage for x in xrange(len(optmessage)) if optmessage.has_target(x)}
+			resp[number_of_opers] = optmessage
+			return resp
 
 	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
 		"""
@@ -136,38 +146,34 @@ class DataFlowDVND(object):
 		"""
 		graph = DFGraph()
 
-		# Nó final Cria n
 		number_of_opers = len(oper_funtions)
 		# End node only processed when there is no improvement
-		fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].metadata), 1,
-			lambda x: x[0].no_improvement())
+		fimNode = Node(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].metadata), 1)
 		graph.add(fimNode)
 
 		# Nó de gerenciamento ligado nele mesmo e no nó final
-		man_node = DecisionNode(self.manager, 2)
+		man_node = SelectOutputNode(self.manager, 2)
 		graph.add(man_node)
-		man_node.add_edge(man_node, 1)
-		man_node.add_edge(fimNode, 0)
+		man_node.add_edge(man_node, 1, number_of_opers)
+		man_node.add_edge(fimNode, 0, number_of_opers + 1)
 
 		# Nó que inicializa o nó gerenciador
 		ini_man_node = Feeder(OptMessage({x: initial_solution for x in xrange(number_of_opers)}, number_of_opers,
-			[False for y in xrange(number_of_opers)], [False for i in xrange(number_of_opers)]))
+			[False for y in xrange(number_of_opers)], [False for i in xrange(number_of_opers)], self.maximize))
 		graph.add(ini_man_node)
 		ini_man_node.add_edge(man_node, 1)
 
 		# Nós de operações
-		oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(number_of_opers)]
-		oper_keep_going = [lambda a, b: True for y in xrange(number_of_opers)]
-		oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it),
-			1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
-		for x in oper_node:
-			graph.add(x)
-			man_node.add_edge(x, 0)
-			x.add_edge(man_node, 0)
+		oper_node = [Node(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it), 1)
+			for i in xrange(number_of_opers)]
+		for i in xrange(number_of_opers):
+			graph.add(oper_node[i])
+			man_node.add_edge(oper_node[i], 0, i)
+			oper_node[i].add_edge(man_node, 0)
 
 		# Nós que inicializam nós de operação
 		ini_node = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(number_of_opers)],
-			[False for i in xrange(number_of_opers)])) for x in xrange(number_of_opers)]
+			[False for i in xrange(number_of_opers)], self.maximize)) for x in xrange(number_of_opers)]
 		for i in xrange(number_of_opers):
 			graph.add(ini_node[i])
 			ini_node[i].add_edge(oper_node[i], 0)
@@ -203,7 +209,7 @@ class DataFlowGDVND(DataFlowDVND):
 	def manager(self, args=[]):
 		man_time_before = args[1].metadata.man_time
 		man_time = time.time()
-		resp = super(DataFlowGDVND, self).manager(args)
+		resp = super(DataFlowGDVND, self).manager(args).itervalues().next()
 
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
 
@@ -212,4 +218,4 @@ class DataFlowGDVND(DataFlowDVND):
 			resp[x] = resp_sol[x]
 
 		resp.metadata.man_time = man_time_before + time.time() - man_time
-		return resp
+		return DataFlowDVND.create_response_map(resp, len(resp))

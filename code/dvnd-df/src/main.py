@@ -7,7 +7,7 @@ from cmdparam import CommandParams
 
 
 # Command line parameters
-param = CommandParams(solver="vnd")
+param = CommandParams(solver="gdvnd")
 
 
 def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
