@@ -42,6 +42,8 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	print linha
 	print ""
 	print "time;{};man_time;{};neigh_time;{}".format(elapsed_time, metadata.man_time, metadata.neigh_time)
+	print "man_time;{};man_merge_sol;{};man_best_sol;{};man_combine_sol;{}".format(
+		metadata.man_time, metadata.man_merge_sol_time, metadata.man_best_sol_time, metadata.man_combine_sol_time)
 	print ""
 
 

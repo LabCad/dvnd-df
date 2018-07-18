@@ -96,7 +96,8 @@ class WamcaWraper(object):
 			else:
 				break
 
-		return self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
+		moves = self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
+		return moves
 
 	def __apply_moves_tuple(self, solint=[], tupple=None):
 		return self.__apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
@@ -107,9 +108,6 @@ class WamcaWraper(object):
 			solution.value = self.__apply_moves_tuple(solution.movvector, solution.movtuple)
 			solution.movapplied = True
 			# solution.vector, solution.movvector = solution.movvector, solution.vector
-		# else:
-		# 	if solution.movapplied:
-		# 		print "economizou apply_moves"
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False):
 		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
@@ -200,7 +198,6 @@ class WamcaWraper(object):
 
 	def merge_independent_movements(self, sol1, sol2):
 		if sol1.can_merge(sol2):
-			# TODO Melhorar usando apenas um movtuple sem precisar gerar novos
 			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
 			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
 			cjjs = numpy.concatenate((sol1.movtuple[2], sol2.movtuple[2]))

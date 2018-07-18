@@ -98,16 +98,18 @@ class DataFlowDVND(object):
 		return anterior, False, False
 
 	def manager(self, args=[]):
-		man_time = time.time()
 		atual = args[0]
 		melhor = args[1]
+		melhor.metadata.man_time -= time.time()
 
 		# melhor_ini = melhor.get_best()
 		melhor.unset_all_targets()
 		# atualValue = atual[atual.source]
 
+		melhor.metadata.man_best_sol_time -= time.time()
 		atual_melhor = self.best_solution(atual[atual.source], melhor[atual.source], melhor.get_best())
 		melhor[atual.source] = atual_melhor[0]
+		melhor.metadata.man_best_sol_time += time.time()
 
 		if atual_melhor[1]:
 			melhor.set_target(atual.source)
@@ -123,8 +125,9 @@ class DataFlowDVND(object):
 				# Se vai chamar novamente remove o sinal
 				melhor.set_not_improved(x, False)
 
-		melhor.metadata.man_time += time.time() - man_time
+		melhor.metadata.man_time += time.time()
 		melhor.metadata.neigh_time += atual.metadata.neigh_time
+		melhor.metadata.man_combine_sol_time += atual_melhor[3] if len(atual_melhor) > 3 else 0
 		# return melhor
 		return DataFlowDVND.create_response_map(melhor, len(melhor))
 
@@ -196,14 +199,16 @@ class DataFlowGDVND(DataFlowDVND):
 
 	def best_solution(self, atual=None, anterior=None, melhor=None):
 		if len(atual.movtuple[0]) > 0 and len(melhor.movtuple[0]) > 0:
+			combine_time = -time.time()
 			combined_sol_resp = self.__combine_sol(atual, melhor)
+			combine_time += time.time()
 			combined_sol = combined_sol_resp[0]
 			if self.maximize:
 				resp_sol = max(atual, anterior, melhor, combined_sol)
-				return resp_sol, resp_sol > melhor, combined_sol_resp[1]
+				return resp_sol, resp_sol > melhor, combined_sol_resp[1], combine_time
 			else:
 				resp_sol = min(atual, anterior, melhor, combined_sol)
-				return resp_sol, resp_sol < melhor, combined_sol_resp[1]
+				return resp_sol, resp_sol < melhor, combined_sol_resp[1], combine_time
 		return super(DataFlowGDVND, self).best_solution(atual, anterior, melhor)
 
 	def manager(self, args=[]):
@@ -211,7 +216,9 @@ class DataFlowGDVND(DataFlowDVND):
 		man_time = time.time()
 		resp = super(DataFlowGDVND, self).manager(args).itervalues().next()
 
+		resp.metadata.man_merge_sol_time -= time.time()
 		resp_tuple = self.__merge_solutions([resp[x] for x in xrange(len(resp))])
+		resp.metadata.man_merge_sol_time += time.time()
 
 		resp_sol = resp_tuple[0]
 		for x in xrange(len(resp)):

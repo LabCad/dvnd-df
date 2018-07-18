@@ -12,7 +12,5 @@ class CommandParams(object):
 		self.number_of_moves = int(getparam(None, "number_of_moves", number_of_moves))
 		self.device_count = int(getparam("dc", "device_count", device_count))
 		self.solver = getparam("s", "solver", solver).lower()
-		# TODO Versão 2 precisa do MPI enabled, bug
-		# mpi_enabled = True
 		self.mpi_enabled = hasparam("mpi")
 		self.workers = int(getparam("n", None, workers))

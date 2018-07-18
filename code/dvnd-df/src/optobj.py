@@ -38,6 +38,10 @@ class DecisionNode(Node):
 class Metadata(object):
 	def __init__(self, counts=None):
 		self.man_time = 0
+		self.man_merge_sol_time = 0
+		self.man_best_sol_time = 0
+		self.man_combine_sol_time = 0
+
 		self.neigh_time = 0
 
 
