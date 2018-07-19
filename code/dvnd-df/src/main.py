@@ -7,8 +7,9 @@ from cmdparam import CommandParams
 
 
 # Command line parameters
-param = CommandParams(solver="gdvnd", solution_instance_index=0)
+param = CommandParams(solver="gdvnd")
 print "param: {}".format(param)
+
 
 def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
 	"""
@@ -31,7 +32,7 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
 	# linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
-		# ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
+	# ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
 	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
 		ini_value, fin_value, elapsed_time, sum([-1, -1]), values_vec, -1, imp_value)
 	# if "gdvnd" == param.solver:
@@ -95,9 +96,9 @@ elif "gdvnd" == param.solver:
 		return mylib.merge_independent_movements(sol1, sol2)
 
 	solver = DataFlowGDVND(param.goal, param.mpi_enabled,
-		apply_moves_to_sol_on_oper,
-		mylib.merge_common_movs,
-		lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
+			apply_moves_to_sol_on_oper,
+			mylib.merge_common_movs,
+			lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
 
 print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
 start_time = time.time()

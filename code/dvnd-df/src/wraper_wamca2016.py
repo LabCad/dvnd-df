@@ -5,7 +5,7 @@ import numpy
 import util
 import random
 import os.path
-# import time
+import time
 # from movement import *
 from solution import SolutionVectorValue, SolutionMovementTuple
 from util import compilelib
@@ -73,6 +73,7 @@ class WamcaWraper(object):
 		self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
 
 	def __apply_moves(self, solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
+		resto_time = -time.time()
 		lenmovs = len(cids)
 		# if lenmovs > 0:
 		for i in xrange(len(cids) - 1, -1, -1):
@@ -96,8 +97,11 @@ class WamcaWraper(object):
 				lenmovs -= 1
 			else:
 				break
-
+		resto_time += time.time()
+		call_time = -time.time()
 		moves = self.__mylib.applyMoves(self.__file, solint, len(solint), lenmovs, cids, ciis, cjjs, ccosts)
+		call_time += time.time()
+		# print("resto_time;%.5f;call_time;;%.5f;" % (resto_time, call_time))
 		return moves
 
 	def __apply_moves_tuple(self, solint=[], tupple=None):
@@ -105,9 +109,15 @@ class WamcaWraper(object):
 
 	def apply_moves(self, solution=None):
 		if not solution.movapplied and len(solution.movtuple[0]) > 0:
+			cop_time = -time.time()
 			numpy.copyto(solution.movvector, solution.vector)
+			cop_time += time.time()
+			ap_time = -time.time()
 			solution.value = self.__apply_moves_tuple(solution.movvector, solution.movtuple)
+			ap_time += time.time()
 			solution.movapplied = True
+			# TODO remove debug time
+			# print("cop_time;%.5f;ap_time;%.5f;" % (cop_time, ap_time))
 			# solution.vector, solution.movvector = solution.movvector, solution.vector
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False):
@@ -143,7 +153,7 @@ class WamcaWraper(object):
 		solint = numpy.arange(0, sol_info[1], dtype=ctypes.c_int)
 		if solution_instance_index == -1:
 			random.shuffle(solint)
-		else:
+		elif solution_instance_index >= 0:
 			with open("{}/sol/{}_{}.in".format(wamca2016_input_file_path, sol_info[0][:-4], solution_instance_index),
 					"r") as filesol:
 				solint = numpy.array([int(x) for x in filesol.read()[1:-1].split(',')], dtype=ctypes.c_int)
@@ -152,7 +162,6 @@ class WamcaWraper(object):
 		if "gdvnd" == solver_param:
 			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
 		else:
-			# return SolutionVectorValue(solint, self.calculate_value(solint))
 			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
 
 	def merge_common_movs(self, solutions=None):
@@ -180,7 +189,6 @@ class WamcaWraper(object):
 
 	def neigh_gpu(self, solution=None, inimov=0):
 		resp = self.__best_neighbor(solution.vector, inimov, False)
-		# return SolutionVectorValue(resp[0], resp[1]), (0, 0, 0, 0, 0)
 
 		return SolutionMovementTuple(resp[0], resp[1], ([], [], [], [])), (0, 0, 0, 0, 0)
 
@@ -204,18 +212,31 @@ class WamcaWraper(object):
 
 	def merge_independent_movements(self, sol1, sol2):
 		if sol1.can_merge(sol2):
+			contat_time = -time.time()
 			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
 			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
 			cjjs = numpy.concatenate((sol1.movtuple[2], sol2.movtuple[2]))
 			ccosts = numpy.concatenate((sol1.movtuple[3], sol2.movtuple[3]))
+			contat_time += time.time()
+			no_conflict_time = -time.time()
 			independent_movs = self.get_no_conflict(cids, ciis, cjjs, ccosts)
+			no_conflict_time += time.time()
+			new_sol_time = -time.time()
 			resp = SolutionMovementTuple(numpy.copy(sol1.vector), 0, independent_movs)
+			new_sol_time += time.time()
+			app_sol_time = -time.time()
 			self.apply_moves(resp)
+			app_sol_time += time.time()
+			cp_sol_time = -time.time()
 			numpy.copyto(resp.vector, sol1.vector)
+			cp_sol_time += time.time()
+			# TODO Remover contagem
+			# print("contat_time;%.5lf;no_conflict_time;%.5lf;new_sol_time;%.5lf;app_sol_time;%.5lf;cp_sol_time;%.5lf;"
+			# 	% (contat_time, no_conflict_time, new_sol_time, app_sol_time, cp_sol_time))
 			return resp, True
 		return sol1, False
 
-	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=3):
+	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=2):
 		impMoves = numpy.arange(0, len(cids), dtype=ctypes.c_int)
 		impMovesTemp = numpy.arange(0, len(cids), dtype=ctypes.c_int)
 		impValue = numpy.array([0], dtype=ctypes.c_int)
