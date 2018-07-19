@@ -7,8 +7,8 @@ from cmdparam import CommandParams
 
 
 # Command line parameters
-param = CommandParams(solver="gdvnd")
-
+param = CommandParams(solver="gdvnd", solution_instance_index=0)
+print "param: {}".format(param)
 
 def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
 	"""

@@ -5,7 +5,7 @@ import numpy
 import util
 import random
 import os.path
-import time
+# import time
 # from movement import *
 from solution import SolutionVectorValue, SolutionMovementTuple
 from util import compilelib
@@ -13,6 +13,7 @@ from util import compilelib
 
 wamca2016path_uff = "/home/imcoelho/Rodolfo/wamca2016/"
 wamca2016path_local = "/home/rodolfo/git/wamca2016/"
+wamca2016_input_file_path = "/home/rodolfo/git/dvnd-df/doc/"
 localpath_uff = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/src/"
 localpath_local = "/home/rodolfo/git/dvnd-df/code/dvnd-df/src/"
 
@@ -142,6 +143,11 @@ class WamcaWraper(object):
 		solint = numpy.arange(0, sol_info[1], dtype=ctypes.c_int)
 		if solution_instance_index == -1:
 			random.shuffle(solint)
+		else:
+			with open("{}/sol/{}_{}.in".format(wamca2016_input_file_path, sol_info[0][:-4], solution_instance_index),
+					"r") as filesol:
+				solint = numpy.array([int(x) for x in filesol.read()[1:-1].split(',')], dtype=ctypes.c_int)
+
 		print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 		if "gdvnd" == solver_param:
 			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))

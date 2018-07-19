@@ -14,3 +14,9 @@ class CommandParams(object):
 		self.solver = getparam("s", "solver", solver).lower()
 		self.mpi_enabled = hasparam("mpi")
 		self.workers = int(getparam("n", None, workers))
+
+	def __str__(self):
+		return "{{solution_index:{}, solution_instance_index:{}, multi_gpu:{}, goal:{}, problem_name:{}, " \
+				"number_of_moves:{}, device_count:{}, solver:{}, mpi_enabled:{}, workers:{}}}".\
+			format(self.solution_index, self.solution_instance_index, self.multi_gpu, self.goal, self.problem_name,
+				self.number_of_moves, self.device_count, self.solver, self.mpi_enabled, self.workers)

@@ -53,6 +53,13 @@ if [ $# -gt 3 ]; then
 		problem="ml"
 	fi
 
+	echo "num_proc="$num_proc", num_workes="$num_workes", host_num="$host_num", host_file="$host_file
+	echo "solver_name="$solver_name", file_list="$file_list" problem="$problem
+	echo "home_p="$home_p
+	echo "home_script="$home_script
+	echo "home_src="$home_src
+	echo "home_doc="$home_doc
+
 	for filei in "${file_list[@]}"
 	do
 		for i in {0..99}
@@ -67,7 +74,7 @@ if [ $# -gt 3 ]; then
 				python $home_src"main.py" -n $num_workes -in $filei -s $solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			else
 				# echo $solver_name
-				time mpirun -np $num_proc --hostfile $home_script""$host_file python $home_src"main.py" -sii -1 -mpi -n $num_workes -in $filei -s $solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+				time mpirun -np $num_proc --hostfile $home_script""$host_file python $home_src"main.py" -sii $i -mpi -n $num_workes -in $filei -mg -dc 2 -s $solver_name -p ml > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			fi
 		done
 	done
