@@ -109,19 +109,11 @@ class WamcaWraper(object):
 
 	def apply_moves(self, solution=None):
 		if not solution.movapplied and len(solution.movtuple[0]) > 0:
-			cop_time = -time.time()
 			numpy.copyto(solution.movvector, solution.vector)
-			cop_time += time.time()
-			ap_time = -time.time()
 			solution.value = self.__apply_moves_tuple(solution.movvector, solution.movtuple)
-			ap_time += time.time()
 			solution.movapplied = True
-			# TODO remove debug time
-			# print("cop_time;%.5f;ap_time;%.5f;" % (cop_time, ap_time))
-			# solution.vector, solution.movvector = solution.movvector, solution.vector
 
 	def __best_neighbor(self, solint=[], neighborhood=0, justcalc=False):
-		# self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
 		return self.__best_neighbor_moves(solint, neighborhood, 0, justcalc, numpy.array([], dtype=ctypes.c_int))
 
 	def __best_neighbor_moves(self, solint=[], neighborhood=0, n_moves=0, justcalc=False, solintResp=None):
@@ -212,27 +204,14 @@ class WamcaWraper(object):
 
 	def merge_independent_movements(self, sol1, sol2):
 		if sol1.can_merge(sol2):
-			contat_time = -time.time()
 			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
 			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
 			cjjs = numpy.concatenate((sol1.movtuple[2], sol2.movtuple[2]))
 			ccosts = numpy.concatenate((sol1.movtuple[3], sol2.movtuple[3]))
-			contat_time += time.time()
-			no_conflict_time = -time.time()
 			independent_movs = self.get_no_conflict(cids, ciis, cjjs, ccosts)
-			no_conflict_time += time.time()
-			new_sol_time = -time.time()
 			resp = SolutionMovementTuple(numpy.copy(sol1.vector), 0, independent_movs)
-			new_sol_time += time.time()
-			app_sol_time = -time.time()
 			self.apply_moves(resp)
-			app_sol_time += time.time()
-			cp_sol_time = -time.time()
 			numpy.copyto(resp.vector, sol1.vector)
-			cp_sol_time += time.time()
-			# TODO Remover contagem
-			# print("contat_time;%.5lf;no_conflict_time;%.5lf;new_sol_time;%.5lf;app_sol_time;%.5lf;cp_sol_time;%.5lf;"
-			# 	% (contat_time, no_conflict_time, new_sol_time, app_sol_time, cp_sol_time))
 			return resp, True
 		return sol1, False
 
