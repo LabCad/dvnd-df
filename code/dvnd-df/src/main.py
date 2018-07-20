@@ -60,6 +60,7 @@ if "tt" == param.problem_name:
 	goal = True
 elif "ml" == param.problem_name:
 	from wraper_wamca2016 import get_file_name
+
 	file_name = get_file_name(param.solution_index)
 	mylib = WamcaWraper(file_name, useMultipleGpu=param.multi_gpu, deviceCount=param.device_count)
 	ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
