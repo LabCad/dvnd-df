@@ -7,7 +7,8 @@ from cmdparam import CommandParams
 
 
 # Command line parameters
-param = CommandParams(solver="vnd")
+param = CommandParams(solver="gdvnd")
+print "param: {}".format(param)
 
 
 def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -19,7 +20,7 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	"""
 	end_time = time.time()
 	values_vec = [x.value for x in solutions]
-	print "solutions: {}, counts: {}".format(values_vec, metadata.counts)
+	# print "solutions: {}, counts: {}".format(values_vec, metadata.counts)
 	print "Initial: {}".format(ini_sol)
 	final_solution = min(solutions)
 	elapsed_time = end_time - initial_time
@@ -30,34 +31,20 @@ def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=No
 	if abs(fin_value * 1.0) > 0.00001:
 		imp_value = 1.0 * ini_value / fin_value
 	print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
-	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{};age;{}".format(
-		ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value, metadata.age)
-	if "gdvnd" == param.solver:
-		linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
-			metadata.combine_count, sum(metadata.combine_count))
+	# linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
+	# ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
+	linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
+		ini_value, fin_value, elapsed_time, sum([-1, -1]), values_vec, -1, imp_value)
+	# if "gdvnd" == param.solver:
+	# 	linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
+	# 		metadata.combine_count, sum(metadata.combine_count))
 	linha = "{};type;{};inum;{};w;{}".format(linha, param.solver, param.solution_index, param.workers)
+	print ""
 	print linha
-	if metadata is not None:
-		print("\nage;{};".format(metadata.age))
-		print("\nmanager_time;{};man_get_best_time;{};man_update_data_time;{}\nmanager_merge_time;{}".
-			format(metadata.man_time, metadata.man_get_best_time, metadata.man_update_data_time, metadata.man_merge_time))
-
-		print("\nneighbor_time;{};neighbor_proc_before;{};neighbor_func;{}".format(
-			metadata.neighbor_time, metadata.neighbor_proc_before_time, metadata.neighbor_func_time))
-		print("neighbor_func_inner_time;{};neighbor_func_numpy_alloc_time;{}".format(
-			metadata.neighbor_func_inner_time, metadata.neighbor_func_numpy_alloc_time))
-		print("neighbor_func_mpi_time;{};neighbor_func_numpy_resize_time;{}".format(
-			metadata.neighbor_func_mpi_time, metadata.neighbor_func_numpy_resize_time))
-		print("neighbor_func_rest;{}".format(
-			metadata.neighbor_func_rest))
-
-		# print("\n%;manager_time/total_time;{};neighbor_time/total_time;{}".format(100.0 * metadata.man_time / elapsed_time,
-		# 	100.0 * metadata.neighbor_time / elapsed_time))
-		#
-		# print("%;merge/manager;{}".format(100.0 * metadata.man_merge_time / metadata.man_time))
-		# print("%;process/neighbor;{};func/neighbor;{}".format(
-		# 	100.0 * metadata.neighbor_proc_before_time / metadata.neighbor_time,
-		# 	100.0 * metadata.neighbor_func_time / metadata.neighbor_time))
+	print ""
+	print "time;{};man_time;{};neigh_time;{}".format(elapsed_time, metadata.man_time, metadata.neigh_time)
+	print "man_time;{};man_merge_sol;{};man_best_sol;{};man_combine_sol;{}".format(
+		metadata.man_time, metadata.man_merge_sol_time, metadata.man_best_sol_time, metadata.man_combine_sol_time)
 	print ""
 
 
@@ -73,6 +60,7 @@ if "tt" == param.problem_name:
 	goal = True
 elif "ml" == param.problem_name:
 	from wraper_wamca2016 import get_file_name
+
 	file_name = get_file_name(param.solution_index)
 	mylib = WamcaWraper(file_name, useMultipleGpu=param.multi_gpu, deviceCount=param.device_count)
 	ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
@@ -109,9 +97,9 @@ elif "gdvnd" == param.solver:
 		return mylib.merge_independent_movements(sol1, sol2)
 
 	solver = DataFlowGDVND(param.goal, param.mpi_enabled,
-		apply_moves_to_sol_on_oper,
-		mylib.merge_common_movs,
-		lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
+			apply_moves_to_sol_on_oper,
+			mylib.merge_common_movs,
+			lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
 
 print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
 start_time = time.time()

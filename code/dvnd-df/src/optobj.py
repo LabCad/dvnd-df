@@ -37,44 +37,19 @@ class DecisionNode(Node):
 
 class Metadata(object):
 	def __init__(self, counts=None):
-		"""Number of called localseaches."""
-		self.age = 0
-
-		"""Total time elapsed on the manager node."""
 		self.man_time = 0
-		"""Time elapsed on a single merge operation."""
-		self.man_merge_time = 0
-		"""Time getting best solution"""
-		self.man_get_best_time = 0
-		self.man_update_data_time = 0
+		self.man_merge_sol_time = 0
+		self.man_best_sol_time = 0
+		self.man_combine_sol_time = 0
 
-		"""Time taken by neighborhood process."""
-		self.neighbor_time = 0
-		"""Time elapsed processing solution before it is sent to the localsearch."""
-		self.neighbor_proc_before_time = 0
-		"""Time elapsed on the localsearch itself."""
-		self.neighbor_func_time = 0
-		"""Time elapsed on the C function call."""
-		self.neighbor_func_inner_time = 0
-		"""Time elapsed allocating numpy arrays."""
-		self.neighbor_func_numpy_alloc_time = 0
-		self.neighbor_func_numpy_resize_time = 0
-		self.neighbor_func_mpi_time = 0
-		self.neighbor_func_rest = 0
-
-		"""Vector of neighborhoods calls count."""
-		self.counts = counts
-		"""Vector with the number of comibined solutions count."""
-		self.combine_count = None
-		"""Count of merges on the movements."""
-		self.merge_count = 0
+		self.neigh_time = 0
 
 
 class OptMessage(object):
 	"""
 	History for the DVND.
 	"""
-	def __init__(self, solmap={}, source=0, target=[], not_improved=[]):
+	def __init__(self, solmap={}, source=0, target=[], not_improved=[], maximize=False):
 		"""
 		:param solmap: Map os solutions (node code, actual solution).
 		:param source: Source of the history.
@@ -85,12 +60,13 @@ class OptMessage(object):
 		self.__source = source
 		self.__target = target
 		self.__not_improved = not_improved
+		self.__maximize = maximize
 		self.metadata = Metadata()
 		self.metadata.counts = [0 for x in target]
 		self.metadata.combine_count = [0 for x in target]
 
 	def __getitem__(self, item=0):
-		return self.__solmap[item]
+		return self.__solmap[item] if item < len(self) else self.get_best()
 
 	def __setitem__(self, item=0, val=None):
 		self.__solmap[item] = val
@@ -98,12 +74,12 @@ class OptMessage(object):
 	def __len__(self):
 		return len(self.__solmap)
 
-	def get_best(self, maximize=False):
+	def get_best(self):
 		"""
 		:param maximize: Indicates is is a maximization o minimization problem.
 		:return: Get the best solution on the history.
 		"""
-		return max(self.__solmap.values()) if maximize else min(self.__solmap.values())
+		return max(self.__solmap.values()) if self.__maximize else min(self.__solmap.values())
 
 	@property
 	def source(self):

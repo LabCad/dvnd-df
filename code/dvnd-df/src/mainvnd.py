@@ -30,20 +30,13 @@ k = 0
 counts = 0
 while k < len(neigh_op):
 	counts += 1
-	# print "Start k=", k, " f=", solution.value,
-	# for i in xrange(len(solution.vector)):
-	# 	solution2.vector[i] = solution.vector[i]
 	numpy.copyto(solution2.vector, solution.vector)
 	solution2.value = solution.value
-	# resp = best_neighbor(file_name, solution2.vector, k)
 	resp = mylib.neigh_gpu(solution2, k)
-	# print "out k=", k, " -> ", resp[1]
 	if resp[0] < solution:
 		k = 0
 		numpy.copyto(solution.vector, resp[0].vector)
-		# solution.vector = resp[0]
 		solution.value = resp[0].value
-		# solution.value = resp[1]
 	else:
 		k += 1
 
