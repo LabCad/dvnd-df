@@ -42,7 +42,7 @@ with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 					# data-line;i;558778;f;137704;t;2.54564595222;c;75;fv;[137704L, 137704L, 137704L, 137704L, 137704L];
 					# cv;[10, 12, 18, 18, 17];imp;4.05781967118;age;75;type;dvnd;inum;0;w;1
 
-					#data-line;i;558778;f;140654;t;4.76258206367;c;68;fv;[140654L, 140654L, 140654L, 140654L, 140654L];
+					# data-line;i;558778;f;140654;t;4.76258206367;c;68;fv;[140654L, 140654L, 140654L, 140654L, 140654L];
 					# cv;[18, 15, 13, 10, 12];imp;3.9727131827;age;68;mergecount;10;combine_count;[3, 4, 4, 3, 3];
 					# combine_count_sum;17
 					initial_value = line[2]

@@ -7,7 +7,7 @@ from cmdparam import CommandParams
 
 
 # Command line parameters
-param = CommandParams(solver="gdvnd")
+param = CommandParams(solver="dvnd")
 print "param: {}".format(param)
 
 
@@ -66,9 +66,9 @@ elif "ml" == param.problem_name:
 	ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
 
 	if "gdvnd" == param.solver:
-		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves) for mv in xrange(10)]
 	else:
-		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(10)]
 
 print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 is_use_metadata = True
