@@ -54,7 +54,7 @@ class WamcaWraper(object):
 		self.__mylib.getNoConflictMoves.restype = ctypes.c_int
 		self.__mylib.getNoConflictMoves.argtypes = [ctypes.c_uint, util.array_1d_ushort, util.array_1d_uint,
 			util.array_1d_uint, util.array_1d_int, util.array_1d_int,
-			util.array_1d_int, ctypes.c_bool]
+			util.array_1d_int, ctypes.c_bool, ctypes.c_bool]
 		# ctypes.POINTER(c_int)
 
 		# unsigned int applyMoves(char * file, int * solution, unsigned int solutionSize, unsigned int useMoves = 0,
@@ -215,13 +215,14 @@ class WamcaWraper(object):
 			return resp, True
 		return sol1, False
 
-	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=2):
+	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=2, melhorParaPior=False):
 		impMoves = numpy.arange(0, len(cids), dtype=ctypes.c_int)
 		impMovesTemp = numpy.arange(0, len(cids), dtype=ctypes.c_int)
 		impValue = numpy.array([0], dtype=ctypes.c_int)
 		impValueTemp = numpy.array([0], dtype=ctypes.c_int)
 
-		nMoves = self.__mylib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts, impMoves, impValue, maximize)
+		nMoves = self.__mylib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts,
+			impMoves, impValue, maximize, melhorParaPior)
 		tentativas = min(tentativas, len(cids) - 1)
 		removed_moves = set()
 		for cont_tentativas in xrange(tentativas):
@@ -236,7 +237,7 @@ class WamcaWraper(object):
 			ccosts[removeIndex] *= -1
 
 			nMovesTemp = self.__mylib.getNoConflictMoves(len(cids), cids, ciis, cjjs, ccosts,
-				impMovesTemp, impValueTemp, maximize)
+				impMovesTemp, impValueTemp, maximize, melhorParaPior)
 			if (not maximize and impValue[0] > impValueTemp[0]) or \
 					(maximize and impValue[0] < impValueTemp[0]):
 				# print "trocou {} por {}".format(impValue[0], impValueTemp[0])
