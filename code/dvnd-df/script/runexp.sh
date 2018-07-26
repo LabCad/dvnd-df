@@ -67,8 +67,13 @@ if [ $# -gt 3 ]; then
 			file_name=$solver_name"_n"$num_proc"w"$num_workes"in"$filei"_"$i
 			echo $file_name
 			if [ "$solver_name" = "rvnd_no_df" ]; then
+				solver_name = "rvnd"
 				# echo rvnd_no_df
-				time python $home_src"mainvnd.py" -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+				time python $home_src"mainvnd.py" -s $solver_name -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+			elif [ "$solver_name" = "dvnd_no_df" ]; then
+				# echo rvnd_no_df
+				solver_name = "dvnd"
+				time python $home_src"mainvnd.py" -s $solver_name -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			elif [ "$solver_name" = "rvnd_no_mpi" ]; then
 				solver_name = "rvnd"
 				python $home_src"main.py" -n $num_workes -sii $i -in $filei -s $solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"

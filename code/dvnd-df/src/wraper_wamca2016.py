@@ -154,7 +154,7 @@ class WamcaWraper(object):
 		if "gdvnd" == solver_param:
 			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
 		else:
-			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
+			return SolutionVectorValue(solint, self.calculate_value(solint))
 
 	def merge_common_movs(self, solutions=None):
 		if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
@@ -182,7 +182,7 @@ class WamcaWraper(object):
 	def neigh_gpu(self, solution=None, inimov=0):
 		resp = self.__best_neighbor(solution.vector, inimov, False)
 
-		return SolutionMovementTuple(resp[0], resp[1], ([], [], [], [])), (0, 0, 0, 0, 0)
+		return SolutionVectorValue(resp[0], resp[1]), (0, 0, 0, 0, 0)
 
 	def neigh_gpu_moves(self, solution=None, inimov=0, n_moves=0):
 		if len(solution.movtuple[0]) > 0:

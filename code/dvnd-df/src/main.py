@@ -66,9 +66,9 @@ elif "ml" == param.problem_name:
 	ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
 
 	if "gdvnd" == param.solver:
-		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves) for mv in xrange(10)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves) for mv in xrange(5)]
 	else:
-		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(10)]
+		neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
 
 print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 is_use_metadata = True
