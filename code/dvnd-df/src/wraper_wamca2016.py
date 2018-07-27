@@ -107,8 +107,8 @@ class WamcaWraper(object):
 	def __apply_moves_tuple(self, solint=[], tupple=None):
 		return self.__apply_moves(solint, tupple[0], tupple[1], tupple[2], tupple[3])
 
-	def apply_moves(self, solution=None):
-		if not solution.movapplied and len(solution.movtuple[0]) > 0:
+	def apply_moves(self, solution=None, force=False):
+		if force or (not solution.movapplied and len(solution.movtuple[0]) > 0):
 			numpy.copyto(solution.movvector, solution.vector)
 			solution.value = self.__apply_moves_tuple(solution.movvector, solution.movtuple)
 			solution.movapplied = True
@@ -138,6 +138,16 @@ class WamcaWraper(object):
 
 	def calculate_value(self, solint=[]):
 		return self.__best_neighbor(solint, 1, True)[1]
+
+	def copy_solution(self, solution):
+		if isinstance(solution, SolutionMovementTuple):
+			return SolutionMovementTuple(numpy.copy(solution.vector), solution.value,
+				(numpy.copy(solution.movtuple[0]), numpy.copy(solution.movtuple[1]), numpy.copy(solution.movtuple[2]),
+				numpy.copy(solution.movtuple[3])))
+		elif isinstance(solution, SolutionVectorValue):
+			return SolutionVectorValue(numpy.copy(solution.vector), solution.value)
+		else:
+			raise ValueError("Invalid solution")
 
 	def create_initial_solution(self, solution_index=0, solver_param="", solution_instance_index=None):
 		sol_info = wamca_solution_instance_file[solution_index]

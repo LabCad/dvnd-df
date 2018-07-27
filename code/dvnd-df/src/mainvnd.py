@@ -48,7 +48,7 @@ elif "dvnd" == param.solver:
 
 	melhorou = True
 	while melhorou:
-		my_threads = [pool.apply_async(ope, (solution, )) for ope in neigh_op]
+		my_threads = [pool.apply_async(ope, (mylib.copy_solution(solution), )) for ope in neigh_op]
 		melhorou = False
 		for i in xrange(len(my_threads)):
 			it_tread = my_threads[i]
