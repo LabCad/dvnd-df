@@ -66,19 +66,18 @@ if [ $# -gt 3 ]; then
 		do
 			file_name=$solver_name"_n"$num_proc"w"$num_workes"in"$filei"_"$i
 			echo $file_name
-			if [ "$solver_name" = "rvnd_no_df" ]; then
-				solver_name="rvnd"
-				# echo rvnd_no_df
-				time python $home_src"mainvnd.py" -s $solver_name -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
-			elif [ "$solver_name" = "dvnd_no_df" ]; then
-				# echo rvnd_no_df
-				solver_name="dvnd"
-				time python $home_src"mainvnd.py" -s $solver_name -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
-			elif [ "$solver_name" = "rvnd_no_mpi" ]; then
-				solver_name="rvnd"
-				python $home_src"main.py" -n $num_workes -sii $i -in $filei -s $solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+			if [ "$solver_name" = "rvnd_no_df" -o "$solver_name" = "dvnd_no_df" ]
+			then
+				temp_solver_name=$solver_name | cut -c 1-4
+				echo "first-$solver_name"
+				time python $home_src"mainvnd.py" -s temp_solver_name -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+			elif [ "$solver_name" = "rvnd_no_mpi" ]
+			then
+				echo "rvnd_no_mpi-$solver_name"
+				temp_solver_name="rvnd"
+				python $home_src"main.py" -n $num_workes -sii $i -in $filei -s $temp_solver_name -p $problem > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			else
-				# echo $solver_name
+				echo "else-"$solver_name
 				time mpirun -np $num_proc --hostfile $home_script""$host_file python $home_src"main.py" -sii $i -mpi -n $num_workes -in $filei -mg -dc 2 -s $solver_name -p ml > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			fi
 		done
