@@ -25,13 +25,13 @@ print "ns: ", neigh_op
 print ini_solution
 
 start_time = time.time()
-counts = 0
+counts = [0 for x in xrange(len(neigh_op))]
 if "rvnd" == param.solver:
 	solution = deepcopy(ini_solution)
 	solution2 = deepcopy(solution)
 	k = 0
 	while k < len(neigh_op):
-		counts += 1
+		counts[k] += 1
 		numpy.copyto(solution2.vector, solution.vector)
 		solution2.value = solution.value
 		resp = mylib.neigh_gpu(solution2, k)
@@ -50,8 +50,9 @@ elif "dvnd" == param.solver:
 	while melhorou:
 		my_threads = [pool.apply_async(ope, (solution, )) for ope in neigh_op]
 		melhorou = False
-		for it_tread in my_threads:
-			counts += 1
+		for i in xrange(len(my_threads)):
+			it_tread = my_threads[i]
+			counts[i] += 1
 			sol = it_tread.get()[0]
 			if sol < solution:
 				melhorou = True
@@ -59,6 +60,6 @@ elif "dvnd" == param.solver:
 
 
 end_time = time.time()
-print "finished rvnd in {}s".format(end_time - start_time)
+print "finished {} in {}s".format(param.solver.upper(), end_time - start_time)
 print "data-line;initial_solution;{};final_solution;{};time;{};counts;{};fv;{};cv;{};imp;{}".format(ini_solution.value, solution.value,
-	end_time - start_time, counts, [], [], 1.0 * ini_solution.value / solution.value)
+	end_time - start_time, sum(counts), [], counts, 1.0 * ini_solution.value / solution.value)
