@@ -44,6 +44,8 @@ class Metadata(object):
 
 		self.neigh_time = 0
 
+		self.counts = counts
+
 
 class OptMessage(object):
 	"""

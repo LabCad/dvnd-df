@@ -68,9 +68,8 @@ if [ $# -gt 3 ]; then
 			echo $file_name
 			if [ "$solver_name" = "rvnd_no_df" -o "$solver_name" = "dvnd_no_df" ]
 			then
-				temp_solver_name=$solver_name | cut -c 1-4
-				echo "first-$solver_name"
-				time python $home_src"mainvnd.py" -s temp_solver_name -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+				echo "first-$solver_name - ${solver_name:0:4}"
+				time python $home_src"mainvnd.py" -s ${solver_name:0:4} -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
 			elif [ "$solver_name" = "rvnd_no_mpi" ]
 			then
 				echo "rvnd_no_mpi-$solver_name"

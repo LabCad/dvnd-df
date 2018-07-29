@@ -268,12 +268,12 @@ class WraperWamca2016Test(unittest.TestCase):
 		tam = sol_info[1]
 		number_of_moves = 10
 
-		sol_list = numpy.arange(0, tam, dtype=ctypes.c_int)
-		sol_value = self.__mylib.calculate_value(sol_list)
+		bkp_sol = SolutionMovementTuple(numpy.arange(0, tam, dtype=ctypes.c_int), 0, from_list_to_tuple([], [], [], []))
+		self.__mylib.set_solution_value(bkp_sol)
 		# No moves
 		sol = list()
 		for x in xrange(5):
-			sol.append(SolutionMovementTuple(numpy.copy(sol_list), sol_value, from_list_to_tuple([], [], [], [])))
+			sol.append(SolutionMovementTuple(numpy.copy(bkp_sol.vector), bkp_sol.value, from_list_to_tuple([], [], [], [])))
 
 		resp = list()
 		for x in xrange(len(sol)):
