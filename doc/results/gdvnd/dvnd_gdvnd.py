@@ -12,7 +12,7 @@ with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 	writer.writerow(titles_new)
 	# content_folders = ["./dvnd_n4w4h1_4in0_7/", "./gdvnd_n4w4h1_4in0_7/"]
 	content_folders = ["./dvnd_n4w5h1_4in0_7randInitial/", "./gdvnd_n4w5h1_4in0_7randInitial/"]
-	content_folders = ["./dvnd_n1w6/", "./dvndNoDf_n1w6/"]
+	content_folders = ["./dvnd_n1w6/", "./dvnd_n2w6/", "./dvndNoDf_n1w6/"]
 	# content_folders = ["./dvndNoDf_n1w6/"]
 	for folder_to_look in content_folders:
 		for file_name in fnmatch.filter(os.listdir(folder_to_look), file_name_pattern):
