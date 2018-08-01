@@ -10,9 +10,8 @@ titles_new = ["initial", "final", "count", "time", "imp", "inum", "n", "w", "sol
 with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 	writer = csv.writer(novo_csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
 	writer.writerow(titles_new)
-	# content_folders = ["./dvnd_n4w4h1_4in0_7/", "./gdvnd_n4w4h1_4in0_7/"]
-	content_folders = ["./dvnd_n4w5h1_4in0_7randInitial/", "./gdvnd_n4w5h1_4in0_7randInitial/"]
-	content_folders = ["./rvndNoDf_n4w4h1_4in0_7sameInitial/"]
+	content_folders = ["./dvnd_n1w6h1_1in0_7100sol/", "./dvnd_n2w6h1_2in0_7100sol/",
+		"./dvnd_n3w6h1_3in0_7100sol/", "./dvnd_n4w6h1_4in0_7100sol/", "./dvndNoDf_n1w6h1_3in0_7100sol/"]
 	for folder_to_look in content_folders:
 		for file_name in fnmatch.filter(os.listdir(folder_to_look), file_name_pattern):
 			nome_separado = rfn.search(file_name)

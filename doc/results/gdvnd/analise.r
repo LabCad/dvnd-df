@@ -9,23 +9,66 @@ cores = 4
 
 startTime = Sys.time()
 #library(ggplot2)
-# library(data.table)
 library(tidyverse)
+
 setwd("~/git/dvnd-df/doc/results/gdvnd/")
-# dvndGdvndSameInitial = data.table(read_csv(file="dvndGdvnd-sameInitial.csv", head=TRUE, sep=";"))
-# dvndGdvndRandInitial = data.table(read_csv(file="dvndGdvnd-randInitial.csv", head=TRUE, sep=";"))
-rvndSameInitial = read.csv(file="rvnd-sameInitial.csv", head=TRUE, sep=";")
 
-# dvndGdvndSameInitial$initialSolMethod = rep("same", length(dvndGdvndSameInitial$initial))
-# dvndGdvndRandInitial$initialSolMethod = rep("rand", length(dvndGdvndRandInitial$initial))
-rvndSameInitial$initialSolMethod = rep("rand", length(rvndSameInitial$initial))
+dvndGdvndData = read.csv(file="dvndGdvnd-dataflow.csv", header=TRUE, sep=";")
+dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
 
-# dvndGdvndData = read.csv(file="dvndGdvnd-noDf.csv", header=TRUE, sep="\t")
-# dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
-# dvndGdvndData = merge(dvndGdvndSameInitial, dvndGdvndRandInitial, all=TRUE)
-# dvndGdvndData = merge(merge(dvndGdvndSameInitial, dvndGdvndRandInitial, all=TRUE), rvndSameInitial, all=TRUE)
+desenharDispersao = function(data_src, iniMethod, coluna, draw_inum) {
+  if (length(data_src$sample) > 0) {
+    x_axis_value = rep(1:100, length(data_src$sample) / 100)
+    # x_axis_value = data_src$sample
 
-dvndGdvndData = rvndSameInitial
+    mychart = NULL
+    if (coluna == "time") {
+      data_src = data_src %>% arrange(paste(solver, "_n", n, sep=""), time)
+      mychart = data_src %>%
+        ggplot(aes(x=x_axis_value, y=time, group=paste(solver, "_n", n, sep=""), label=paste(solver, "_n", n, sep="")))
+    } else if (coluna == "imp") {
+      data_src = data_src %>% arrange(paste(solver, "_n", n, sep=""), imp)
+      mychart = data_src %>%
+        ggplot(aes(x=x_axis_value, y=imp, group=paste(solver, "_n", n, sep=""), label=paste(solver, "_n", n, sep="")))
+    } else if (coluna == "count") {
+      data_src = data_src %>% arrange(paste(solver, "_n", n, sep=""), count)
+      mychart = data_src %>%
+        ggplot(aes(x=x_axis_value, y=count, group=paste(solver, "_n", n, sep=""), label=paste(solver, "_n", n, sep="")))
+    }
+    
+    mychart = mychart +
+      geom_line(aes(color=paste(solver, "_n", n, sep=""))) +
+      geom_point(aes(color=paste(solver, "_n", n, sep=""))) +
+      # scale_x_discrete(name ="sample") +
+      labs(color='Método')
+    
+    # geom_text(check_overlap = T,# automatically reduce overlap (deletes some labels)
+    #           vjust = "bottom", # adjust the vertical orientation
+    #           nudge_y = 0.01, # move the text up a bit so it doesn't touch the points
+    #           angle = 30,# tilt the text 30 degrees
+    #           size = 2 # make the text smaller (to reduce overlap more)
+    # ) + # and then add labels to the points
+    # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
+    ggsave(paste("chart/scatter", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
+  }
+}
+
+desenharBoxplot = function(data_src, iniMethod, coluna, draw_inum, draw_n, draw_w) {
+  if (length(data_src$sample) > 0) {
+    # x_axis_value = rep(1:100, length(data_src$sample) / 100)
+    
+    # ggplot(aes(x=factor(paste(solver, "_n", n))), y=time, group=paste(solver, "_n", n, sep=""), fill=paste(solver, "_n", n, sep="")) #+
+    mychart = data_src %>%
+      ggplot(aes(x=paste(solver, "_n", n), y=time, fill=paste(solver, "_n", n))) +
+      geom_boxplot() +
+      labs(color='Método') +
+      theme(legend.position="bottom") +
+      labs(fill = "Método")
+    # scale_x_discrete(name ="sample") +
+    # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
+    ggsave(paste("chart/box", iniMethod, "_time_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
+  }
+}
 
 # for (draw_n in 1:4) {
   for (iniMethod in c("same", "rand", "100sol")) {
@@ -33,49 +76,15 @@ dvndGdvndData = rvndSameInitial
     # foreach(draw_inum=0:7, .combine=cbind) %dopar% {
 
       library(ggplot2)
-      for (draw_w in 1:10) {
+      # for (draw_w in 1:10) {
         # data_src = dvndGdvndData[inum == draw_inum & n == draw_n & w == draw_w & initialSolMethod == iniMethod][order(solver, time)]
-        # data_src = dvndGdvndData %>% filter(inum == draw_inum & n == draw_n & w == draw_w & initialSolMethod == iniMethod) %>%
-        data_src = dvndGdvndData %>% filter(inum == draw_inum & w == draw_w & initialSolMethod == iniMethod) %>%
-          arrange(solver, n, time)
-        if (length(data_src$sample) > 0) {
-          x_axis_value = rep(1:100, length(data_src$sample) / 100)
-
-          mychart = ggplot(data=data_src, aes(x=x_axis_value, y=time, group=paste(solver, "_n", n, sep="")))
-          mychart = mychart + geom_line(aes(color=paste(solver, "_n", n, sep="")))
-          mychart = mychart + geom_point(aes(color=paste(solver, "_n", n, sep="")))
-          mychart = mychart + scale_x_discrete(name ="sample")
-          mychart = mychart + ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
-
-          ggsave(paste("chart/rvnd_", iniMethod, "_time_in", draw_inum, "n", draw_n, "w", draw_w, ".png", sep=""), plot = mychart, device="png")
-        }
-
-        data_src = data_src %>% arrange(solver, n, imp)
-        if (length(data_src$sample) > 0) {
-          x_axis_value = rep(1:100, length(data_src$sample) / 100)
-          mychart = ggplot(data=data_src, aes(x=x_axis_value, y=imp, group=paste(solver, "_n", n, sep="")))
-
-          mychart = mychart + geom_line(aes(color=paste(solver, "_n", n, sep="")))
-          mychart = mychart + geom_point(aes(color=paste(solver, "_n", n, sep="")))
-          mychart = mychart + scale_x_discrete(name ="sample")
-          mychart = mychart + ggtitle(paste(iniMethod, " initial - Improvement in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
-
-          ggsave(paste("chart/rvnd_", iniMethod, "_imp_in", draw_inum, "n", draw_n, "w", draw_w, ".png", sep=""), plot = mychart, device="png")
-        }
-        
-        data_src = data_src %>% arrange(solver, n, count)
-        if (length(data_src$sample) > 0) {
-          x_axis_value = rep(1:100, length(data_src$sample) / 100)
-          mychart = ggplot(data=data_src, aes(x=x_axis_value, y=count, group=paste(solver, "_n", n, sep="")))
-
-          mychart = mychart + geom_line(aes(color=paste(solver, "_n", n, sep="")))
-          mychart = mychart + geom_point(aes(color=paste(solver, "_n", n, sep="")))
-          mychart = mychart + scale_x_discrete(name ="sample")
-          mychart = mychart + ggtitle(paste(iniMethod, " initial - Count in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
-
-          # ggsave(paste("chart/rvnd_", iniMethod, "_count_in", draw_inum, "n", draw_n, "w", draw_w, ".png", sep=""), plot = mychart, device="png")
-        }
-      }
+        data_src = dvndGdvndData %>%
+          filter(inum == draw_inum & initialSolMethod == iniMethod)
+        desenharBoxplot(data_src, iniMethod, "time", draw_inum)
+        desenharBoxplot(data_src, iniMethod, "imp", draw_inum)
+        desenharDispersao(data_src, iniMethod, "time", draw_inum)
+        desenharDispersao(data_src, iniMethod, "imp", draw_inum)
+      # }
     }
   }
 # }
