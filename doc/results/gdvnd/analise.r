@@ -11,9 +11,9 @@ startTime = Sys.time()
 #library(ggplot2)
 library(tidyverse)
 
-setwd("~/git/dvnd-df/doc/results/gdvnd/")
+setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
 
-dvndGdvndData = read.csv(file="dvndGdvnd-dataflow.csv", header=TRUE, sep=";")
+dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
 
 titulos = list()
@@ -81,7 +81,7 @@ desenharBoxplot = function(prefix, data_src, iniMethod, coluna, draw_inum, draw_
       labs(color='Método', fill = "Método") +
       # theme(legend.position="bottom") +
       labs(color='Método', x="Método", y=titulos[coluna])
-      # scale_y_discrete(name ="Método")
+      # scale_y_discrete(name ="MÃ©todo")
     # scale_x_discrete(name ="sample") +
     # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
     ggsave(paste("chart/", prefix, "_box", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
@@ -89,21 +89,44 @@ desenharBoxplot = function(prefix, data_src, iniMethod, coluna, draw_inum, draw_
 }
 
 dvndGdvndData = dvndGdvndData %>%
-  mutate(df_mac = paste(ifelse(solver=="dvnd", "DC", "DD"), " m", n, sep = ""))
+  mutate(df_mac = paste(ifelse(solver=="dvnd_no_df", "DC", "DD"), " m", n, sep = ""))
 
-  for (iniMethod in c("same", "rand", "100sol")) {
-    for (draw_inum in 0:7) {
-    # foreach(draw_inum=0:7, .combine=cbind) %dopar% {
+for (iniMethod in c("same", "rand", "100sol")) {
+  for (draw_inum in 0:7) {
+  # foreach(draw_inum=0:7, .combine=cbind) %dopar% {
 
-      library(ggplot2)
-        data_src = dvndGdvndData %>%
-          filter(inum == draw_inum & initialSolMethod == iniMethod)
-        desenharBoxplot("dvnd", data_src, iniMethod, "time", draw_inum)
-        desenharBoxplot("dvnd", data_src, iniMethod, "imp", draw_inum)
-        desenharDispersao("dvnd", data_src, iniMethod, "time", draw_inum)
-        desenharDispersao("dvnd", data_src, iniMethod, "imp", draw_inum)
-    }
+    library(ggplot2)
+      data_src = dvndGdvndData %>%
+        filter(inum == draw_inum & initialSolMethod == iniMethod)
+      # desenharBoxplot("dvnd", data_src, iniMethod, "time", draw_inum)
+      # desenharBoxplot("dvnd", data_src, iniMethod, "imp", draw_inum)
+      # desenharDispersao("dvnd", data_src, iniMethod, "time", draw_inum)
+      # desenharDispersao("dvnd", data_src, iniMethod, "imp", draw_inum)
   }
+}
+
+dvndGdvndData_time = dvndGdvndData %>%
+  group_by(inum, solver, n) %>%
+  summarize(minV = min(time), meanV = mean(time), maxV = max(time), sdV = sd(time)) %>%
+  rename(sn = n, sinum = inum, ssolver = solver) %>%
+  mutate(wilcoxP = wilcox.test(filter(dvndGdvndData, inum == sinum & solver == ssolver & n == sn)$time, filter(dvndGdvndData, inum == sinum & solver != ssolver & n == sn)$time)$p.value)
+
+dvndGdvndData_imp = dvndGdvndData %>%
+  group_by(inum, solver, n) %>%
+  summarize(minV = min(imp), meanV = mean(imp), maxV = max(imp), sdV = sd(imp)) %>%
+  rename(sn = n, sinum = inum, ssolver = solver) %>%
+  mutate(wilcoxP = wilcox.test(filter(dvndGdvndData, inum == sinum & solver == ssolver & n == sn)$imp, filter(dvndGdvndData, inum == sinum & solver != ssolver & n == sn)$imp)$p.value)
+
+data_src = dvndGdvndData_time
+print(paste(paste("#", "Método", "$m$", "min", "\\overline{x}", "max", "\\sigma", "$p-value$", sep=" & "), " \\", sep=""))
+for (lineI in 1:nrow(data_src)) {
+  row <- data_src[lineI,]
+  print(paste(paste(row$sinum, ifelse(row$ssolver=="dvnd_no_df", "DC", "DD"), 
+    row$sn, format(row$minV, digits=4, decimal.mark=","), format(row$meanV, digits=4, decimal.mark=","),
+    format(row$maxV, digits=4, decimal.mark=","), format(row$sdV, digits=4, decimal.mark=","),
+    ifelse(row$wilcoxP >= .05, paste("\\textbf{", format(row$wilcoxP, digits=4, decimal.mark=","), "}", sep=""),
+    format(row$wilcoxP, digits=4, decimal.mark=",")), sep=" & "), " \\", sep = ""))
+}
 
 #stopCluster(cl)
 print(paste("Using", cores, "cores"))
