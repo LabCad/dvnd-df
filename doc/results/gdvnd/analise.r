@@ -11,7 +11,8 @@ startTime = Sys.time()
 #library(ggplot2)
 library(tidyverse)
 
-setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
+# setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
+setwd("/home/rodolfo/git/dvnd-df/doc/results/gdvnd")
 
 dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
@@ -117,16 +118,33 @@ dvndGdvndData_imp = dvndGdvndData %>%
   rename(sn = n, sinum = inum, ssolver = solver) %>%
   mutate(wilcoxP = wilcox.test(filter(dvndGdvndData, inum == sinum & solver == ssolver & n == sn)$imp, filter(dvndGdvndData, inum == sinum & solver != ssolver & n == sn)$imp)$p.value)
 
-data_src = dvndGdvndData_time
-print(paste(paste("#", "Método", "$m$", "min", "\\overline{x}", "max", "\\sigma", "$p-value$", sep=" & "), " \\", sep=""))
-for (lineI in 1:nrow(data_src)) {
-  row <- data_src[lineI,]
-  print(paste(paste(row$sinum, ifelse(row$ssolver=="dvnd_no_df", "DC", "DD"), 
-    row$sn, format(row$minV, digits=4, decimal.mark=","), format(row$meanV, digits=4, decimal.mark=","),
-    format(row$maxV, digits=4, decimal.mark=","), format(row$sdV, digits=4, decimal.mark=","),
-    ifelse(row$wilcoxP >= .05, paste("\\textbf{", format(row$wilcoxP, digits=4, decimal.mark=","), "}", sep=""),
-    format(row$wilcoxP, digits=4, decimal.mark=",")), sep=" & "), " \\", sep = ""))
+imprimirTabela = function(data_src) {
+  print("\\hline \\hline")
+  print(paste(paste("\\#", "Método", "$m$", "min", "\\overline{x}", "max", "\\sigma", "$p-value$", sep=" & "), " \\ \\hline", sep=""))
+  print("\\hline")
+  inumV = -1
+  inumVtext = NULL
+  for (lineI in 1:nrow(data_src)) {
+    row <- data_src[lineI,]
+    inumVtext = ""
+    solverText = ifelse(row$ssolver == "dvnd_no_df", "DC", "DD")
+    if (inumV != row$sinum) {
+      inumV = row$sinum
+      inumVtext = paste("\\multirow{5}{*}{", row$sinum, "}", sep = "")
+      solverText = paste("\\multirow{4}{*}{", solverText, "}", sep = "")
+    }
+    wilcoxV = ifelse(row$wilcoxP >= .05, paste("\\textbf{", format(row$wilcoxP, digits=4, decimal.mark=","), "}", sep=""), format(row$wilcoxP, digits=4, decimal.mark=","))
+    wilcoxV = ifelse(solverText == "DD", wilcoxV, "")
+    print(paste(paste(inumVtext, ifelse(solverText == "DD", "", solverText), 
+        row$sn, format(row$minV, digits=4, decimal.mark=","), format(row$meanV, digits=4, decimal.mark=","),
+        format(row$maxV, digits=4, decimal.mark=","), format(row$sdV, digits=4, decimal.mark=","),
+        wilcoxV,
+      sep=" & "), ifelse(solverText == "DD", " \\", " \\ \\hline"), sep = ""))
+  }
 }
+
+imprimirTabela(dvndGdvndData_time)
+imprimirTabela(dvndGdvndData_imp)
 
 #stopCluster(cl)
 print(paste("Using", cores, "cores"))
