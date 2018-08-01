@@ -5,6 +5,7 @@ import random
 import time
 import numpy
 from multiprocessing.pool import ThreadPool
+import threading
 from copy import deepcopy
 from wraper_wamca2016 import WamcaWraper, get_file_name
 from cmdparam import CommandParams
@@ -42,18 +43,33 @@ if "rvnd" == param.solver:
 		else:
 			k += 1
 elif "dvnd" == param.solver:
+	def negigh_dvnd(solution, idx, resp, funfun):
+		resp[idx] = funfun(solution)[0]
+		return resp[idx]
+
+	neigh_op = [lambda sol, idx, resp, funfun=ope, y=mv: negigh_dvnd(sol, idx, resp, funfun) for ope in neigh_op]
 	neigh_count = len(neigh_op)
 	solution = deepcopy(ini_solution)
-	pool = ThreadPool(processes=neigh_count)
+	# pool = ThreadPool(processes=neigh_count)
 
 	melhorou = True
+	respostas = [None for x in xrange(neigh_count)]
 	while melhorou:
-		my_threads = [pool.apply_async(ope, (mylib.copy_solution(solution), )) for ope in neigh_op]
+		# my_threads = [pool.apply_async(ope, (mylib.copy_solution(solution), )) for ope in neigh_op]
+		my_threads = []
 		melhorou = False
-		for i in xrange(len(my_threads)):
-			it_tread = my_threads[i]
+		for i in xrange(neigh_count):
 			counts[i] += 1
-			sol = it_tread.get()[0]
+			it_tread = threading.Thread(target=neigh_op[i], args=(mylib.copy_solution(solution), i, respostas))
+			it_tread.setDaemon(True)
+			it_tread.start()
+			my_threads.append(it_tread)
+
+		for i in xrange(neigh_count):
+			it_tread = my_threads[i]
+			if it_tread.isAlive():
+				it_tread.join()
+			sol = respostas[i]
 			if sol < solution:
 				melhorou = True
 				solution = sol
@@ -61,5 +77,5 @@ elif "dvnd" == param.solver:
 
 end_time = time.time()
 print "finished {} in {}s".format(param.solver.upper(), end_time - start_time)
-print "data-line;initial_solution;{};final_solution;{};time;{};counts;{};fv;{};cv;{};imp;{}".format(ini_solution.value, solution.value,
-	end_time - start_time, sum(counts), [], counts, 1.0 * ini_solution.value / solution.value)
+print "data-line;initial_solution;{};final_solution;{};time;{};counts;{};fv;{};cv;{};imp;{}".format(ini_solution.value,
+	solution.value, end_time - start_time, sum(counts), [], counts, 1.0 * ini_solution.value / solution.value)

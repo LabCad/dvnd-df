@@ -136,7 +136,10 @@ class WamcaWraper(object):
 		carrays = [numpy.resize(x, int(n_moves_array[0])) for x in carrays]
 		return solint, resp, carrays, (0, 0, 0, 0), solintResp
 
-	def calculate_value(self, solint=[]):
+	def set_solution_value(self, solution):
+		solution.value = self.__best_neighbor(solution.vector, 1, True)[1]
+
+	def __calculate_value(self, solint=[]):
 		return self.__best_neighbor(solint, 1, True)[1]
 
 	def copy_solution(self, solution):
@@ -162,9 +165,9 @@ class WamcaWraper(object):
 
 		print "Size: {} - file name: {}".format(sol_info[1], sol_info[0])
 		if "gdvnd" == solver_param:
-			return SolutionMovementTuple(solint, self.calculate_value(solint), ([], [], [], []))
+			return SolutionMovementTuple(solint, self.__calculate_value(solint), ([], [], [], []))
 		else:
-			return SolutionVectorValue(solint, self.calculate_value(solint))
+			return SolutionVectorValue(solint, self.__calculate_value(solint))
 
 	def merge_common_movs(self, solutions=None):
 		if all([solutions[0].can_merge(solutions[x]) for x in xrange(1, len(solutions))]):
@@ -174,7 +177,7 @@ class WamcaWraper(object):
 			if len(intersection) > 0:
 				new_solution_vetor = numpy.copy(solutions[0].vector)
 				self.__apply_moves_tuple(new_solution_vetor, from_movement_list_to_tuple(intersection))
-				new_value = self.calculate_value(new_solution_vetor)
+				new_value = self.__calculate_value(new_solution_vetor)
 
 				# Optimization for the case where all the solutions are the same
 				# len(intersection) == len(solutions[0].movtuple[0])
@@ -212,7 +215,9 @@ class WamcaWraper(object):
 	def no_conflict(self, id1=0, i1=0, j1=0, id2=0, i2=0, j2=0):
 		return self.__mylib.noConflict(id1, i1, j1, id2, i2, j2)
 
-	def merge_independent_movements(self, sol1, sol2):
+	def merge_independent_movements(self, sol1, sol2, maximize=False):
+		target_sol = SolutionMovementTuple(numpy.copy(sol1.movvector), 0, ([], [], [], []))
+		self.__calculate_value(target_sol.vector)
 		if sol1.can_merge(sol2):
 			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
 			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
@@ -222,8 +227,8 @@ class WamcaWraper(object):
 			resp = SolutionMovementTuple(numpy.copy(sol1.vector), 0, independent_movs)
 			self.apply_moves(resp)
 			numpy.copyto(resp.vector, sol1.vector)
-			return resp, True
-		return sol1, False
+			return max(resp, target_sol) if maximize else min(resp, target_sol), True
+		return max(sol1, target_sol) if maximize else min(sol1, target_sol), False
 
 	def get_no_conflict(self, cids, ciis, cjjs, ccosts, maximize=False, tentativas=2, melhorParaPior=False):
 		impMoves = numpy.arange(0, len(cids), dtype=ctypes.c_int)
@@ -313,6 +318,7 @@ wamca_solution_instance_file = [
 	# 08
 	("u1060.tsp", 1060),
 	("vm1084.tsp", 1084),
+	# 10
 	("u1432.tsp", 1432),
 	("vm1748.tsp", 1748),
 	("u1817.tsp", 1817),
