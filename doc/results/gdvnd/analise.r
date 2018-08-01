@@ -16,31 +16,37 @@ setwd("~/git/dvnd-df/doc/results/gdvnd/")
 dvndGdvndData = read.csv(file="dvndGdvnd-dataflow.csv", header=TRUE, sep=";")
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
 
-desenharDispersao = function(data_src, iniMethod, coluna, draw_inum) {
+titulos = list()
+titulos["imp"] = "Melhoria na solução"
+titulos["time"] = "Tempo(s)"
+titulos["count"] = "Iterações"
+
+desenharDispersao = function(prefix, data_src, iniMethod, coluna, draw_inum) {
   if (length(data_src$sample) > 0) {
     x_axis_value = rep(1:100, length(data_src$sample) / 100)
     # x_axis_value = data_src$sample
 
     mychart = NULL
     if (coluna == "time") {
-      data_src = data_src %>% arrange(paste(solver, "_n", n, sep=""), time)
+      data_src = data_src %>% arrange(df_mac, time)
       mychart = data_src %>%
-        ggplot(aes(x=x_axis_value, y=time, group=paste(solver, "_n", n, sep=""), label=paste(solver, "_n", n, sep="")))
+        ggplot(aes(x=x_axis_value, y=time, group=df_mac, label=df_mac))
     } else if (coluna == "imp") {
-      data_src = data_src %>% arrange(paste(solver, "_n", n, sep=""), imp)
+      data_src = data_src %>% arrange(df_mac, imp)
       mychart = data_src %>%
-        ggplot(aes(x=x_axis_value, y=imp, group=paste(solver, "_n", n, sep=""), label=paste(solver, "_n", n, sep="")))
+        ggplot(aes(x=x_axis_value, y=imp, group=df_mac, label=df_mac))
     } else if (coluna == "count") {
-      data_src = data_src %>% arrange(paste(solver, "_n", n, sep=""), count)
+      data_src = data_src %>% arrange(df_mac, count)
       mychart = data_src %>%
-        ggplot(aes(x=x_axis_value, y=count, group=paste(solver, "_n", n, sep=""), label=paste(solver, "_n", n, sep="")))
+        ggplot(aes(x=x_axis_value, y=count, group=df_mac, label=df_mac))
     }
     
     mychart = mychart +
-      geom_line(aes(color=paste(solver, "_n", n, sep=""))) +
-      geom_point(aes(color=paste(solver, "_n", n, sep=""))) +
+      geom_line(aes(color=df_mac)) +
+      geom_point(aes(color=df_mac)) +
+      # scale_x_discrete(name ="Amostra", limits=c(1, 100), breaks=waiver()) +
       # scale_x_discrete(name ="sample") +
-      labs(color='Método')
+      labs(color='Método', x="Amostra", y=titulos[coluna])
     
     # geom_text(check_overlap = T,# automatically reduce overlap (deletes some labels)
     #           vjust = "bottom", # adjust the vertical orientation
@@ -49,45 +55,55 @@ desenharDispersao = function(data_src, iniMethod, coluna, draw_inum) {
     #           size = 2 # make the text smaller (to reduce overlap more)
     # ) + # and then add labels to the points
     # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
-    ggsave(paste("chart/scatter", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
+    ggsave(paste("chart/", prefix, "_scatter", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
   }
 }
 
-desenharBoxplot = function(data_src, iniMethod, coluna, draw_inum, draw_n, draw_w) {
+desenharBoxplot = function(prefix, data_src, iniMethod, coluna, draw_inum, draw_n, draw_w) {
   if (length(data_src$sample) > 0) {
     # x_axis_value = rep(1:100, length(data_src$sample) / 100)
     
     # ggplot(aes(x=factor(paste(solver, "_n", n))), y=time, group=paste(solver, "_n", n, sep=""), fill=paste(solver, "_n", n, sep="")) #+
-    mychart = data_src %>%
-      ggplot(aes(x=paste(solver, "_n", n), y=time, fill=paste(solver, "_n", n))) +
+    mychart = NULL
+    if (coluna == "time") {
+      mychart = data_src %>%
+        ggplot(aes(x=df_mac, y=time, fill=df_mac))
+    } else if (coluna == "imp") {
+      mychart = data_src %>%
+        ggplot(aes(x=df_mac, y=imp, fill=df_mac))
+    } else if (coluna == "count") {
+      mychart = data_src %>%
+        ggplot(aes(x=df_mac, y=count, fill=df_mac))
+    }
+    
+    mychart = mychart +
       geom_boxplot() +
-      labs(color='Método') +
-      theme(legend.position="bottom") +
-      labs(fill = "Método")
+      labs(color='Método', fill = "Método") +
+      # theme(legend.position="bottom") +
+      labs(color='Método', x="Método", y=titulos[coluna])
+      # scale_y_discrete(name ="Método")
     # scale_x_discrete(name ="sample") +
     # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
-    ggsave(paste("chart/box", iniMethod, "_time_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
+    ggsave(paste("chart/", prefix, "_box", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
   }
 }
 
-# for (draw_n in 1:4) {
+dvndGdvndData = dvndGdvndData %>%
+  mutate(df_mac = paste(ifelse(solver=="dvnd", "DC", "DD"), " m", n, sep = ""))
+
   for (iniMethod in c("same", "rand", "100sol")) {
     for (draw_inum in 0:7) {
     # foreach(draw_inum=0:7, .combine=cbind) %dopar% {
 
       library(ggplot2)
-      # for (draw_w in 1:10) {
-        # data_src = dvndGdvndData[inum == draw_inum & n == draw_n & w == draw_w & initialSolMethod == iniMethod][order(solver, time)]
         data_src = dvndGdvndData %>%
           filter(inum == draw_inum & initialSolMethod == iniMethod)
-        desenharBoxplot(data_src, iniMethod, "time", draw_inum)
-        desenharBoxplot(data_src, iniMethod, "imp", draw_inum)
-        desenharDispersao(data_src, iniMethod, "time", draw_inum)
-        desenharDispersao(data_src, iniMethod, "imp", draw_inum)
-      # }
+        desenharBoxplot("dvnd", data_src, iniMethod, "time", draw_inum)
+        desenharBoxplot("dvnd", data_src, iniMethod, "imp", draw_inum)
+        desenharDispersao("dvnd", data_src, iniMethod, "time", draw_inum)
+        desenharDispersao("dvnd", data_src, iniMethod, "imp", draw_inum)
     }
   }
-# }
 
 #stopCluster(cl)
 print(paste("Using", cores, "cores"))

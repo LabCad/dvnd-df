@@ -23,7 +23,7 @@ class NeighborhoodThread(threading.Thread):
 
 if __name__ == '__main__':
 	# Command line parameters
-	param = CommandParams(solver="dvnd", solution_index=7)
+	param = CommandParams(solver="dvnd")
 
 	start_time = time.time()
 
@@ -78,34 +78,15 @@ if __name__ == '__main__':
 					melhorou = True
 					solution = it_tread.resp
 
-			for ope in neigh_op:
-				if melhorou:
-					break
-				resp = ope(solution)[0]
-				if resp < solution:
-					melhorou = True
-					solution = it_tread.resp
+			if not melhorou:
+				for i in xrange(neigh_count):
+					resp = neigh_op[i](solution)[0]
+					counts[i] += 1
+					if resp < solution:
+						melhorou = True
+						solution = it_tread.resp
+						break
 
-	end_time = time.time()
-	print "finished {} in {}s".format(param.solver.upper(), end_time - start_time)
-	print "data-line;initial_solution;{};final_solution;{};time;{};counts;{};fv;{};cv;{};imp;{}".format(ini_solution.value,
-		solution.value, end_time - start_time, sum(counts), [], counts, 1.0 * ini_solution.value / solution.value)
-
-	solution2 = deepcopy(solution)
-	k = 0
-	counts = [0 for x in xrange(len(neigh_op))]
-	start_time = time.time()
-	while k < len(neigh_op):
-		counts[k] += 1
-		numpy.copyto(solution2.vector, solution.vector)
-		solution2.value = solution.value
-		resp = mylib.neigh_gpu(solution2, k)
-		if resp[0] < solution:
-			k = 0
-			numpy.copyto(solution.vector, resp[0].vector)
-			solution.value = resp[0].value
-		else:
-			k += 1
 	end_time = time.time()
 	print "finished {} in {}s".format(param.solver.upper(), end_time - start_time)
 	print "data-line;initial_solution;{};final_solution;{};time;{};counts;{};fv;{};cv;{};imp;{}".format(ini_solution.value,
