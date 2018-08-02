@@ -11,8 +11,8 @@ startTime = Sys.time()
 #library(ggplot2)
 library(tidyverse)
 
-# setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
-setwd("/home/rodolfo/git/dvnd-df/doc/results/gdvnd")
+setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
+# setwd("/home/rodolfo/git/dvnd-df/doc/results/gdvnd")
 
 dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
@@ -21,6 +21,13 @@ titulos = list()
 titulos["imp"] = "Melhoria na solução"
 titulos["time"] = "Tempo(s)"
 titulos["count"] = "Iterações"
+
+tamanhoInstancia = c(52, 100, 226, 318, 501, 657, 783, 1001,
+  1060, 1084,
+  1432, 1748, 1817, 1889, 2152,
+  2319, 4461, 5915, 5934, 11849,
+  13509, 18512
+)
 
 desenharDispersao = function(prefix, data_src, iniMethod, coluna, draw_inum) {
   if (length(data_src$sample) > 0) {
@@ -108,19 +115,34 @@ for (iniMethod in c("same", "rand", "100sol")) {
 
 dvndGdvndData_time = dvndGdvndData %>%
   group_by(inum, solver, n) %>%
-  summarize(minV = min(time), meanV = mean(time), maxV = max(time), sdV = sd(time)) %>%
+  summarize(minV = min(time), meanV = mean(time), maxV = max(time), sdV = sd(time), medianV = median(time), q1 = quantile(time, 1.0/4, names=FALSE), q3 = quantile(time, 3.0/4.0, names=FALSE)) %>%
   rename(sn = n, sinum = inum, ssolver = solver) %>%
   mutate(wilcoxP = wilcox.test(filter(dvndGdvndData, inum == sinum & solver == ssolver & n == sn)$time, filter(dvndGdvndData, inum == sinum & solver != ssolver & n == sn)$time)$p.value)
 
 dvndGdvndData_imp = dvndGdvndData %>%
   group_by(inum, solver, n) %>%
-  summarize(minV = min(imp), meanV = mean(imp), maxV = max(imp), sdV = sd(imp)) %>%
+  summarize(minV = min(imp), meanV = mean(imp), maxV = max(imp), sdV = sd(imp), medianV = median(imp), q1 = quantile(imp, 1.0/4, names=FALSE), q3 = quantile(imp, 3.0/4.0, names=FALSE)) %>%
   rename(sn = n, sinum = inum, ssolver = solver) %>%
   mutate(wilcoxP = wilcox.test(filter(dvndGdvndData, inum == sinum & solver == ssolver & n == sn)$imp, filter(dvndGdvndData, inum == sinum & solver != ssolver & n == sn)$imp)$p.value)
 
+tabelaNum = function(numero) {
+  return(format(numero, digits=4, decimal.mark=","));
+}
+  
 imprimirTabela = function(data_src) {
   print("\\hline \\hline")
-  print(paste(paste("\\#", "Método", "$m$", "min", "\\overline{x}", "max", "\\sigma", "$p-value$", sep=" & "), " \\ \\hline", sep=""))
+  print(
+    paste(
+      paste(
+        "\\#", "\\Tau", "$m$", "$n$",
+        "min", "max",
+        "1Q", "2Q", "3Q",
+        "$\\overline{x}$", "$\\sigma$", "$p-value$",
+        sep=" & "
+      ),
+      " \\ \\hline", sep=""
+    )
+  )
   print("\\hline")
   inumV = -1
   inumVtext = NULL
@@ -128,18 +150,26 @@ imprimirTabela = function(data_src) {
     row <- data_src[lineI,]
     inumVtext = ""
     solverText = ifelse(row$ssolver == "dvnd_no_df", "DC", "DD")
+    tamanhoInst = ""
     if (inumV != row$sinum) {
       inumV = row$sinum
       inumVtext = paste("\\multirow{5}{*}{", row$sinum, "}", sep = "")
       solverText = paste("\\multirow{4}{*}{", solverText, "}", sep = "")
+      tamanhoInst = paste("\\multirow{5}{*}{", tamanhoInstancia[row$sinum + 1], "}", sep = "")
     }
-    wilcoxV = ifelse(row$wilcoxP >= .05, paste("\\textbf{", format(row$wilcoxP, digits=4, decimal.mark=","), "}", sep=""), format(row$wilcoxP, digits=4, decimal.mark=","))
-    wilcoxV = ifelse(solverText == "DD", wilcoxV, "")
-    print(paste(paste(inumVtext, ifelse(solverText == "DD", "", solverText), 
-        row$sn, format(row$minV, digits=4, decimal.mark=","), format(row$meanV, digits=4, decimal.mark=","),
-        format(row$maxV, digits=4, decimal.mark=","), format(row$sdV, digits=4, decimal.mark=","),
-        wilcoxV,
-      sep=" & "), ifelse(solverText == "DD", " \\", " \\ \\hline"), sep = ""))
+    wilcoxV = ifelse(row$wilcoxP >= .05, paste("\\textbf{", tabelaNum(row$wilcoxP), "}", sep=""), tabelaNum(row$wilcoxP))
+    wilcoxV = ifelse(solverText == "DC", "", wilcoxV)
+    print(
+      paste(
+        paste(
+          inumVtext, ifelse(solverText == "DD", "", solverText), row$sn, tamanhoInst,
+          tabelaNum(row$minV), tabelaNum(row$maxV),
+          tabelaNum(row$q1), tabelaNum(row$medianV), tabelaNum(row$q3),
+          tabelaNum(row$meanV), format(row$sdV, digits=3, decimal.mark=","), wilcoxV,
+          sep=" & "
+        ),
+        ifelse(solverText == "DC", " \\ \\hline", " \\"), sep = ""
+      ))
   }
 }
 
