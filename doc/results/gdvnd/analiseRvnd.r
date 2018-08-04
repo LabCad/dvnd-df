@@ -14,7 +14,8 @@ library(tidyverse)
 # setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
 setwd("/home/rodolfo/git/dvnd-df/doc/results/gdvnd")
 
-dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
+# dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
+dvndGdvndData = read.csv(file="rvndRvndnodf.csv", header=TRUE, sep=";")
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
 
 titulos = list()
@@ -97,7 +98,7 @@ desenharBoxplot = function(prefix, data_src, iniMethod, coluna, draw_inum, draw_
 }
 
 dvndGdvndData = dvndGdvndData %>%
-  mutate(df_mac = paste(ifelse(solver=="dvnd_no_df", "DC", "DD"), " m", n, sep = ""))
+  mutate(df_mac = paste(ifelse(solver=="rvnd_no_df", "RC", "RD"), " m", n, sep = ""))
 
 for (iniMethod in c("same", "rand", "100sol")) {
   for (draw_inum in 0:7) {
@@ -106,10 +107,10 @@ for (iniMethod in c("same", "rand", "100sol")) {
     library(ggplot2)
       data_src = dvndGdvndData %>%
         filter(inum == draw_inum & initialSolMethod == iniMethod)
-      # desenharBoxplot("dvnd", data_src, iniMethod, "time", draw_inum)
-      # desenharBoxplot("dvnd", data_src, iniMethod, "imp", draw_inum)
-      # desenharDispersao("dvnd", data_src, iniMethod, "time", draw_inum)
-      # desenharDispersao("dvnd", data_src, iniMethod, "imp", draw_inum)
+      desenharBoxplot("rvnd", data_src, iniMethod, "time", draw_inum)
+      desenharBoxplot("rvnd", data_src, iniMethod, "imp", draw_inum)
+      desenharDispersao("rvnd", data_src, iniMethod, "time", draw_inum)
+      desenharDispersao("rvnd", data_src, iniMethod, "imp", draw_inum)
   }
 }
 
@@ -149,7 +150,7 @@ imprimirTabela = function(data_src) {
   for (lineI in 1:nrow(data_src)) {
     row <- data_src[lineI,]
     inumVtext = ""
-    solverText = ifelse(row$ssolver == "dvnd_no_df", "DC", "DD")
+    solverText = ifelse(row$ssolver == "rvnd_no_df", "DC", "DD")
     tamanhoInst = ""
     if (inumV != row$sinum) {
       inumV = row$sinum
