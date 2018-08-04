@@ -12,6 +12,7 @@ with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 	writer.writerow(titles_new)
 	content_folders = ["./dvnd_n1w6h1_1in0_7100sol/", "./dvnd_n2w6h1_2in0_7100sol/",
 		"./dvnd_n3w6h1_3in0_7100sol/", "./dvnd_n4w6h1_4in0_7100sol/", "./dvndNoDf_n1w6h1_3in0_7100sol/"]
+	content_folders = ["./rvnd_n1w1h1_1in0_7100sol/", "./rvndNoDf_n1w1h1_1in0_7100sol/"]
 	for folder_to_look in content_folders:
 		for file_name in fnmatch.filter(os.listdir(folder_to_look), file_name_pattern):
 			nome_separado = rfn.search(file_name)
