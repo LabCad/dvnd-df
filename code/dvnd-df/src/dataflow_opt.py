@@ -128,6 +128,7 @@ class DataFlowDVND(object):
 		melhor.metadata.man_time += time.time()
 		melhor.metadata.neigh_time += atual.metadata.neigh_time
 		melhor.metadata.man_combine_sol_time += atual_melhor[3] if len(atual_melhor) > 3 else 0
+		melhor.metadata.counts[atual.source] += 1
 		return DataFlowDVND.create_response_map(melhor, len(melhor))
 
 	@staticmethod
