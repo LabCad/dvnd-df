@@ -137,7 +137,7 @@ class WamcaWraper(object):
 		return solint, resp, carrays, (0, 0, 0, 0), solintResp
 
 	def set_solution_value(self, solution):
-		solution.value = self.__best_neighbor(solution.vector, 1, True)[1]
+		solution.value = self.__calculate_value(solution.vector)
 
 	def __calculate_value(self, solint=[]):
 		return self.__best_neighbor(solint, 1, True)[1]
@@ -217,7 +217,7 @@ class WamcaWraper(object):
 
 	def merge_independent_movements(self, sol1, sol2, maximize=False):
 		target_sol = SolutionMovementTuple(numpy.copy(sol1.movvector), 0, ([], [], [], []))
-		self.__calculate_value(target_sol.vector)
+		self.set_solution_value(target_sol)
 		if sol1.can_merge(sol2):
 			cids = numpy.concatenate((sol1.movtuple[0], sol2.movtuple[0]))
 			ciis = numpy.concatenate((sol1.movtuple[1], sol2.movtuple[1]))
