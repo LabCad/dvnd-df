@@ -14,7 +14,13 @@ library(tidyverse)
 # setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
 setwd("/home/rodolfo/git/dvnd-df/doc/results/gdvnd")
 
-dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
+isDvnd = FALSE
+
+if (isDvnd) {
+  dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
+} else {
+ dvndGdvndData = read.csv(file="rvndRvndnodf.csv", header=TRUE, sep=";")
+}
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
 
 titulos = list()
@@ -96,9 +102,14 @@ desenharBoxplot = function(prefix, data_src, iniMethod, coluna, draw_inum, draw_
   }
 }
 
-dvndGdvndData = dvndGdvndData %>%
-  mutate(df_mac = paste(ifelse(solver=="dvnd_no_df", "DC", "DD"), " m", n, sep = ""))
-
+if (isDvnd) {
+  dvndGdvndData = dvndGdvndData %>%
+    mutate(df_mac = paste(ifelse(solver=="dvnd_no_df", "DC", "DD"), " m", n, sep = ""))
+} else {
+  dvndGdvndData = dvndGdvndData %>%
+    mutate(df_mac = paste(ifelse(solver=="rvnd_no_df", "RC", "RD"), " m", n, sep = ""))
+}
+typeName = ifelse(isDvnd, "dvnd", "rvnd")
 for (iniMethod in c("same", "rand", "100sol")) {
   for (draw_inum in 0:7) {
   # foreach(draw_inum=0:7, .combine=cbind) %dopar% {
@@ -106,10 +117,10 @@ for (iniMethod in c("same", "rand", "100sol")) {
     library(ggplot2)
       data_src = dvndGdvndData %>%
         filter(inum == draw_inum & initialSolMethod == iniMethod)
-      # desenharBoxplot("dvnd", data_src, iniMethod, "time", draw_inum)
-      # desenharBoxplot("dvnd", data_src, iniMethod, "imp", draw_inum)
-      # desenharDispersao("dvnd", data_src, iniMethod, "time", draw_inum)
-      # desenharDispersao("dvnd", data_src, iniMethod, "imp", draw_inum)
+      # desenharBoxplot(typeName, data_src, iniMethod, "time", draw_inum)
+      # desenharBoxplot(typeName, data_src, iniMethod, "imp", draw_inum)
+      # desenharDispersao(typeName, data_src, iniMethod, "time", draw_inum)
+      # desenharDispersao(typeName, data_src, iniMethod, "imp", draw_inum)
   }
 }
 
@@ -146,19 +157,21 @@ imprimirTabela = function(data_src) {
   print("\\hline")
   inumV = -1
   inumVtext = NULL
+  prefixMethod = ifelse(isDvnd, "D", "R")
   for (lineI in 1:nrow(data_src)) {
     row <- data_src[lineI,]
     inumVtext = ""
-    solverText = ifelse(row$ssolver == "dvnd_no_df", "DC", "DD")
+    solverText = paste(prefixMethod, ifelse(row$ssolver == "dvnd_no_df", "C", "D"), sep="")
     tamanhoInst = ""
     if (inumV != row$sinum) {
       inumV = row$sinum
-      inumVtext = paste("\\multirow{5}{*}{", row$sinum, "}", sep = "")
-      solverText = paste("\\multirow{4}{*}{", solverText, "}", sep = "")
-      tamanhoInst = paste("\\multirow{5}{*}{", tamanhoInstancia[row$sinum + 1], "}", sep = "")
+      tamanhoLocal = nlevels(factor(dvndGdvndData_time$sn))
+      inumVtext = paste("\\multirow{", tamanhoLocal, "}{*}{", row$sinum, "}", sep = "")
+      solverText = paste("\\multirow{", tamanhoLocal - 1, "}{*}{", solverText, "}", sep = "")
+      tamanhoInst = paste("\\multirow{", tamanhoLocal, "}{*}{", tamanhoInstancia[row$sinum + 1], "}", sep = "")
     }
     wilcoxV = ifelse(row$wilcoxP >= .05, paste("\\textbf{", tabelaNum(row$wilcoxP), "}", sep=""), tabelaNum(row$wilcoxP))
-    wilcoxV = ifelse(solverText == "DC", "", wilcoxV)
+    wilcoxV = paste(prefixMethod, ifelse(solverText == "C", "", wilcoxV), sep="")
     print(
       paste(
         paste(
@@ -168,8 +181,10 @@ imprimirTabela = function(data_src) {
           tabelaNum(row$meanV), format(row$sdV, digits=3, decimal.mark=","), wilcoxV,
           sep=" & "
         ),
-        ifelse(solverText == "DC", " \\ \\hline", " \\"), sep = ""
-      ))
+        paste(prefixMethod, ifelse(solverText == "DC", " \\ \\hline", " \\"), sep=""), 
+        sep = ""
+      )
+    )
   }
 }
 

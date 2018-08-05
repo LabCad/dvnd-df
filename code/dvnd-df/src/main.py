@@ -7,7 +7,7 @@ from cmdparam import CommandParams
 
 if __name__ == '__main__':
 	# Command line parameters
-	param = CommandParams(solver="dvnd")
+	param = CommandParams(solver="gdvnd", solution_index=0)
 	print "param: {}".format(param)
 
 	def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -33,11 +33,13 @@ if __name__ == '__main__':
 		# linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
 		# ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
 		linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
-			ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, -1, imp_value)
+			ini_value, fin_value, elapsed_time, sum(metadata.counts), values_vec, metadata.counts, imp_value)
 		# if "gdvnd" == param.solver:
 		# 	linha = "{};mergecount;{};combine_count;{};combine_count_sum;{}".format(linha, metadata.merge_count,
 		# 		metadata.combine_count, sum(metadata.combine_count))
 		linha = "{};type;{};inum;{};w;{}".format(linha, param.solver, param.solution_index, param.workers)
+		if "gdvnd" == param.solver:
+			linha = "{};man_time;{}".format(linha, metadata.man_time)
 		print ""
 		print linha
 		print ""
