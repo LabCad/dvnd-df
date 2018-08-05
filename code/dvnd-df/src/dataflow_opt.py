@@ -67,7 +67,8 @@ class DataFlowVND(Solver):
 
 
 class DataFlowDVND(Solver):
-	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: arg, use_metadata=False):
+	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: arg, use_metadata=False,
+			use_multiple_output=True):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
@@ -76,6 +77,7 @@ class DataFlowDVND(Solver):
 		self.__mpi_enabled = mpi_enabled
 		self.__process_sol_before_oper = process_sol_before_oper
 		self.use_metadata = use_metadata
+		self.use_multiple_output = use_multiple_output
 
 	def __neighborhood(self, func=lambda arg: None, args=[], inimov=0):
 		atual = args[0]
@@ -135,7 +137,7 @@ class DataFlowDVND(Solver):
 		melhor.metadata.neigh_time += atual.metadata.neigh_time
 		melhor.metadata.man_combine_sol_time += atual_melhor[3] if len(atual_melhor) > 3 else 0
 		melhor.metadata.counts[atual.source] += 1
-		return DataFlowDVND.create_response_map(melhor, len(melhor))
+		return DataFlowDVND.create_response_map(melhor, len(melhor)) if self.use_multiple_output else melhor
 
 	@staticmethod
 	def create_response_map(optmessage, number_of_opers):
@@ -157,28 +159,52 @@ class DataFlowDVND(Solver):
 
 		number_of_opers = len(oper_funtions)
 		# End node only processed when there is no improvement
-		fimNode = Node(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].metadata), 1)
+		if self.use_multiple_output:
+			fimNode = Node(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].metadata), 1)
+		else:
+			fimNode = DecisionNode(lambda y: result_callback([y[0][i] for i in xrange(number_of_opers)], y[0].metadata),
+				1, lambda x: x[0].no_improvement())
 		graph.add(fimNode)
 
 		# Nó de gerenciamento ligado nele mesmo e no nó final
-		man_node = SelectOutputNode(self.manager, 2)
-		graph.add(man_node)
-		man_node.add_edge(man_node, 1, number_of_opers)
-		man_node.add_edge(fimNode, 0, number_of_opers + 1)
+		if self.use_multiple_output:
+			man_node = SelectOutputNode(self.manager, 2)
+			graph.add(man_node)
+			man_node.add_edge(man_node, 1, number_of_opers)
+			man_node.add_edge(fimNode, 0, number_of_opers + 1)
+		else:
+			man_node = DecisionNode(self.manager, 2)
+			graph.add(man_node)
+			man_node.add_edge(man_node, 1)
+			man_node.add_edge(fimNode, 0)
 
 		# Nó que inicializa o nó gerenciador
-		ini_man_node = Feeder(OptMessage({x: initial_solution for x in xrange(number_of_opers)}, number_of_opers,
-			[False for y in xrange(number_of_opers)], [False for i in xrange(number_of_opers)], self.maximize))
+		if self.use_multiple_output:
+			ini_man_node = Feeder(OptMessage({x: initial_solution for x in xrange(number_of_opers)}, number_of_opers,
+				[False for y in xrange(number_of_opers)], [False for i in xrange(number_of_opers)], self.maximize))
+		else:
+			ini_man_node = Feeder(OptMessage({x: initial_solution for x in xrange(number_of_opers)}, number_of_opers,
+				[False for y in xrange(number_of_opers)], [False for i in xrange(number_of_opers)]))
 		graph.add(ini_man_node)
 		ini_man_node.add_edge(man_node, 1)
 
 		# Nós de operações
-		oper_node = [Node(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it), 1)
-			for i in xrange(number_of_opers)]
-		for i in xrange(number_of_opers):
-			graph.add(oper_node[i])
-			man_node.add_edge(oper_node[i], 0, i)
-			oper_node[i].add_edge(man_node, 0)
+		if self.use_multiple_output:
+			oper_node = [Node(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it), 1)
+				for i in xrange(number_of_opers)]
+			for i in xrange(number_of_opers):
+				graph.add(oper_node[i])
+				man_node.add_edge(oper_node[i], 0, i)
+				oper_node[i].add_edge(man_node, 0)
+		else:
+			oper_should_run = [lambda x, a=y: x[0].has_target(a) for y in xrange(number_of_opers)]
+			oper_keep_going = [lambda a, b: True for y in xrange(number_of_opers)]
+			oper_node = [DecisionNode(lambda arg, fnc=oper_funtions[i], it=i: self.__neighborhood(fnc, arg, it),
+				1, oper_should_run[i], oper_keep_going[i]) for i in xrange(number_of_opers)]
+			for x in oper_node:
+				graph.add(x)
+				man_node.add_edge(x, 0)
+				x.add_edge(man_node, 0)
 
 		# Nós que inicializam nós de operação
 		ini_node = [Feeder(OptMessage({x: initial_solution}, x, [x == y for y in xrange(number_of_opers)],
@@ -192,14 +218,16 @@ class DataFlowDVND(Solver):
 
 class DataFlowGDVND(DataFlowDVND):
 	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: None,
-			merge_solutions=lambda sols=[]: sols, combine_sol=lambda sol1, sol2: sol1, use_metadata=False):
+			merge_solutions=lambda sols=[]: sols, combine_sol=lambda sol1, sol2: sol1, use_metadata=False,
+			use_multiple_output=True):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
 		:param mpi_enabled: Indica se usa MPI.
 		:param merge_solutions: The merge solution function.
 		:param process_sol_before_oper: Process the solution before it is sent to the operation node.
 		"""
-		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled, process_sol_before_oper, use_metadata)
+		super(DataFlowGDVND, self).__init__(maximize, mpi_enabled, process_sol_before_oper, use_metadata,
+			use_multiple_output)
 		self.__merge_solutions = merge_solutions
 		self.__combine_sol = combine_sol
 
@@ -231,7 +259,7 @@ class DataFlowGDVND(DataFlowDVND):
 			resp[x] = resp_sol[x]
 
 		resp.metadata.man_time = man_time_before + time.time() - man_time
-		return DataFlowDVND.create_response_map(resp, len(resp))
+		return DataFlowDVND.create_response_map(resp, len(resp)) if self.use_multiple_output else resp
 
 
 class VND(Solver):

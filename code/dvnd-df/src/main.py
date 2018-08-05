@@ -7,7 +7,7 @@ from cmdparam import CommandParams
 
 if __name__ == '__main__':
 	# Command line parameters
-	param = CommandParams(solver="dvnd_no_df", solution_index=0)
+	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True)
 	print "param: {}".format(param)
 
 	def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -41,6 +41,7 @@ if __name__ == '__main__':
 		if "gdvnd" == param.solver:
 			linha = "{};man_time;{}".format(linha, metadata.man_time)
 		print ""
+		print "solver: {}".format(param.solver.upper())
 		print linha
 		print ""
 		print "time;{};man_time;{};neigh_time;{}".format(elapsed_time, metadata.man_time, metadata.neigh_time)
@@ -81,7 +82,8 @@ if __name__ == '__main__':
 		elif "dvnd_no_df" == param.solver:
 			solver = DVND()
 	elif "dvnd" == param.solver:
-		solver = DataFlowDVND(param.goal, param.mpi_enabled, use_metadata=is_use_metadata)
+		solver = DataFlowDVND(param.goal, param.mpi_enabled, use_metadata=is_use_metadata,
+			use_multiple_output=not param.single_output_gate)
 	elif "rvnd" == param.solver:
 		solver = DataFlowVND(param.goal, param.mpi_enabled, True)
 	elif "vnd" == param.solver:
@@ -106,7 +108,8 @@ if __name__ == '__main__':
 		solver = DataFlowGDVND(param.goal, param.mpi_enabled,
 				apply_moves_to_sol_on_oper,
 				mylib.merge_common_movs,
-				lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata)
+				lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata,
+				use_multiple_output=not param.single_output_gate)
 
 	print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
 	start_time = time.time()
