@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+class SolverType(object):
+	VND = 1
+	RVND = 2
+	DVND = 3
+	GDVND = 4
+
+
 class CommandParams(object):
 	def __init__(self, solution_index=0, solution_instance_index=-2, goal="min",
 			problem_name="ml", number_of_moves=10, device_count=1, solver="gdvnd", workers=1):
@@ -16,6 +23,11 @@ class CommandParams(object):
 		self.solver = getparam("s", "solver", solver).lower()
 		self.mpi_enabled = hasparam("mpi")
 		self.workers = int(getparam("n", None, workers))
+
+		self.use_dataflow = not self.solver.endswith("_do_df")
+		tempmap = {"vnd": SolverType.VND, "rvnd": SolverType.RVND,
+			"dvnd": SolverType.DVND, "gdvnd": SolverType.GDVND}
+		self.simple_solver = tempmap[self.solver] if not self.use_dataflow else tempmap[self.solver[0:-6]]
 
 	def __str__(self):
 		return "{{solution_index:{}, solution_instance_index:{}, multi_gpu:{}, goal:{}, problem_name:{}, " \

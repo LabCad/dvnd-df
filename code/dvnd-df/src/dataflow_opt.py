@@ -2,12 +2,18 @@
 # -*- coding: utf-8 -*-
 import random
 import time
+import threading
 # from mpi4py import MPI
 from optobj import DecisionNode, OptMessage, Metadata
 from pyDF import DFGraph, Feeder, Scheduler, SelectOutputNode, Node
 
 
-class DataFlowVND(object):
+class Solver(object):
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
+		raise NotImplementedError()
+
+
+class DataFlowVND(Solver):
 	def __init__(self, maximize=False, mpi_enabled=False, is_rvnd=False):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
@@ -60,7 +66,7 @@ class DataFlowVND(object):
 		Scheduler(graph, number_of_workers, mpi_enabled=self.__mpi_enabled).start()
 
 
-class DataFlowDVND(object):
+class DataFlowDVND(Solver):
 	def __init__(self, maximize=False, mpi_enabled=False, process_sol_before_oper=lambda arg: arg, use_metadata=False):
 		"""
 		:param maximize: Indica se é um problema de maximização ou minimização.
@@ -226,3 +232,87 @@ class DataFlowGDVND(DataFlowDVND):
 
 		resp.metadata.man_time = man_time_before + time.time() - man_time
 		return DataFlowDVND.create_response_map(resp, len(resp))
+
+
+class VND(Solver):
+	def __init__(self, isrvnd=True):
+		self.isrvnd = isrvnd
+
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
+		from copy import deepcopy
+
+		if self.isrvnd:
+			random.shuffle(oper_funtions)
+
+		metadata = Metadata(counts=[0 for x in xrange(len(oper_funtions))])
+		solution = deepcopy(initial_solution)
+		k = 0
+		while k < len(oper_funtions):
+			metadata.counts[k] += 1
+			# numpy.copyto(solution2.vector, solution.vector)
+			# solution2.value = solution.value
+			solution2 = deepcopy(solution)
+			# resp = mylib.neigh_gpu(solution2, k)
+			resp = oper_funtions[k](solution2)
+			if resp[0] < solution:
+				k = 0
+				# numpy.copyto(solution.vector, resp[0].vector)
+				# solution.value = resp[0].value
+
+				solution = deepcopy(resp[0])
+			else:
+				k += 1
+
+		result_callback([solution], metadata)
+
+
+class NeighborhoodThread(threading.Thread):
+	def __init__(self, fun, sol):
+		super(NeighborhoodThread, self).__init__()
+		self.setDaemon(True)
+		self.resp = None
+		self.fun = fun
+		self.solution = sol
+
+	def run(self):
+		self.resp = self.fun(self.solution)[0]
+
+
+class DVND(Solver):
+	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
+		from copy import deepcopy
+
+		def negigh_dvnd(solution, idx, resp, funfun):
+			resp[idx] = funfun(solution)[0]
+			return resp[idx]
+
+		# neigh_op = [lambda sol, idx, resp, funfun=ope, y=mv: negigh_dvnd(sol, idx, resp, funfun) for ope in neigh_op]
+		neigh_count = len(oper_funtions)
+		solution = deepcopy(initial_solution)
+		metadata = Metadata(counts=[0 for x in xrange(len(oper_funtions))])
+
+		melhorou = True
+		while melhorou:
+			my_threads = [NeighborhoodThread(oper_funtions[i], deepcopy(initial_solution)) for i in xrange(neigh_count)]
+			melhorou = False
+			for i in xrange(neigh_count):
+				metadata.counts[i] += 1
+				my_threads[i].start()
+
+			for it_tread in my_threads:
+				# if it_tread.isAlive():
+				it_tread.join()
+				if it_tread.resp < solution:
+					melhorou = True
+					solution = deepcopy(it_tread.resp)
+
+			if not melhorou:
+				for i in xrange(neigh_count):
+					resp = oper_funtions[i](deepcopy(solution))[0]
+					metadata.counts[i] += 1
+					if resp < solution:
+						melhorou = True
+						solution = deepcopy(resp)
+						break
+
+		result_callback([solution], metadata)

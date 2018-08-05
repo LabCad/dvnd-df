@@ -7,7 +7,7 @@ from cmdparam import CommandParams
 
 if __name__ == '__main__':
 	# Command line parameters
-	param = CommandParams(solver="gdvnd", solution_index=0)
+	param = CommandParams(solver="dvnd_no_df", solution_index=0)
 	print "param: {}".format(param)
 
 	def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -73,8 +73,14 @@ if __name__ == '__main__':
 
 	print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 	is_use_metadata = True
+
 	solver = None
-	if "dvnd" == param.solver:
+	if param.solver.endswith("_no_df"):
+		if "rvnd_no_df" == param.solver or "vnd_no_df" == param.solver:
+			solver = VND("rvnd_no_df" == param.solver)
+		elif "dvnd_no_df" == param.solver:
+			solver = DVND()
+	elif "dvnd" == param.solver:
 		solver = DataFlowDVND(param.goal, param.mpi_enabled, use_metadata=is_use_metadata)
 	elif "rvnd" == param.solver:
 		solver = DataFlowVND(param.goal, param.mpi_enabled, True)

@@ -66,11 +66,11 @@ if [ $# -gt 3 ]; then
 		do
 			file_name=$solver_name"_n"$num_proc"w"$num_workes"in"$filei"_"$i
 			echo $file_name
-			if [ "$solver_name" = "rvnd_no_df" -o "$solver_name" = "dvnd_no_df" ]
-			then
-				echo "first-$solver_name - ${solver_name:0:4}"
-				time python $home_src"mainvnd.py" -s ${solver_name:0:4} -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
-			elif [ "$solver_name" = "rvnd_no_mpi" ]
+#			if [ "$solver_name" = "rvnd_no_df" -o "$solver_name" = "dvnd_no_df" ]
+#			then
+#				echo "first-$solver_name - ${solver_name:0:4}"
+#				time python $home_src"mainvnd.py" -s ${solver_name:0:4} -sii $i -in $filei > $home_doc"results/"$file_name".out" 2> $home_doc"results/"$file_name".log"
+			if [ "$solver_name" = "rvnd_no_mpi" ]
 			then
 				echo "rvnd_no_mpi-$solver_name"
 				temp_solver_name="rvnd"
