@@ -6,13 +6,13 @@ import re
 
 file_name_pattern = "*.out"
 rfn = re.compile("(\w*)_n(\d*)w(\d*)in(\d*)_(\d*).out", re.IGNORECASE)
-titles_new = ["initial", "final", "count", "time", "imp", "inum", "n", "w", "solver", "sample"]
+titles_new = ["initial", "final", "count", "time", "imp", "inum", "n", "w", "solver", "sample", "man_time"]
 with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 	writer = csv.writer(novo_csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
 	writer.writerow(titles_new)
 	content_folders = ["./dvnd_n1w6h1_1in0_7100sol/", "./dvnd_n2w6h1_2in0_7100sol/",
 		"./dvnd_n3w6h1_3in0_7100sol/", "./dvnd_n4w6h1_4in0_7100sol/", "./dvndNoDf_n1w6h1_3in0_7100sol/"]
-	content_folders = ["./rvnd_n1w1h1_1in0_7100sol/", "./rvndNoDf_n1w1h1_1in0_7100sol/"]
+	content_folders = ["./dvnd_n4w6h1_4in0_7100sol/", "./gdvnd_n4w6h1_4in0_7100sol/"]
 	for folder_to_look in content_folders:
 		for file_name in fnmatch.filter(os.listdir(folder_to_look), file_name_pattern):
 			nome_separado = rfn.search(file_name)
@@ -40,6 +40,7 @@ with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 					type_value = None
 					inum_value = None
 					workers_value = None
+					man_time = "NA"
 					if len(line) > 14:
 						imp_value = line[14]
 						if len(line) > 16:
@@ -48,6 +49,8 @@ with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 								type_value = line[18]
 								inum_value = line[20]
 								workers_value = line[22]
+							if len(line) > 22 and "man_time" == line[21]:
+								man_time = line[22]
 					else:
 						imp_value = str(1.0 * int(initial_value) / int(final_value))
 						age_value = "NA"
@@ -57,7 +60,7 @@ with open("dvndGdvnd.csv", 'wb') as novo_csvfile:
 					workers_value = workers_value if workers_value is not None else test_w
 
 					linha_atual = [initial_value, final_value, count_value, time_value, imp_value,
-						inum_value, test_n, workers_value, type_value, test_it]
+						inum_value, test_n, workers_value, type_value, test_it, man_time]
 					writer.writerow(linha_atual)
 
 					break
