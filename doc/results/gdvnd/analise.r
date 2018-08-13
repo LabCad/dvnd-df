@@ -188,8 +188,49 @@ imprimirTabela = function(data_src) {
   }
 }
 
-imprimirTabela(dvndGdvndData_time)
-imprimirTabela(dvndGdvndData_imp)
+# imprimirTabela(dvndGdvndData_time)
+# imprimirTabela(dvndGdvndData_imp)
+
+dvndGdvndData = dvndGdvndData %>%
+  filter(solver == "gdvnd") %>%
+  mutate(time = time - man_time, solver = "gdvnd-man") %>%
+  merge(dvndGdvndData, all = TRUE) %>%
+  arrange(inum, sample)
+
+dvndGdvndDataDvnd = dvndGdvndData %>%
+  filter(solver == "dvnd")
+
+dvndGdvndDataGdvnd = dvndGdvndData %>%
+  filter(solver == "gdvnd")
+
+dvndGdvndDataGdvndMan = dvndGdvndData %>%
+  filter(solver == "gdvnd-man")
+
+dvnd3colum = dvndGdvndDataDvnd
+
+dvnd3colum$dvnd_time = dvndGdvndDataDvnd$time
+dvnd3colum$gdvnd_time = dvndGdvndDataGdvnd$time
+dvnd3colum$gdvnd_man_time = dvndGdvndDataGdvndMan$time
+
+# dvnd3colum = dvnd3colum %>%
+#   mutate(difTime = gdvnd_man_time - dvnd_time) %>%
+#   mutate(difTimeP = 100 * difTime / gdvnd_man_time) %>%
+#   arrange(difTimeP)
+
+dvnd3colum = dvnd3colum %>%
+  arrange(inum, gdvnd_man_time)
+
+prefix = "man"
+coluna = "time"
+iniMethod = "100sol"
+for (draw_inum in 0:7) {
+  my_chart = ggplot(filter(dvnd3colum, inum==draw_inum)) +
+    geom_point(aes(x=1:100, y=gdvnd_man_time, color="GDVND-MAN")) +
+    geom_point(aes(x=1:100, y=dvnd_time, color="DVND")) +
+    geom_point(aes(x=1:100, y=gdvnd_time, color="GDVND")) +
+    labs(color='Método', x="Amostra", y="Tempo(s)") 
+  ggsave(paste("chart/", prefix, "_scatter", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = my_chart, device="png")
+}
 
 #stopCluster(cl)
 print(paste("Using", cores, "cores"))
