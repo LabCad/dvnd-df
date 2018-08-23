@@ -6,9 +6,7 @@ import os.path
 import socket
 import numpy
 import ctypes
-import include_lib
 import sys
-include_lib.include_simple_pycuda()
 from simplepycuda import SimpleSourceModule, SimplePyCuda
 
 
