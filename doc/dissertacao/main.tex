@@ -1,0 +1,173 @@
+\documentclass[titlepage,a4paper,oneside,onecolumn,12pt]{report}
+%\documentclass[a4paper,12pt,oneside,onecolumn]{uerj/uerj}
+
+% \usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% Estratégias de exploração de vizinhança com GPU para problemas de otimização e roteamento
+\usepackage[pdftex,
+            pdfauthor={Rodolfo Pereira Araujo},
+            pdftitle={Estratégias de exploração de vizinhança com GPU para problemas de otimização},
+            pdfsubject={Pesquisa Operacional},
+            pdfkeywords={Meta-heurística, Busca Local, Dataflow, Graphics Processing Unit, Variable},
+            pdfproducer={Latex with hyperref, or other system},
+            pdfcreator={pdflatex}]{hyperref}
+\usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[alf]{abntex2cite}
+\usepackage{pgfplotstable}
+\usepackage{pgfplots}
+\usepackage[brazil]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+% \usepackage{hyperref}
+\usepackage{dsfont}
+\usepackage[section]{placeins}
+\usepackage[ruled]{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage[justification=centering]{caption}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{mathtools}
+\usepackage{fancyhdr}
+\usepackage{relsize}
+\usepackage{setspace}
+\usepackage{graphicx}
+% \usepackage{subcaption}
+\usepackage{subfig}
+% \usepackage{subfigure}
+\usepackage{icomma}
+\usepackage{silence}
+% \usepackage{cleveref}
+\MakeRobust{\Call}
+\input{uerj/algptbr.tex}
+\usepackage[frame=no,gride=no,algline=yes,font=default]{uerj/uerjformat}
+\usepackage{lscape}
+% \usepackage{graphicx}
+\usepackage{centernot}
+\usepackage{mathrsfs}
+% \usepackage{bookmark}
+% \usepackage[open,openlevel=3]{bookmark}
+% \usepackage[inline]{showlabels} %[inline]{showlabels}
+\usepackage{minted}
+% \usepackage[toc,page]{appendix}
+
+\setlength{\headheight}{15.1pt} 
+
+\pgfkeys{/pgf/number format/.cd, use comma, 1000 sep={.}}
+
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyfoot[C]{}\fancyhead[R]{\thepage}}
+\pagestyle{plain}
+
+\pgfplotsset{compat=1.9}
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{fillbetween}
+
+\makeatletter
+
+\renewcommand*{\ALG@name}{Algoritmo} %Nome da estrutura
+\renewcommand{\floatpagefraction}{.9}%
+\newcommand{\mbf}{\mathversion{bold}}
+
+\makeatother
+
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{N}{@{}m{0pt}@{}}
+
+\logo{uerj/logo_uerj_cinza.png}
+\marcadagua{uerj/marcadagua_uerj_cinza.png}{1}{160}{255}
+
+\instituicao{Universidade do Estado do Rio de Janeiro}
+    {Centro de Tecnologia e Ciências}
+    {Instituto de Matemática e Estatística}
+    {Programa de Pós-Graduação em Ciências Computacionais}
+
+\author{Rodolfo Pereira Araujo \and Igor M. Coelho \and Leandro A. J. Marzulo}
+\autor{Rodolfo Pereira}{Araújo}
+
+% Estratégias de exploração de vizinhança com GPU para problemas de otimização e roteamento
+\titulo{Estratégias de exploração de vizinhança com GPU para problemas de otimização}
+\title{Estratégias de exploração de vizinhança com GPU para problemas de otimização}
+
+% \keywords{Meta-heuristics, Local Search, Dataflow, Graphics Processing Unit, Variable Neighborhood Descent}
+
+% Estratégias de exploração de vizinhança com GPU para problemas de otimização e roteamento
+\tituloshow{Estratégias de exploração de vizinhança com GPU para problemas de otimização}
+
+\orientador{Prof. Dr.} % rotulo
+   {Igor Machado}{Coelho} % {nome}{sobrenome}
+   {Instituto de Matemática e Estatística - UERJ} % afiliacao
+
+\coorientador{Prof. Dr.} % rotulo
+   {Leandro Augusto Justen}{Marzulo} % {nome}{sobrenome}
+   {Instituto de Matemática e Estatística - UERJ} % afiliacao
+
+\grau{Mestre}
+\curso{Ciências Computacionais}
+
+\local{Rio de Janeiro}   % cidade
+\data{??}{Agosto}{2018} % {dia}{mes}{ano}
+
+\newcommand{\comm}[1]{}
+% \newtheorem{theorem}{Teorema}
+\newtheorem{theorem}{Teorema}[section]
+
+\begin{document}
+\tracingall
+
+% \frontmatter
+\capa
+\folhaderosto
+
+% \includepdf{ficha_catalografica.pdf}
+% \input{fichaCatalografica.tex}
+
+\begin{folhadeaprovacao}
+    \assinatura{Prof. Dra. Cristiana Barbosa Bentes\\ Instituto de Matemática e Estatística - UERJ} %nome\\ afiliação
+    \assinatura{Prof. Dr. Luiz Satoru Ochi\\ Instituto de Computação - UFF} %nome\\ afiliação 
+    \assinatura{Prof. Dr. Tiago Assumpção de Oliveira Alves\\ Instituto de Matemática e Estatística - UERJ} %nome\\ afiliação
+    % \assinatura{Prof. Dr. Felipe Maia Galvão França\\ Instituto Alberto Luiz Coimbra de Pós Graduação e Pesquisa de Engenharia - UFRJ} %nome\\ afiliação 
+    % \assinatura{Prof. Dra. Maria Clicia Stelling de Castro\\ Instituto de Matemática e Estatística - UERJ} %nome\\ afiliação
+\end{folhadeaprovacao}
+
+%\chapter*{Dedicatória}
+%  \vfill\vfill
+%    \hfill escrever,
+%    
+%    \hfill escrever.
+%  \vfill
+
+% \input{agradecimentoResumo.tex}
+
+\tableofcontents
+
+\listadefiguras
+\listadetabelas
+\listofalgorithms
+
+\onehalfspacing
+
+% \input{introducao/index.tex}
+% \input{conceitos/index.tex}
+% \input{metodologia/index.tex}
+% \input{resultados/index.tex}
+% \input{conclusao/index.tex}
+
+% \input{apendice.tex}
+
+\cleardoublepage
+
+\addcontentsline{toc}{chapter}{Referências Bibliográficas}
+
+\singlespacing
+
+\citeoption{abnt-options4}
+\bibliography{bin}
+
+\end{document}

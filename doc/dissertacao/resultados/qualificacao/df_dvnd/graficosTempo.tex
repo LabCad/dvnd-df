@@ -1,0 +1,29 @@
+\newcommand{\figureTimeDvndRvndSubFig}[2]{
+    \subfloat[$m=#1$]{{ %scale=0.225
+        \includegraphics[scale=0.425]{figuras/dvnd/n#1/time#2.png}
+        \label{fig:timeDvndRvnd_n#1in#2}
+    }}%
+}
+
+\newcommand{\figureTimeDvndRvnd}[2]{
+\begin{figure}%
+    \centering
+    \figureTimeDvndRvndSubFig{1}{#1}
+    \figureTimeDvndRvndSubFig{2}{#1}
+    \qquad
+    \figureTimeDvndRvndSubFig{3}{#1}
+    \figureTimeDvndRvndSubFig{4}{#1}
+
+    \caption{Tempos DVND e RVND para a instância #1, $n=#2$}%
+    \label{fig:timeDvndRvnd_in#1}%
+\end{figure}
+}
+
+% \figureTimeDvndRvnd{0}
+% \figureTimeDvndRvnd{1}
+% \figureTimeDvndRvnd{2}
+% \figureTimeDvndRvnd{3}
+% \figureTimeDvndRvnd{4}
+% \figureTimeDvndRvnd{5}
+% \figureTimeDvndRvnd{6}
+% \figureTimeDvndRvnd{7}

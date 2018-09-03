@@ -1,0 +1,48 @@
+\subsection{Sucuri} \label{sect:sucuri}
+
+Sucuri \cite{sucuri-original} is a minimalistic Dataflow library for Python language that allows programmers to naturally exploit parallelism through dataflow execution on Von Neumann machines. Sucuri allows transparent execution on computer cluster, relying on Python mechanisms for object serialization (\emph{Pickle}).
+
+Conceptually, a dataflow graph is comprised of nodes that represent tasks, which can be fine-grained (as instructions) or coarse-grained (as functions). Edges connecting nodes represent data-dependencies, meaning a source node will produce a result that will be used by the destination node. When a certain node receives all necessary inputs though its incident edges, it can be dispatched to execution.
+
+Figure \ref{fig:arch} shows Sucuri's structure, where it is possible to observe three main components: \texttt{Graph}, \texttt{Scheduler} and \texttt{Worker}. 
+
+The \texttt{Graph} is just a container object for nodes that represent a dataflow application, each containing:
+\begin{itemize}
+    \item The list of inputs received so far. When all necessary operands are receive a \emph{matching} occurs and node execution will be triggered.
+    \item The function (computation) that should be executed when matching happens for that node.
+    \item A list of destination nodes that should receive the result produced.
+    \item Specific attributes, such as an unique id that can be used for assigning work to a set of nodes (like in a fork-join approach).
+\end{itemize}
+
+When used in a cluster of computers, each of the aforementioned components is replicated in each machine of the cluster, except for the Scheduler, meaning Sucuri adopts a centralized pool of tasks. In \cite{sucuri-distribuida} Sucuri authors implement and evaluate a distributed scheduler for Sucuri, but this version is not employed in this work.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.65]{figuras/dataflow/SucuriArchitectureHorizonal.png}
+    \caption{The Sucuri Architecture (from \cite{sucuri-original}). The same structure is replicated in each node but only the Scheduler from Cluster Node 0 contains the Matching Unit and the Ready Queue. It is responsible for receiving operands from local Workers and from the others Schedulers and also to generate tasks and put them into the Ready Queue.}
+    \label{fig:arch}
+\end{figure}
+
+The main \texttt{Scheduler}, placed at Cluster Node 0, is composed of a Matching Unit, a Ready Queue and a Waiting Queue. It is responsible for delivering all operands to the operand list of its destination Node in the Graph. If a match happens, a task is created and put in the Ready Queue. When workers are idle they will request tasks to the \texttt{Scheduler}, that would be fetched from the Ready Queue. The \texttt{Scheduler} placed in the other cluster nodes are more simple and only forwards tasks from the main \texttt{Scheduler} to their local workers and operands from their workers to the main \texttt{Scheduler}. The graph is replicated in all nodes of the Cluster but only the graph in node 0 can receive operands from the main \texttt{Scheduler}.
+
+All communication intra-node between the main components cited above is done via shared memory and between Schedulers from different nodes is done via interface.
+
+Each node of a Sucuri graph is associated with a function that can be implemented by programmers and pass them to node instantiation when creating the dataflow graph. After instantiating the nodes, the programmer can then proceed to connect them using the \texttt{add\_edge()} method, which basically creates a new dependency in the dataflow graph. When the scheduler dispatches a task for execution in a certain worker, that worker will call the \texttt{run()} method of the node corresponding to that task. In most cases, this \texttt{run()} method will just act as a wrapper that calls the function associated with the node during the construction of the graph and send the values returned by the function call to the main scheduler.
+
+Sucuri also provides a set of special nodes that could help programmers devise applications that follow some parallel patterns. For example, a software pipeline application for Sucuri is presented in Fig.~\ref{fig:pipeline}. Panel $A$ shows a graph representation of this pattern and panel $B$ the Sucuri's code for this operation. Notice how new nodes are creates (lines 11-13), added to the graph (lines 17-19) and how edges connecting the nodes are defined (lines 21 and 22). Also, notice the instantiation of the scheduler (line 6) and how to start the schedule after the dataflow graph is defined (line 23).
+
+Figure \ref{fig:pipeline} also shows how a special node \texttt{Source} receives an \emph{iterable} Python object (for instance, a list or a file descriptor) at instantiation. During program execution, the \texttt{run()} method of the \emph{Source} node will be fired only once, since this node works as a root, i.e., has no input operands from the graph and serves to initiate the computation. The execution of such method, however, will typically last until the contents of the iterable object are exhausted. By default the \texttt{Source} node will loop over the iterable object and produce several outputs (messages) that would trigger the execution of the pipeline multiple times. 
+
+Notice that the last node of the pipeline is a special \texttt{Serializer} node, that is responsible for writing the data to a file. It is possible for the data produced by the \texttt{Source} node to be processed out of order by the second node, since the multiple tasks may be scheduled to different workers. Therefore, it is necessary to reorder the data before writing it to the file, in the \texttt{Serializer} node. For that purpose, the data produced by the \texttt{Source} node must be encapsulated in a \texttt{TaggedValue} object, which contains a \texttt{tag} attribute, indicating its position in the ordered data set. The middle node will also send the filtered data inside of a \texttt{TaggedValue} object, with the same tag of the chunk of data it received. The \texttt{Serializer} node then, upon receiving data from the filter node, will store it in a buffer sorted according to the tag. If the tag of the last piece of data received corresponds to the next data to be written to the file, the \texttt{Serializer} node proceeds to pop data from the sorted buffer and write to the file until there is a gap in the ordering, i.e. the chunk of data that is the next to be written has not arrived yet. If the data received by the \texttt{Serializer} is out of order, the node just stores it in the sorted buffer and waits for more data. The \texttt{pin\(\)} method is used to pin the node to a certain worker, which will make it only be executed by that worker. In the case of the example, we pin the nodes that performs I\/O operations on disk to the workers that have direct access to that disk. 
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[scale=0.75]{figuras/dataflow/pipeline.eps} 
+    \caption{Pipelining with Sucuri. 
+    %The data is read from the disk by \texttt{Reader} node encapsulated in a \texttt{TaggedValue} object while a filter is applied by \texttt{Filer} node in a data read previously. As the \texttt{Filter} finish, the \texttt{Writer} node receives and store them in buffer sorted according to the tag. If the tag of the last piece of data received corresponds to the next data to be written to the file, the \texttt{Writer} node proceeds to pop data from the sorted buffer and write to the file.
+    Panel $A$ shows the dataflow graph of the application, panel $B$ describes the graph using Sucuri.}
+    \label{fig:pipeline}
+\end{figure}
+
+One interesting modeling feature that we explore in this paper consists in exploring coarse-grained programming in Sucuri together with fine-grained computing on GPU. This results in a heterogeneous Dataflow/Von Neumann computing, with dataflow nodes performing high performance GPU computing.
+This strategy provides greater flexibility for the design of novel algorithms, with greater simplicity than adopting a single computing paradigm (dataflow or von Neumann).

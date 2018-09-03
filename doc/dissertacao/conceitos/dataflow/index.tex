@@ -1,0 +1,46 @@
+\section{Dataflow} \label{sec:conceitosDataflow}
+% Essa parte tá bem próxima da tese do Marzulo
+
+Atualmente os processadores no mercado de computadores seguem, em geral, o modelo de \textit{Von Neumann}.
+No referido modelo, a execução das instruções é guiada por um fluxo de controle, ou seja, segundo a ordem que aparecem no programa, desta forma se faz necessário um \textit{Program Counter} (Contador de Programa) para indicar qual a próxima instrução a ser executada.
+O contador também pode ser alterado por instruções de desvio, e laços de repetição ou qualquer tipo de comando de execução condicional.
+
+Note que este modelo é intrinsecamente sequencial. No entanto, tenta-se resgatar paralelismo em nível de instruções com técnicas como pipelining~\cite{patterson2003computerOrganization}, predição de desvio~\cite{patterson2003computerOrganization} e renomeamento de registradores~\cite{patterson2012}.
+
+O modelo dataflow~\cite{2468, Swanson2003, 642111, Davis:1978:ASM:800094.803050, 714523, Shimada:1986:EPD:17356.17383, Kishi:1983:DDD:1067651.801661, Grafe:1989:EDP:74925.74930, 134511, Swanson:2007:WA:1233307.1233308} expõe paralelismo de forma natural.
+Neste modelo, as instruções são executadas de acordo com o fluxo de dados, ou seja, assim que todos os seus operandos de entrada estiverem disponíveis.
+
+No modelo dataflow os programas são escritos como um grafo de fluxo de dados onde os nós representam as instruções e as arestas direcionadas indicam as dependências de dados.
+Assim $A \rightarrow B$ indica que $A$ produz um dado que é enviado como entrada para $B$ após ter sido processado.
+Cabe lembrar que este modelo é adotado nas máquinas de Von Neumann para extrair paralelismo ao implementar o mecanismo de execução fora-de-ordem com escalonamento dinâmico baseado em fluxo de dados~\cite{tomasulo}, contudo limitado o paralelismo pela emissão das instruções que permanece seguindo o fluxo de controle.
+Numa arquitetura que segue totalmente o fluxo de dados as instruções não são emitidas segundo se apresentam no programa, instruções distintas podem executar concorrentemente.
+
+Na Figura~\ref{fig:dataflowExemploPython} pode ser visto um programa simples, à esquerda é mostrado o código e à direita sua tradução no grafo de fluxo de dados associado, note que as instruções de soma e multiplicação podem ser executadas em paralelo ou qualquer ordem sem alterar o resultado final.
+
+\begin{figure}
+    \centering
+    \begin{minipage}{.3\textwidth}
+        \centering
+\begin{minted}{python}
+a = 10
+b = 9
+c = 3
+d = 8
+e = a * b
+f = c + d
+if e > f:
+  g = (a - b) * a
+else:
+  g = (c - d) * d
+\end{minted}
+    \end{minipage}
+    \begin{minipage}{.675\textwidth}
+        \centering %width=.655\linewidth
+        \includegraphics[scale=.7]{figuras/dataflow/pythonCodeDf.png}
+    \end{minipage}
+    \caption{Exemplo de conversão código para grafo de dependências.
+    À esquerda pode ser visto um trecho de código em \emph{python} ao passo que à direita é exibido o grafo dataflow associado.}
+    \label{fig:dataflowExemploPython}
+\end{figure}
+
+% \input{conceitos/dataflow/sucuri.tex}

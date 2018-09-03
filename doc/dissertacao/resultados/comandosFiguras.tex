@@ -1,0 +1,132 @@
+\newcommand{\figureDvndOrRvndDcDd}[7]{
+% #1 {box, scatter}, #2 {count, imp, time}, #3 {instance number}, #4 {Tempo, Melhoria}, #5 tamanho instância, #6 {DVND, RVND}, #7 {dvnd, rvnd}
+\begin{figure}%
+    \centering
+    \includegraphics[scale=0.9]{figuras/#7/dc_dd/#1/#7_#1100sol_#2_in#3.png}
+    \caption{#4 do #6 para a instância #3 de tamanho #5. $m$ indica o número de máquinas, \textit{DC} refere-se ao #6 clássico e \textit{DD} ao #6 implementado em dataflow.}%
+    \label{fig:#2_#7DcDd_in#3}%
+\end{figure}
+}
+
+\newcommand{\figureDvndDcDd}[5]{
+% #1 {box, scatter}, #2 {count, imp, time}, #3 {instance number}, #4 {Tempo, Melhoria}, #5 tamanho instância
+    \figureDvndOrRvndDcDd{#1}{#2}{#3}{#4}{#5}{DVND}{dvnd}
+}
+
+\newcommand{\figureRvndDcDd}[5]{
+% #1 {box, scatter}, #2 {count, imp, time}, #3 {instance number}, #4 {Tempo, Melhoria}, #5 tamanho instância
+    \figureDvndOrRvndDcDd{#1}{#2}{#3}{#4}{#5}{RVND}{rvnd}
+}
+
+\newcommand{\tabelaEstatisticasGeral}[6]{
+% #1 Descrição, #2 label, #3 {dvnd, rvnd}, #4 {DVND, RVND}, #6 DD/DC, #6 Conteúdo
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|ccc|cc|ccc|cc|c}
+        \hline \hline
+        \# & Tipo & $m$ & $n$ & $min$ & $max$ & 1Q & 2Q & 3Q & $\overline{x}$ & $\sigma$ & $p-valor$ \\ \hline
+        #6
+    \end{tabular}
+    \caption{#1 #4 #5
+        Instância (\#), tipo de implementação (Tipo), número de máquinas ($m$), tamanho da instância ($n$), valor mínimo ($min$), máximo ($max$), primeiro quartil (1Q), mediana (2Q), terceiro quartil (3Q), média ($\overline{x}$), desvio padrão ($\sigma$) e p-valor para o teste de Wilcox entre as versões (valores em negrito quando $p-valor > 0.05$).
+    }
+    \label{tab:#3DcDd#2}
+\end{table}
+}
+
+\newcommand{\tabelaEstatisticas}[5]{
+    \tabelaEstatisticasGeral{#1}{#2}{#3}{#4}{na implementação clássica (DC) e a proposta de implementação usando dataflow (DD).}{#5}
+}
+
+\newcommand{\figureDvndSogMog}[7]{
+% #1 {box, scatter}, #2 {count, imp, time}, #3 {instance number}, #4 {Tempo, Melhoria}, #5 tamanho instância, #6 {DVND, RVND}, #7 {dvnd, rvnd}
+\begin{figure}%
+    \centering
+    \includegraphics[scale=0.9]{figuras/#7/sog_mog/#1/#7_#1100sol_#2_in#3.png}
+    \caption{#4 do #6 para a instância #3 de tamanho #5. \textit{SOG} refere-se a uma porta de saída e \textit{MOG} a múltiplas portas de saída.}%
+    \label{fig:#2_#7SogMog_in#3}%
+\end{figure}
+}
+
+\newcommand{\figureDvndGdvnd}[9]{
+% #1 {box, scatter}, #2 {count, imp, time}, #3 {instance number}, #4 {Tempo, Melhoria}, #5 tamanho instância, #6 {DVND, RVND}, #7 {dvnd, rvnd}, #8 {man_time, full_time}, #9 {man, dvnd} #10 descricao
+\begin{figure}%
+    \centering
+    \includegraphics[scale=0.9]{figuras/#7/#8/#1/#9_#1100sol_#2_in#3.png}
+    \caption{#4 do #6 para a instância #3 de tamanho #5. \textit{DVND} refere-se ao tempo gasto pelo algoritmo de mesmo nome, para \textit{GDVND} é análogo ao anterior, no caso do \textit{GDVND-MAN} este se refere ao tempo do GDVND subtraido do tempo para gerenciar os movimentos.}%
+    \label{fig:#2_#7_#8_in#3}%
+\end{figure}
+}
+
+\newcommand{\figureDvndGdvndTime}[8]{
+    \figureDvndGdvnd{#1}{#2}{#3}{#4}{#5}{#6}{#7}{man_time}{man}
+}
+
+\newcommand{\figureGdvndDvndRvnd}[9]{
+% #1 {box, scatter}, #2 {count, imp, time}, #3 {instance number}, #4 {Tempo, Melhoria}, #5 tamanho instância, #6 {DVND, RVND}, #7 {dvnd, rvnd}, #8 {man_time, full_time}, #9 {man, dvnd} #10 descricao
+\begin{figure}%
+    \centering
+    \includegraphics[scale=0.9]{figuras/#7/#8/#1/#9_#1100sol_#2_in#3.png}
+    \caption{#4 do #6 para a instância #3 de tamanho #5. \textit{DVND}, \textit{GDVND} e \textit{RVND} referem-se ao tempo gasto pelos algoritmos de mesmo nome.}%
+    \label{fig:#2_#7_#8_in#3}%
+\end{figure}
+}
+
+% \subfloat[$m=#1$]{{ %scale=0.225
+%         \includegraphics[scale=0.425]{figuras/dvnd/n#1/time#2.png}
+%         \label{fig:timeDvndRvnd_n#1in#2}
+%     }}%
+% #1 {dvnd, rvnd, gdvnd}, #2 {sog_mog, dc_dd}, #3 {time, imp}, #4 in, #5 tamanho, #6 {box, scatter}
+\newcommand{\subFig}[6]{
+    \subfloat[][Instância #4, $n=#5$]{
+        \includegraphics[scale=0.425]{figuras/#1/#2/#6/#1_#6100sol_#3_in#4.png}
+		\label{fig:#1_#2_#3_in#4}
+    }
+% 	\begin{subfigure}{0.45\textwidth} % dvnd_box100sol_imp_in0
+% 		\includegraphics[scale=0.425]{figuras/#1/#2/#6/#1_#6100sol_#3_in#4.png}
+% 		\caption{Instância #4, $n=#5$}
+        % \label{fig:#1_#2_#3_in#4}
+    % \end{subfigure}
+}
+
+\newcommand{\subFigBox}[5]{
+	\subFig{#1}{#2}{#3}{#4}{#5}{box}
+}
+
+\newcommand{\subFigScatter}[5]{
+	\subFig{#1}{#2}{#3}{#4}{#5}{scatter}
+}
+
+% #1 {dvnd, rvnd, gdvnd}, #2 {sog_mog, dc_dd}, #3 {time, imp}, #4 {box, scatter}, #5 {Tempo do DVND...}
+\newcommand{\multiFigureInstanciasGeral}[5]{
+	\begin{figure}[ht]
+		\centering
+		\subFig{#1}{#2}{#3}{0}{52}{#4}
+		~
+		\subFig{#1}{#2}{#3}{1}{100}{#4}
+		
+		\subFig{#1}{#2}{#3}{2}{226}{#4}
+		~
+		\subFig{#1}{#2}{#3}{3}{318}{#4}
+		\caption{#5 Instâncias 0 a 3.}
+		\label{fig:#1_#2_#3_in0_4}
+	\end{figure}
+	
+	\begin{figure}[ht]
+		\centering
+		\subFig{#1}{#2}{#3}{4}{501}{#4}
+		~
+		\subFig{#1}{#2}{#3}{5}{657}{#4}
+		
+		\subFig{#1}{#2}{#3}{6}{783}{#4}
+		~
+		\subFig{#1}{#2}{#3}{7}{1001}{#4}
+		\caption{#5 Instâncias 5 a 7.}
+		\label{fig:#1_#2_#3_in5_7}
+	\end{figure}
+}
+
+% #1 {dvnd, rvnd, gdvnd}, #2 {sog_mog, dc_dd}, #3 {time, imp}, #4 {Tempo do DVND...}
+\newcommand{\multiFigureInstancias}[4]{
+    \multiFigureInstanciasGeral{#1}{#2}{#3}{box}{#4}
+}

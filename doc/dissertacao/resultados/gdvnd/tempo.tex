@@ -1,0 +1,48 @@
+\subsection{Tempo}
+
+Pode ser visto na Tabela~\ref{tab:gdvndDcDdTime} e nas Figuras~\ref{fig:gdvnd_full_time_time_in0}-\ref{fig:gdvnd_full_time_time_in7} que o DVND e GDVND apresentam comportamentos semelhantes em relação ao RVND, os tempos do RVND são melhores para as instâncias até o tamanho 318 e da instância 4 (tamanho 501) em diante o RVND começa a levar mais tempo para encontrar a resposta.
+
+\tabelaEstatisticasGeral{Tempos comparativos do}{Time}{gdvnd}{GDVND}{com DVND e RVND.}{
+    \multirow{3}{*}{0} & DVND & 4 & \multirow{3}{*}{52} & 2,43 & 4,028 & 2,698 & 2,811 & 2,928 & 2,953 & 0,429 & 7,588e-05 \\
+     & RVND & 1 &  & 0,4269 & 1,77 & 1,258 & 1,416 & 1,531 & 1,321 & 0,323 & 3,564e-34 \\
+     & GDVND & 4 &  & 1,6 & 4,955 & 2,856 & 3,069 & 3,57 & 3,182 & 0,572 &  \\ \hline
+    \multirow{3}{*}{1} & DVND & 4 & \multirow{3}{*}{100} & 1,841 & 4,156 & 2,831 & 2,963 & 3,808 & 3,207 & 0,527 & 2,201e-06 \\
+     & RVND & 1 &  & 0,5236 & 2,773 & 0,8762 & 1,025 & 1,309 & 1,177 & 0,457 & 3,673e-34 \\
+     & GDVND & 4 &  & 2,346 & 5,178 & 3,078 & 3,367 & 4,061 & 3,495 & 0,597 &  \\ \hline
+    \multirow{3}{*}{2} & DVND & 4 & \multirow{3}{*}{226} & 2,504 & 4,545 & 3,079 & 3,171 & 3,29 & 3,243 & 0,355 & 7,31e-21 \\
+     & RVND & 1 &  & 1,483 & 9,029 & 2,194 & 2,556 & 3,308 & 3,103 & 1,49 & 2,196e-13 \\
+     & GDVND & 4 &  & 2,347 & 5,639 & 3,579 & 3,858 & 4,532 & 4,011 & 0,657 &  \\ \hline
+    \multirow{3}{*}{3} & DVND & 4 & \multirow{3}{*}{318} & 2,674 & 4,592 & 3,515 & 3,622 & 3,756 & 3,648 & 0,324 & 1,74e-18 \\
+     & RVND & 1 &  & 1,983 & 7,007 & 3,133 & 3,541 & 4,125 & 3,824 & 1,07 & 8,397e-09 \\
+     & GDVND & 4 &  & 2,265 & 6,533 & 4,091 & 4,401 & 4,942 & 4,46 & 0,763 &  \\ \hline
+    \multirow{3}{*}{4} & DVND & 4 & \multirow{3}{*}{501} & 3,423 & 5,801 & 4,345 & 4,514 & 4,691 & 4,496 & 0,38 & 2,401e-26 \\
+     & RVND & 1 &  & 3,614 & 13,5 & 5,374 & 6,104 & 7,05 & 6,597 & 1,98 & \textbf{0,8022} \\
+     & GDVND & 4 &  & 2,487 & 8,283 & 5,697 & 6,173 & 6,7 & 6,092 & 0,933 &  \\ \hline
+    \multirow{3}{*}{5} & DVND & 4 & \multirow{3}{*}{657} & 4,17 & 6,604 & 5,246 & 5,464 & 5,682 & 5,49 & 0,441 & 6,681e-34 \\
+     & RVND & 1 &  & 6,878 & 22,9 & 9,351 & 10,12 & 11,74 & 11,43 & 3,82 & 1,967e-20 \\
+     & GDVND & 4 &  & 5,796 & 10,71 & 7,5 & 8,074 & 8,605 & 8,097 & 0,876 &  \\ \hline
+    \multirow{3}{*}{6} & DVND & 4 & \multirow{3}{*}{783} & 5,434 & 8,442 & 6,305 & 6,508 & 6,691 & 6,514 & 0,507 & 4,018e-34 \\
+     & RVND & 1 &  & 9,997 & 35,13 & 13,26 & 14,9 & 17,5 & 16,91 & 5,93 & 1,396e-29 \\
+     & GDVND & 4 &  & 7,187 & 13,09 & 9,821 & 10,61 & 11,15 & 10,49 & 1,1 &  \\ \hline
+    \multirow{3}{*}{7} & DVND & 4 & \multirow{3}{*}{1001} & 7,871 & 10,88 & 8,836 & 9,09 & 9,493 & 9,164 & 0,566 & 8,482e-34 \\
+     & RVND & 1 &  & 15,51 & 66,77 & 21,48 & 24,74 & 29,11 & 27,5 & 9,6 & 1,705e-30 \\
+     & GDVND & 4 &  & 9,195 & 19,53 & 15,71 & 16,47 & 17,22 & 16,35 & 1,54 &   \\ \hline
+}
+
+% \figureGdvndDvndRvnd{box}{time}{0}{Tempo}{52}{GDVND}{gdvnd}{full_time}{gdvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{1}{Tempo}{100}{GDVND}{gdvnd}{full_time}{dvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{2}{Tempo}{226}{GDVND}{gdvnd}{full_time}{dvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{3}{Tempo}{318}{GDVND}{gdvnd}{full_time}{dvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{4}{Tempo}{501}{GDVND}{gdvnd}{full_time}{dvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{5}{Tempo}{657}{GDVND}{gdvnd}{full_time}{dvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{6}{Tempo}{783}{GDVND}{gdvnd}{full_time}{dvnd}
+
+% \figureGdvndDvndRvnd{box}{time}{7}{Tempo}{1001}{GDVND}{gdvnd}{full_time}{dvnd}
+
+\multiFigureInstancias{gdvnd}{full_time}{time}{Tempo dos algoritmos GDVND, DVND e RVND,  $n$ representa o tamanho da instância, $m$ indica o número de máquinas.}

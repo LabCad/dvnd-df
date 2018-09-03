@@ -1,0 +1,39 @@
+\chapter{Resultados} \label{cap:resultados}
+
+Este capítulo exibe os resultados computacionais dos algoritmos propostos no Capítulo~\ref{cap:metodologia} para o caso do PML, para cada instância foi gerado um conjunto com 100 soluções iniciais aleatórias que foram submetidas aos métodos para comparação dos resultados.
+
+Quando há referência à melhoria na solução (\textit{Imp}), esta melhoria pode ser calculada pelo quociente do valor da solução inicial pela solução final, ou seja:
+\begin{equation}\label{eq:calculateImprovement}
+Imp = \frac{f(\textrm{solução inicial})}{f(\textrm{solução final})}
+\end{equation}
+
+Desta forma quanto maior for o valor da melhoria ($Imp$) mais o método melhorou o valor da solução inicial.
+
+\section{Instâncias} \label{sec:instancias}
+
+Todas as instâncias usadas nos testes computacionais e cujas configurações de lançamento foram descritas na Tabela~\ref{tab:neighborhoodsLaunchConfigurarion} são as mesmas usadas em~\cite{wamca2016}.
+Para o RVND foi feita uma implementação do algoritmo clássico (Algoritmo~\ref{alg:rvnd}) e também a implementação dataflow mencionada na Figura~\ref{fig:rvndGraph} fazendo uso de uma máquina.
+Para o caso do DVND foi utilizada a implementação clássica (Algoritmo~\ref{alg:dvnd}) e a implementação dataflow proposta (Figura~\ref{fig:dvndGraph}), os resultados foram obtidos com diferentes números de máquinas e os mesmos são indicados conforme o caso.
+
+\section{Implementação e ambiente computacional}\label{sec:amb}
+
+A implementação para cada algoritmo proposto no Capítulo~\ref{cap:metodologia} utiliza a linguagem de programação \textit{C++11} em conjunto com a API CUDA\texttrademark, para a implementação dos grafos e do ambiente dataflow foi utilizada a biblioteca Sucuri~\cite{sucuri-original}\footnote{Disponível em \url{https://github.com/tiagoaoa/Sucuri}} implementada em Python, para a integração entre o dataflow e o código CUDA foi utilizada a biblioteca SimplePyCuda~\cite{simple-pycuda}\footnote{Disponível em \url{https://github.com/igormcoelho/simple-pycuda}}. As implementações com múltiplas threads usaram a biblioteca OpenMP.
+%As implementações foram compiladas através do \textit{GCC} \textit{(GNU Compiler Collection)}\footnote{O GCC está disponível no seguinte sítio eletrônico: \url{https://gcc.gnu.org/}.} com a \textit{flag} de otimização $-O3$.
+O ambiente computacional utilizado em todos os testes neste trabalho consiste de 4 máquinas com a seguinte configuração:
+
+\begin{itemize}
+    \item Processador Intel\textregistered Core\texttrademark i7-4820K 3.7 GHz (4 núcleos);
+    \item 8 GB de memória RAM;
+    \item Sistema Operacional Ubuntu 14.10 (x64);
+    \item NVIDIA GeForce GTX 780 com 2304 CUDA cores.
+\end{itemize}
+
+\input{resultados/comandosFiguras.tex}
+
+\input{resultados/sog_mog/index.tex}
+
+\input{resultados/rvnd/index.tex}
+
+\input{resultados/dvnd/index.tex}
+
+\input{resultados/gdvnd/index.tex}
