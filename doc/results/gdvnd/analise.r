@@ -14,18 +14,20 @@ library(tidyverse)
 # setwd("C:/rdf/my/ms/dvnd-df/dc_dd")
 setwd("/home/rodolfo/git/dvnd-df/doc/results/gdvnd")
 
-isDvnd = FALSE
+isDvnd = TRUE
 
 if (isDvnd) {
-  dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
+  # dvndGdvndData = read.csv(file="dvndGdvnd.csv", header=TRUE, sep=";")
 } else {
- dvndGdvndData = read.csv(file="rvndRvndnodf.csv", header=TRUE, sep=";")
+ # dvndGdvndData = read.csv(file="rvndRvndnodf.csv", header=TRUE, sep=";")
 }
+# dvnd vs dvnd dataflow
+dvndGdvndData = read.csv(file="dc_dd-rc_rd.csv", header=TRUE, sep=";")
 dvndGdvndData$initialSolMethod = rep("100sol", length(dvndGdvndData$initial))
 
 titulos = list()
 titulos["imp"] = "Melhoria na solução"
-titulos["time"] = "Tempo(s)"
+titulos["time"] = "Tempo (s)"
 titulos["count"] = "Iterações"
 
 tamanhoInstancia = c(52, 100, 226, 318, 501, 657, 783, 1001,
@@ -94,7 +96,9 @@ desenharBoxplot = function(prefix, data_src, iniMethod, coluna, draw_inum, draw_
       geom_boxplot() +
       labs(color='Método', fill = "Método") +
       # theme(legend.position="bottom") +
-      labs(color='Método', x="Método", y=titulos[coluna])
+      labs(color='Método', x="Método", y=titulos[coluna]) +
+      # theme(legend.position="bottom", text=element_text(size = 24))
+      theme(legend.position="none", text=element_text(size = 25))
       # scale_y_discrete(name ="MÃ©todo")
     # scale_x_discrete(name ="sample") +
     # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
@@ -117,7 +121,7 @@ for (iniMethod in c("same", "rand", "100sol")) {
     library(ggplot2)
       data_src = dvndGdvndData %>%
         filter(inum == draw_inum & initialSolMethod == iniMethod)
-      # desenharBoxplot(typeName, data_src, iniMethod, "time", draw_inum)
+      desenharBoxplot(typeName, data_src, iniMethod, "time", draw_inum)
       # desenharBoxplot(typeName, data_src, iniMethod, "imp", draw_inum)
       # desenharDispersao(typeName, data_src, iniMethod, "time", draw_inum)
       # desenharDispersao(typeName, data_src, iniMethod, "imp", draw_inum)
@@ -191,45 +195,52 @@ imprimirTabela = function(data_src) {
 # imprimirTabela(dvndGdvndData_time)
 # imprimirTabela(dvndGdvndData_imp)
 
-dvndGdvndData = dvndGdvndData %>%
-  filter(solver == "gdvnd") %>%
-  mutate(time = time - man_time, solver = "gdvnd-man") %>%
-  merge(dvndGdvndData, all = TRUE) %>%
-  arrange(inum, sample)
-
-dvndGdvndDataDvnd = dvndGdvndData %>%
-  filter(solver == "dvnd")
-
-dvndGdvndDataGdvnd = dvndGdvndData %>%
-  filter(solver == "gdvnd")
-
-dvndGdvndDataGdvndMan = dvndGdvndData %>%
-  filter(solver == "gdvnd-man")
-
-dvnd3colum = dvndGdvndDataDvnd
-
-dvnd3colum$dvnd_time = dvndGdvndDataDvnd$time
-dvnd3colum$gdvnd_time = dvndGdvndDataGdvnd$time
-dvnd3colum$gdvnd_man_time = dvndGdvndDataGdvndMan$time
-
-# dvnd3colum = dvnd3colum %>%
-#   mutate(difTime = gdvnd_man_time - dvnd_time) %>%
-#   mutate(difTimeP = 100 * difTime / gdvnd_man_time) %>%
-#   arrange(difTimeP)
-
-dvnd3colum = dvnd3colum %>%
-  arrange(inum, gdvnd_man_time)
-
-prefix = "man"
-coluna = "time"
-iniMethod = "100sol"
-for (draw_inum in 0:7) {
-  my_chart = ggplot(filter(dvnd3colum, inum==draw_inum)) +
-    geom_point(aes(x=1:100, y=gdvnd_man_time, color="GDVND-MAN")) +
-    geom_point(aes(x=1:100, y=dvnd_time, color="DVND")) +
-    geom_point(aes(x=1:100, y=gdvnd_time, color="GDVND")) +
-    labs(color='Método', x="Amostra", y="Tempo(s)") 
-  ggsave(paste("chart/", prefix, "_scatter", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = my_chart, device="png")
+plotarDvnd = FALSE
+if (plotarDvnd) {
+  
+  dvndGdvndData = read.csv(file="dvndGdvndManTime.csv", header=TRUE, sep=";")
+  dvndGdvndData = dvndGdvndData %>%
+    filter(solver == "gdvnd") %>%
+    mutate(time = time - man_time, solver = "gdvnd-man") %>%
+    merge(dvndGdvndData, all = TRUE) %>%
+    arrange(inum, sample)
+  
+  dvndGdvndDataDvnd = dvndGdvndData %>%
+    filter(solver == "dvnd")
+  
+  dvndGdvndDataGdvnd = dvndGdvndData %>%
+    filter(solver == "gdvnd")
+  
+  dvndGdvndDataGdvndMan = dvndGdvndData %>%
+    filter(solver == "gdvnd-man")
+  
+  dvnd3colum = dvndGdvndDataDvnd
+  
+  dvnd3colum$dvnd_time = dvndGdvndDataDvnd$time
+  dvnd3colum$gdvnd_time = dvndGdvndDataGdvnd$time
+  dvnd3colum$gdvnd_man_time = dvndGdvndDataGdvndMan$time
+  
+  # dvnd3colum = dvnd3colum %>%
+  #   mutate(difTime = gdvnd_man_time - dvnd_time) %>%
+  #   mutate(difTimeP = 100 * difTime / gdvnd_man_time) %>%
+  #   arrange(difTimeP)
+  
+  dvnd3colum = dvnd3colum %>%
+    arrange(inum, gdvnd_man_time)
+  
+  prefix = "gdvnd"
+  coluna = "time"
+  iniMethod = "100sol"
+  # for (draw_inum in 0:7) {
+  #   my_chart = ggplot(filter(dvnd3colum, inum==draw_inum)) +
+  #     geom_point(aes(x=1:100, y=gdvnd_man_time, color="GDVND-MAN", shape="GDVND-MAN")) +
+  #     geom_point(aes(x=1:100, y=dvnd_time, color="DVND", shape="DVND")) +
+  #     geom_point(aes(x=1:100, y=gdvnd_time, color="GDVND", shape="GDVND")) +
+  #     labs(color='Método', shape='Método', x="Amostra", y="Tempo (s)") +
+  #     # theme(legend.position="bottom", text=element_text(size = 17))
+  #     theme(legend.position="none", text=element_text(size = 25))
+  #   ggsave(paste("chart/", prefix, "_scatter", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = my_chart, device="png")
+  # }
 }
 
 #stopCluster(cl)
