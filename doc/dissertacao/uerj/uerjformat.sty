@@ -157,27 +157,32 @@
 
 \RequirePackage[brazil]{babel}
 \addto\captionsbrazil{%
-  \renewcommand\contentsname{Sum\'ario}
-  \renewcommand{\listfigurename}{Lista de figuras}
-  \renewcommand{\listtablename}{Lista de tabelas}
-  \renewcommand\bibname{Refer\^encias}
-  \renewcommand\indexname{\'Indice}
+  \renewcommand\contentsname{\normalsize{\centerline{SUMÁRIO}}}
+  \renewcommand{\listfigurename}{\centerline{\textbf{\normalsize{LISTA DE ILUSTRAÇÕES}}}}
+  \renewcommand{\listtablename}{\textbf{\centerline{\normalsize{LISTA DE TABELAS}}}}
+  \renewcommand{\listalgorithmname}{\textbf{\centerline{\normalsize{LISTA DE ALGORITMOS}}}}
+  \renewcommand\bibname{\centerline{REFERÊNCIAS}}
+  \renewcommand\indexname{Índice}
   \renewcommand\figurename{Figura}
   \renewcommand\tablename{Tabela}
   \renewcommand\partname{}
-  \renewcommand\appendixname{Ap\^endice}
+  \renewcommand\appendixname{Apêndice}
   %\renewcommand\annexname{Anexo}
   \renewcommand\abstractname{Abstract}
 }
 
-\newcommand{\abrevnome}{Lista de abreviaturas e siglas}
-\newcommand{\simbnome}{Lista de s\'imbolos}
-\newcommand{\dedicatorianome}{Dedicat\'oria}
-\newcommand{\agradecimentosnome}{Agradecimentos}
+
+%\renewcommand{\thefigure}{Figura \arabic{figure}
+%\renewcommand{\thefigure}{Tabela \arabic{table}}}
+
+\newcommand{\abrevnome}{\textbf{\normalsize\centerline{LISTA DE ABREVIATURAS E SIGLAS}}}
+\newcommand{\simbnome}{\textbf{\normalsize\centerline{LISTA DE SÍMBOLOS}}}
+\newcommand{\dedicatorianome}{\textbf{\normalsize\centerline{DEDICATÓRIA}}}
+\newcommand{\agradecimentosnome}{\textbf{\normalsize\centerline{AGRADECIMENTOS}}}
 \newcommand{\orientadornome}{Orientador}
-\newcommand{\coorientadornome}{Orientador}
+\newcommand{\coorientadornome}{Coorientador}
 \newcommand{\resumonome}{Resumo}
-\newcommand{\glossarionome}{Gloss\'ario}
+\newcommand{\glossarionome}{\normalsize\centerline{GLOSSÁRIO}}
 
 % ------------------------------------------------------------------------
 % ------------------------------------------------------------------------
@@ -300,15 +305,15 @@
   \ifthenelse{\equal{#1}{Mestre}}{
     \renewcommand{\UERJtitulacao}{Mestre}
     \renewcommand{\UERJgrau}{Mestrado}
-    \renewcommand{\UERJdocumento}{Disserta\c{c}\~ao}
+    \renewcommand{\UERJdocumento}{Dissertação}
     \renewcommand{\UERJposgraduacao}
-      {Programa de P\'os-Gradua\c{c}\~ao em \UERJcurso}
+      {Programa de Pós-Graduação em \UERJcurso}
   }{\ifthenelse{\equal{#1}{Doutor}}{
       \renewcommand{\UERJtitulacao}{Doutor}
       \renewcommand{\UERJgrau}{Doutorado}
       \renewcommand{\UERJdocumento}{Tese}
       \renewcommand{\UERJposgraduacao}
-        {Programa de P\'os-Gradua\c{c}\~ao em \UERJcurso}
+        {Programa de Pós-Graduação em \UERJcurso}
     }{\ifthenelse{\equal{#1}{Bacharel}}{
         \renewcommand{\UERJtitulacao}{Bacharel}
         \renewcommand{\UERJgrau}{Bacharelado}
@@ -320,9 +325,9 @@
           \renewcommand{\UERJdocumento}{Monografia}
           \renewcommand{\UERJposgraduacao}{\UERJunidade}
         }{
-          \renewcommand{\UERJtitulacao}{Gradua\c{c}\~ao em \UERJcurso}
-          \renewcommand{\UERJgrau}{Gradua\c{c}\~ao}
-          \renewcommand{\UERJdocumento}{Trabalho de Conclus\~ao de Curso}
+          \renewcommand{\UERJtitulacao}{Graduação em \UERJcurso}
+          \renewcommand{\UERJgrau}{Graduação}
+          \renewcommand{\UERJdocumento}{Trabalho de Conclusão de Curso}
           \renewcommand{\UERJposgraduacao}{\UERJunidade}
           \renewcommand{\presented}{apresentado}
         }
@@ -340,7 +345,7 @@
   \renewcommand{\UERJpreambulo}{#1}
 }
 % --- modelo documento UERJ (novo)
-\preambulo{\UERJdocumento\ \presented\ como requisito parcial para obten\c{c}\~ao do t\'itulo de \UERJtitulacao, ao \UERJposgraduacao, da \UERJnome.}
+\preambulo{\UERJdocumento\ \presented\ como requisito parcial para obtenção do título de \UERJtitulacao, ao \UERJposgraduacao, da \UERJnome.}
 % ---
 
 % ---
@@ -351,7 +356,18 @@
   \renewcommand{\refbibliografica}{\begin{flushleft}#1\end{flushleft}}
 }
 % ---
-\cabecalho{\MakeUppercase{ARAÚJO}, Rodolfo P. \emph{\UERJtitulo}. \UERJano. \UERJdocumento\ (\UERJgrau\ em \UERJcurso) -- \UERJunidade, \UERJnome, \UERJlocal.}
+\cabecalho{\MakeUppercase{Araújo}, Rodolfo Pereira. \emph{Estratégias de exploração de vizinhança com GPU para problemas de otimização}. \UERJano. \UERJdocumento\ (\UERJgrau\ em \UERJcurso) -- \UERJunidade, \UERJnome, \UERJlocal.}
+% ---
+
+% ---
+% Comandos de dados - cabecalho do abstract
+% ---
+\providecommand{\refbibliografic}{}
+\newcommand{\cabecalh}[1]{
+  \renewcommand{\refbibliografic}{\begin{flushleft}#1\end{flushleft}}
+}
+% ---
+\cabecalh{\MakeUppercase{Araújo}, Rodolfo Pereira. \emph{Estratégias de exploração de vizinhança com GPU para problemas de otimização}. \UERJano. \UERJdocumento\ (\UERJgrau\ em \UERJcurso) -- \UERJunidade, \UERJnome, \UERJlocal.}
 % ---
 
 % ---
@@ -436,10 +452,10 @@
     \vfill
     {\large\UERJautor}\par
     \vfill\vfill\vfill
-    {\bfseries\huge\UERJtituloShow\par}\par
+    {\bfseries\large\UERJtituloShow\par}\par
     \vfill\vfill\vfill\vfill\vfill\vfill
-    {\UERJlocal}\par
-    {\UERJdata}
+    {\large\UERJlocal}\\[0.15cm]
+    {\large\UERJdata}
   \end{center}
   \cleardoublepage
 }
@@ -458,9 +474,9 @@
         \includegraphics[scale=\imgscale]{\UERJmarcadagua}
       }
     } 
-    {\large\UERJautor}\par
+    {\normalsize\UERJautor}\par
     \vfill\vfill
-    {\bfseries\huge\UERJtituloShow\par}\par
+    {\bfseries\normalsize\UERJtituloShow\par}\par
     \vfill\vfill
     \vspace{.8cm}
     \hspace{.45\textwidth}
@@ -468,12 +484,12 @@
        \UERJpreambulo
      \end{minipage}%
      \vfill\vfill\vfill
-    \UERJsurpevisor: \UERJorientador\par
+    \UERJsurpevisor: \UERJorientador\\[0.15cm]
     \ifnotempty{\UERJcoorientador}{
        {\UERJcosurpevisor: \UERJcoorientador}\par
     }
     \vfill\vfill
-    \UERJlocal\par
+    \UERJlocal\\[0.15cm]
     \UERJdata
   \end{center}
   \cleardoublepage
@@ -530,9 +546,9 @@
 \newenvironment{folhadeaprovacao}{
   \thispagestyle{empty}%
   \begin{center}
-    {\large\UERJautor}\par
+    {\normalsize\UERJautor}\par
     \vfill\vfill
-    {\bfseries\huge\UERJtituloShow\par}\par
+    {\bfseries\normalsize\UERJtituloShow\par}\par
     \vfill\vfill
     \hspace{.45\textwidth}
     \begin{minipage}{.5\textwidth}
@@ -710,9 +726,8 @@
   {\endgroup}
 
 \newcommand{\algorithmname}{Algoritmo}
-\renewcommand{\listalgorithmname}{Lista de algoritmos}
-\renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}}
-\@addtoreset{algorithm}{chapter}
+\renewcommand{\thealgorithm}{\arabic{algorithm}}
+\@addtoreset{algorithm}{part}
 
 %\renewcommand \thealgorithm {\@arabic\c@algorithm}
 
@@ -734,17 +749,17 @@
 }
 
 \newcommand{\Titulo}[1]{
-  \partab\textsc{T\'itulo}\\
+  \partab\textsc{Título}\\
   \partab\inctab\parbox[t]{\textwidth-2\tab}{\textbf{#1}}\\
 }
 
 \newcommand{\Proposito}[1]{
-  \partab\textsc{Prop\'osito}\\
+  \partab\textsc{Propósito}\\
   \partab\inctab\parbox[t]{\textwidth-2\tab}{#1}\\
 }
 
 \newcommand{\Metodo}[1]{
-  \partab\textsc{M\'etodo}\\
+  \partab\textsc{Método}\\
   \partab\inctab\parbox[t]{\textwidth-2\tab}{#1}\\
 }
 
@@ -754,12 +769,12 @@
 }
 
 \newcommand{\Saidas}[1]{
-  \partab\textsc{Sa\'idas}\\
+  \partab\textsc{Saídas}\\
   \partab\inctab\parbox[t]{\textwidth-2\tab}{#1}\\
 }
 
 \newcommand{\Observacoes}[1]{
-  \partab\textsc{Observa\c{c}\~oes, Restri\c{c}\~oes, Requisitos}\\
+  \partab\textsc{Observações, Restrições, Requisitos}\\
   \partab\inctab\parbox[t]{\textwidth-2\tab}{#1}\\
 }
 
@@ -789,7 +804,7 @@
 
 \newcommand{\FimDocumentacao}{
   \addtocounter{contitab}{-1}
-  \textsc{Fim documenta\c{c}\~ao}\\
+  \textsc{Fim documentação}\\
 }
 
 % Comandos
@@ -799,7 +814,7 @@
 }
 
 \newcommand{\Continuacao}{
-  \partab\inctab--- \textsl{continua\c{c}\~ao} ---\\
+  \partab\inctab--- \textsl{continuação} ---\\
 }
 
 \newcommand{\LinhaEmBranco}{
@@ -835,18 +850,18 @@
 }
 
 \newcommand{\SeEntao}[2][]{
-  \tabulacao\textbf{se} (#2), \textbf{ent\~ao}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
+  \tabulacao\textbf{se} (#2), \textbf{então}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
   \forward
 }
 
 \newcommand{\SenaoSeEntao}[2][]{
-  \tabulacao\textbf{senão se} (#2), \textbf{ent\~ao}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
+  \tabulacao\textbf{senão se} (#2), \textbf{então}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
   \forward
 }
 
 \newcommand{\Senao}[1][]{
   \backward
-  \tabulacao\textbf{sen\~ao}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
+  \tabulacao\textbf{senão}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
   \forward
 }
 
@@ -886,11 +901,11 @@
 
 \newcommand{\AteQue}[1]{
   \backward
-  \tabulacao\textbf{at\'e que} (#1)\\
+  \tabulacao\textbf{até que} (#1)\\
 }
 
 \newcommand{\ParaDeAte}[5][]{
-  \tabulacao\textbf{para} #2 \textbf{de} #3 \textbf{at\'e} #4\ignorespaces
+  \tabulacao\textbf{para} #2 \textbf{de} #3 \textbf{até} #4\ignorespaces
   \ifnotempty{#5}{\textbf{passo} #5, }{, }
   \textbf{fazer}\ifnotempty{#1}{\inctab\delin \textsl{#1}\delout}\\
   \forward
@@ -1014,6 +1029,3 @@
 
 % ------------------------------------------------------------------------
 % ------------------------------------------------------------------------
-
-
-

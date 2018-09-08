@@ -1,10 +1,8 @@
 \documentclass[titlepage,a4paper,oneside,onecolumn,12pt]{report}
-%\documentclass[a4paper,12pt,oneside,onecolumn]{uerj/uerj}
+% \documentclass[titlepage,a4paper,oneside,onecolumn,12pt,draft]{report}
 
-% \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-% Estratégias de exploração de vizinhança com GPU para problemas de otimização e roteamento
 \usepackage[pdftex,
             pdfauthor={Rodolfo Pereira Araujo},
             pdftitle={Estratégias de exploração de vizinhança com GPU para problemas de otimização},
@@ -13,47 +11,74 @@
             pdfproducer={Latex with hyperref, or other system},
             pdfcreator={pdflatex}]{hyperref}
 \usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
-
 \usepackage[table,xcdraw]{xcolor}
 \usepackage[alf]{abntex2cite}
 \usepackage{pgfplotstable}
 \usepackage{pgfplots}
 \usepackage[brazil]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-% \usepackage{hyperref}
+\usepackage{amssymb,amsmath,amsthm}
 \usepackage{dsfont}
 \usepackage[section]{placeins}
-\usepackage[ruled]{algorithm}
+\usepackage[ruled]{algorithm} %[ruled]
 \usepackage[noend]{algpseudocode}
-\usepackage[justification=centering]{caption}
+\usepackage[singlelinecheck=false, justification=raggedright, labelsep=endash]{caption}
 \usepackage{multirow}
 \usepackage{makecell}
 \usepackage{mathtools}
 \usepackage{fancyhdr}
 \usepackage{relsize}
 \usepackage{setspace}
-\usepackage{graphicx}
-% \usepackage{subcaption}
-\usepackage{subfig}
-% \usepackage{subfigure}
+
 \usepackage{icomma}
 \usepackage{silence}
-% \usepackage{cleveref}
-\MakeRobust{\Call}
+\usepackage{etoolbox}
+\usepackage{tocloft}
+\usepackage{titlesec}
+\usepackage{chngcntr}
+\usepackage{indentfirst}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage{pdfpages}
+\usepackage{centernot}
+\usepackage{minted}
+\usepackage{ulem}
+
+\newtheorem{theorem}{Teorema}
+
+\usepackage{mathtools} % Bonus
+
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+\setcounter{tocdepth}{5} %aparece tudo no sumario
+\setcounter{secnumdepth}{5} %aparece tudo no sumario
+
+\captionsetup[figure]{font=normalsize,labelfont=normalsize} %font 12 em caption
+\captionsetup[table]{font=normalsize,labelfont=normalsize} %font 12 em caption
+% \usepackage[justification=raggedright, singlelinecheck=false,]{subcaption}
+\usepackage[justification=raggedright, singlelinecheck=false,]{subfig}
+\captionsetup[subfigure]{font=normalsize,labelfont=normalsize} %font 10 em subcaption
+ 
+\MakeRobust{\Call} %algoritmo
 \input{uerj/algptbr.tex}
 \usepackage[frame=no,gride=no,algline=yes,font=default]{uerj/uerjformat}
-\usepackage{lscape}
-% \usepackage{graphicx}
-\usepackage{centernot}
-\usepackage{mathrsfs}
-% \usepackage{bookmark}
-% \usepackage[open,openlevel=3]{bookmark}
-% \usepackage[inline]{showlabels} %[inline]{showlabels}
-\usepackage{minted}
-% \usepackage[toc,page]{appendix}
+
+%configuracao do capitulo para listas
+\titleformat{\chapter}{\normalsize}{\thechapter}{5pt}{\normalsize}
+\titlespacing*{\chapter}{0pt}{0pt}{1.5cm}
+
+%configuracao da secao
+\titleformat{\section}{\normalsize}{\thesection}{5pt}{\normalsize}
+
+%configuracao da subsecao
+\titleformat{\subsection}{\normalsize}{\thesubsection}{5pt}{\normalsize\uline}
+
+%configuracao da secao quaternaria
+\titleformat{\subsubsection}{\normalsize}{\thesubsubsection}{5pt}{\normalsize}
+
+%configuracao da secao quintenaria
+\titleformat{\subsubsubsection}{\normalsize}{\thesubsubsubsection}{5pt}{\normalsize}
+
+\counterwithout{figure}{chapter} %contador da figura documento todo
+\counterwithout{table}{chapter} %contador da tabela documento todo
 
 \setlength{\headheight}{15.1pt} 
 
@@ -68,11 +93,67 @@
 \usepgfplotslibrary{patchplots}
 \usepgfplotslibrary{fillbetween}
 
+% Nome das figuras e tabelas
+\renewcommand{\cftfigpresnum}{Figura }
+\renewcommand{\cfttabpresnum}{Tabela }
+\renewcommand{\cftfigaftersnum}{ -- }
+\renewcommand{\cfttabaftersnum}{ -- }
+\cftsetindents{figure}{0em}{5em}
+\cftsetindents{table}{0em}{5.2em}
+\renewcommand{\cftafterloftitleskip}{1.5cm}
+\renewcommand{\cftafterlottitleskip}{1.5cm}
+
+%colocando a lista de algoritmos no package tocloft
+\makeatletter
+\begingroup
+  \let\newcounter\@gobble
+  \let\setcounter\@gobbletwo
+  \globaldefs\@ne
+  \let\c@loadepth\@ne
+  \newlistof{algorithms}{loa}{\listalgorithmname}
+\endgroup
+\let\l@algorithm\l@algorithms
+\makeatother
+
+%configuracao da lista de algoritmos
+\renewcommand\cftalgorithmsaftersnum{ -- }
+\renewcommand\cftalgorithmspresnum{Algoritmo~}
+\cftsetindents{algorithms}{0em}{6.5em}
+\renewcommand{\cftbeforeloatitleskip}{0cm}
+\renewcommand{\cftafterloatitleskip}{2.0cm}
+
+%configuracao do sumario
+\renewcommand\cfttoctitlefont{\normalsize\bfseries}
+\renewcommand\cftaftertoctitle{\hfill\mbox{}}
+\renewcommand{\cftbeforetoctitleskip}{0cm}
+\renewcommand{\cftaftertoctitleskip}{1.5cm}
+\renewcommand{\cftchapfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\normalfont}
+%\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+% alinhamento do sumário
+\cftsetindents{chapter}{0em}{3.5em}
+\cftsetindents{section}{0em}{3.5em}
+\cftsetindents{subsection}{0em}{3.5em}
+\cftsetindents{subsubsection}{0em}{3.5em}
+
+\titleformat{\chapter}[hang]
+  {\normalfont\Large\bfseries}
+  {\MakeUppercase{\chaptertitlename}\ \thechapter}
+  {.5em}
+  {\MakeUppercase}
+\titleformat{\section}[hang]
+  {\normalfont\bfseries}
+  {\ \thesection}
+  {.5em}
+  {}
+
 \makeatletter
 
 \renewcommand*{\ALG@name}{Algoritmo} %Nome da estrutura
 \renewcommand{\floatpagefraction}{.9}%
-\newcommand{\mbf}{\mathversion{bold}}
+
+\newcommand{\mbf}{\mathbf}% math bold
 
 \makeatother
 
@@ -84,20 +165,14 @@
 \marcadagua{uerj/marcadagua_uerj_cinza.png}{1}{160}{255}
 
 \instituicao{Universidade do Estado do Rio de Janeiro}
-    {Centro de Tecnologia e Ciências}
-    {Instituto de Matemática e Estatística}
-    {Programa de Pós-Graduação em Ciências Computacionais}
+            {Centro de Tecnologia e Ciências}
+            {Instituto de Matemática e Estatística}
+            %{Programa de Pós-Graduação em Ciências Computacionais}
 
-\author{Rodolfo Pereira Araujo \and Igor M. Coelho \and Leandro A. J. Marzulo}
 \autor{Rodolfo Pereira}{Araújo}
-
-% Estratégias de exploração de vizinhança com GPU para problemas de otimização e roteamento
 \titulo{Estratégias de exploração de vizinhança com GPU para problemas de otimização}
 \title{Estratégias de exploração de vizinhança com GPU para problemas de otimização}
 
-% \keywords{Meta-heuristics, Local Search, Dataflow, Graphics Processing Unit, Variable Neighborhood Descent}
-
-% Estratégias de exploração de vizinhança com GPU para problemas de otimização e roteamento
 \tituloshow{Estratégias de exploração de vizinhança com GPU para problemas de otimização}
 
 \orientador{Prof. Dr.} % rotulo
@@ -112,30 +187,27 @@
 \curso{Ciências Computacionais}
 
 \local{Rio de Janeiro}   % cidade
-\data{??}{Agosto}{2018} % {dia}{mes}{ano}
+\data{??}{Setembro}{2018} % {dia}{mes}{ano}
 
-\newcommand{\comm}[1]{}
-% \newtheorem{theorem}{Teorema}
-\newtheorem{theorem}{Teorema}[section]
 
 \begin{document}
-\tracingall
 
-% \frontmatter
+
+%\frontmatter
 \capa
 \folhaderosto
 
-% \includepdf{ficha_catalografica.pdf}
-% \input{fichaCatalografica.tex}
+% \includepdf{ficha_catalografica.pdf} %retirar até a finalização completa do trabalho  %imprimir a ficha no verso da folha de rosto!!! %pagina 3 da versao digital 
 
 \begin{folhadeaprovacao}
     \assinatura{Prof. Dra. Cristiana Barbosa Bentes\\ Instituto de Matemática e Estatística - UERJ} %nome\\ afiliação
-    \assinatura{Prof. Dr. Luiz Satoru Ochi\\ Instituto de Computação - UFF} %nome\\ afiliação 
     \assinatura{Prof. Dr. Tiago Assumpção de Oliveira Alves\\ Instituto de Matemática e Estatística - UERJ} %nome\\ afiliação
+    \assinatura{Prof. Dr. Luiz Satoru Ochi\\ Instituto de Computação - UFF} %nome\\ afiliação 
     % \assinatura{Prof. Dr. Felipe Maia Galvão França\\ Instituto Alberto Luiz Coimbra de Pós Graduação e Pesquisa de Engenharia - UFRJ} %nome\\ afiliação 
     % \assinatura{Prof. Dra. Maria Clicia Stelling de Castro\\ Instituto de Matemática e Estatística - UERJ} %nome\\ afiliação
 \end{folhadeaprovacao}
 
+%nao arrumei para o padrao uerj... formatar por conta propria seguindo roteiro
 %\chapter*{Dedicatória}
 %  \vfill\vfill
 %    \hfill escrever,
@@ -143,31 +215,103 @@
 %    \hfill escrever.
 %  \vfill
 
-% \input{agradecimentoResumo.tex}
+%\chapter*{Agradecimentos}
+%  \vfill\vfill
+%    \hfill escrever,
+%    
+%    \hfill escrever.
+%  \vfill
 
-\tableofcontents
+\chapter*{\textbf{\normalsize{Agradecimentos}}}
 
+Quero agradecer à Deus que me iluminou com as pessoas que colocou no meu caminho durante esta jornada e por toda minha vida.
+
+Agradeço à minha esposa Izabel por todo apoio, carinho, companheirismo e amizade.
+
+À minha mãe, pai e irmão e minha família que sempre foram os pilares na minha vida e realizações.
+
+Aos meus orientadores, Igor e Marzulo, pelo empenho dedicado à elaboração deste trabalho e por confiarem em mim nesta empreitada.
+E a todos os professores por todo o conhecimento proporcionado para minha formação e que contribuiu para este trabalho.
+
+% ----------------------------------------------------------
+% RESUMO
+% ----------------------------------------------------------
+
+
+\pagenumbering{gobble} %padrao da uerj -- numeracao de paginas começa na introdução -- retira numero das paginas
+\renewcommand{\chaptername}{ } %padrao da biblioteca pede para esconder nome dos capitulos
+
+\chapter*{\textbf{\normalsize\centerline{RESUMO}}}
+
+\refbibliografica %referencia com titulo em port
+
+Problemas de otimização são de grande importância para diversos setores da indústria, desde o planejamento de produção até escoamento e transporte dos produtos.
+Diversos problemas de interesse se enquadram na classe NP-Difícil, sendo desconhecidos algoritmos eficientes para resolvê-los de forma exata em tempo polinomial.
+Assim, estratégias heurísticas com capacidade de escapar de ótimos locais de baixa qualidade (meta-heurísticas) são geralmente empregadas. % FIM IGOR
+A busca local é, em geral, a etapa mais custosa, em termos de tempo computacional, do processo de uma meta-heurística, desta forma torna-se muito importante fazer bom uso dos recursos nela utilizados.
+Esta dissertação estuda o emprego de múltiplas estratégias de vizinhança utilizadas paralelamente para explorar um espaço de vizinhança maior e melhor aproveitar os recursos computacionais.
+O processamento paralelo das estratégias de vizinhança é implementado em nível de grão fino, através de processamento em GPU, e grão grosso, por meio de processamento multi core e processamento em rede, sendo os dois níveis combinados num ambiente heterogêneo, % IGOR BEGIN
+para arquiteturas von Neumann e dataflow. % IGOR END
+
+\vspace{1em}
+\noindent {Palavras-chave}: Meta-heurística, Busca Local, Dataflow, Graphics Processing Unit, Variable Neighborhood Descent.
+
+% ----------------------------------------------------------
+% Abstract
+% ----------------------------------------------------------
+
+\chapter*{\textbf{\normalsize\centerline{ABSTRACT}}}
+
+\refbibliografic %referencia com titulo em ingles
+
+Optimization problems have big importance in the industry field, from production management to production outflow and product transportation.
+Many problems of interest are classified as NP-Hard, so there is no known algorithm to find the exact solution in a polinomial time.
+Therefore heuristic strategies with the ability to escape from poor quality local optima (meta-heuristics) are generally employed.
+In general, the local search is the most costly, in computational time, phase of a meta-heuristic, becoming mandatory a good use of the available resources.
+The parallel processing of neighborhood strategies is implemented at the fine grain level through GPU processing and coarse grain through multi-core processing and network processing, the comibation of the two level parallelization in a heterogeneous environment for von Neumann architectures and dataflow.
+
+\vspace{1em}
+\noindent {Keywords}: Meta-heuristics, Local Search, Dataflow, Graphics Processing Unit, Variable Neighborhood Descent.
+
+\clearpage
 \listadefiguras
+\clearpage
 \listadetabelas
+\clearpage
 \listofalgorithms
+\clearpage
+\tableofcontents
+\clearpage
 
-\onehalfspacing
 
-% \input{introducao/index.tex}
-% \input{conceitos/index.tex}
-% \input{metodologia/index.tex}
-% \input{resultados/index.tex}
-% \input{conclusao/index.tex}
 
-% \input{apendice.tex}
+%espaçamento dos demais capitulos
+\titlespacing*{\chapter}{0pt}{0pt}{3cm}
 
-\cleardoublepage
+\pagenumbering{arabic} %padrao da uerj -- numeracao de paginas começa na introdução -- volta numero das paginas
+\setcounter{page}{12} %coloque o numero da pagina de introducao antes de mandar para a biblioteca
 
-\addcontentsline{toc}{chapter}{Referências Bibliográficas}
+\include{1introducao} %introducao nao conta como capitulo
+\include{2teoria}
+\include{3metodologia}
+\include{4computacional}
+\include{5conclusao} %conclusao nao conta como capitulo
+
+%\cleardoublepage
+
+%configuracao do capitulo para referencia
+\titleformat{\chapter}{\normalsize}{\thechapter}{5pt}{\normalsize}
+\titlespacing*{\chapter}{0pt}{0pt}{1.5cm}
+
+\addcontentsline{toc}{chapter}{\textbf{\hspace{3.1em}Referências}} %adiciona referencias não bugada no sumário
 
 \singlespacing
 
 \citeoption{abnt-options4}
+
+\let\oldaddcontentsline\addcontentsline
+\renewcommand{\addcontentsline}[3]{}%retira uma linha bugada de referencias do sumário
 \bibliography{bin}
+\let\addcontentsline\oldaddcontentsline
 
 \end{document}
