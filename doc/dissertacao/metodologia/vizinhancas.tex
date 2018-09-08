@@ -1,0 +1,107 @@
+\section{Vizinhanças}\label{sec:neighborhoods}
+
+% Vizinhanças Swap, 2-opt, 1-OrOpt, 2-OrOpt, 3-OrOpt
+RVND e DVND usam um conjunto de vizinhanças para processar a solução, foram usadas 5 estruturas diferentes, a saber, Swap, 2-Opt, OrOpt-1, OrOpt-2 e OrOpt-3~\cite{wamca2016}.
+Nesse caso o DVND pode, potencialmente, demandar 5 vezes o tempo computacional necessário pelo RVND no pior cenário (quando a exploração do RVND é ótima) pois no RVND cada solução é propagada para apenas uma vizinhança quando não é encontrada uma melhora.
+No caso do DVND, a cada nova solução encontrada esta pode ser submetida para todas as vizinhanças simultaneamente (tentando explorar melhorias de vizinhanças diferentes simultaneamente).
+% O desafio para melhorar o DVND frente ao RVND é explorar as vizinhanças e combinar os movimentos, de modo a evitar a geração desnecessária de soluções que causariam um desperdício de recursos computacionais.
+% This idea will still be expanded in future works, as for now we lack the capability to combine moves from different neighborhoods, so it is expected to have DVND consuming bigger computational times than RVND.
+A intenção principal é prover uma implementação dataflow de um procedimento de busca local de muitas vizinhanças, o que é uma contribuição original para ambas comunidades, de otimização e computação paralela.
+
+Para a busca local foi usado uma abordagem \emph{Multi Improvement} (\emph{MI})~\cite{wamca2016} em todas as vizinhanças, na qual é calculado os custos de todos os movimentos e os resultados armazenados num vetor.
+Usando a estratégia \emph{Best Improvement} (\emph{BI}) apenas a melhor solução é selecionada, na estratégia \emph{Multi Improvement} todos os \textit{movimentos independentes} são simultaneamente aplicados para a solução dada, provendo assim uma convergência mais rápida para o ótimo local.
+
+A enumeração de todos as estratégias de vizinhança roda numa implementação em GPU, assim temos um algoritmo dataflow onde a implementação de cada nó \textit{oper} roda em GPU para ambos os casos, a configuração do lançamento do \emph{kernel} para cada estratégia de vizinhança é descrita na Tabela~\ref{tab:neighborhoodsLaunchConfigurarion}, estas configurações foram obtidas fazendo-se uso das bibliotecas fornecidas pela NVIDIA para otimização do uso dos recursos conforme o \emph{kernel} que se deseja executar, conforme descrito em~\cite{cudaProTipOccupancy}
+Mais detalhes sobre a implementação GPU da enumeração das vizinhanças podem ser encontrados em \cite{wamca2016}.
+
+% Aqui eu coloquei essa informação porque o revisor pediu, mas devo colcocar como obtenho cada configuração?
+
+\begin{table}[ht]
+\centering
+\caption{Configuração de lançamento para os kernels das vizinhanças.
+Onde \textit{Grid} refere-se a quantidade de grides usada, \textit{Block} o tamanho de cada bloco de threads e \textit{Shared} indica a quantidade de memória compartilhada utilizada pelas threads em cada bloco.}
+\label{tab:neighborhoodsLaunchConfigurarion}
+\begin{tabular}{llllllll}
+\hline
+\hline
+\textbf{Instância} & \textbf{n} & \textbf{Vizinhança} & \textbf{Grid} & \textbf{Block} & \textbf{Shared} \\ \hline
+\multirow{5}{*}{\#0 \rotatebox[origin=c]{90}{berlin52}} & \multirow{5}{*}{52} & Swap         & 26      & 53      & 1060   \\
+                            & &  2-Opt        & 27      & 53      & 1060   \\
+                            & & OrOpt-1      & 50      & 53      & 1060   \\
+                            & & OrOpt-2      & 49      & 53      & 1060   \\ 
+                            & & OrOpt-3      & 48      & 53      & 1060   \\ \hline
+\multirow{5}{*}{\#1 \rotatebox[origin=c]{90}{kroD100}} & \multirow{5}{*}{100} & Swap         & 50      & 101      & 2020   \\
+                            & & 2-Opt        & 51      & 101      & 2020   \\
+                            & & OrOpt-1      & 98      & 101      & 2020   \\
+                            & & OrOpt-2      & 97      & 101      & 2020   \\ 
+                            & & OrOpt-3      & 96      & 101      & 2020   \\ \hline
+\multirow{5}{*}{\#2 \rotatebox[origin=c]{90}{pr226}} & \multirow{5}{*}{226} & Swap         & 113      & 224      & 4540   \\
+                            & & 2-Opt        & 114      & 224      & 4540   \\
+                            & & OrOpt-1      & 224      & 224      & 4540   \\
+                            & & OrOpt-2      & 223      & 224      & 4540   \\ 
+                            & & OrOpt-3      & 222      & 224      & 4540   \\ \hline
+\multirow{5}{*}{\#3 \rotatebox[origin=c]{90}{lin318}} & \multirow{5}{*}{318} & Swap         & 159      & 256      & 6380   \\
+                            & & 2-Opt        & 160      & 256      & 6380   \\
+                            & & OrOpt-1      & 316      & 256      & 6380   \\
+                            & & OrOpt-2      & 315      & 256      & 6380   \\ 
+                            & & OrOpt-3      & 314      & 256      & 6380   \\ \hline
+\multirow{5}{*}{\#4 \rotatebox[origin=c]{90}{TRP-S500-R1}} & \multirow{5}{*}{501} & Swap         & 250      & 502      & 10040   \\
+                            & & 2-Opt        & 251      & 502      & 10040   \\
+                            & & OrOpt-1      & 499      & 502      & 10040   \\
+                            & & OrOpt-2      & 498      & 502      & 10040   \\ 
+                            & & OrOpt-3      & 497      & 502      & 10040   \\ \hline
+\multirow{5}{*}{\#5 \rotatebox[origin=c]{90}{d657}} & \multirow{5}{*}{657} & Swap         & 328      & 512      & 13160   \\
+                            & & 2-Opt        & 329      & 512      & 13160   \\
+                            & & OrOpt-1      & 655      & 512      & 13160   \\
+                            & & OrOpt-2      & 654      & 512      & 13160   \\ 
+                            & & OrOpt-3      & 653      & 512      & 13160   \\ \hline
+\multirow{5}{*}{\#6 \rotatebox[origin=c]{90}{rat784}} & \multirow{5}{*}{783} & Swap         & 391      & 672      & 15680   \\
+                            & & 2-Opt        & 392      & 672      & 15680   \\
+                            & & OrOpt-1      & 781      & 672      & 15680   \\
+                            & & OrOpt-2      & 780      & 672      & 15680   \\ 
+                            & & OrOpt-3      & 779      & 672      & 15680   \\ \hline
+\multirow{6}{*}{\#7 \rotatebox[origin=c]{90}{TRP-S1000-R1}} & \multirow{5}{*}{1001} & Swap         & 500      & 1002      & 20040   \\
+                            & & 2-Opt        & 501      & 1002      & 20040   \\
+                            & & OrOpt-1      & 999      & 1002      & 20040   \\
+                            & & OrOpt-2      & 998      & 1002      & 20040   \\ 
+                            & & OrOpt-3      & 997      & 1002      & 20040   \\
+                            & &              &          &           &    \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Tabela de conflitos}
+
+Para classificação de movimentos independentes é necessário identificar quando um movimento aplicado a uma solução não conflita com outro movimento aplicado a mesma solução, conforme a definição estabelecida na Seção~\ref{subsubsec:movimentosIndependentes}.
+
+A identificação de conflitos pode ser feita em $\mathcal{O}(n)$ conforme descrito na Seção~\ref{subsec:gdvndDetectarMovimentosIndependentes}, contudo nos termos deste trabalho que trata do Problema da Mínima Latência (conforme descrito na Seção~\ref{sec:mlp}), para as vizinhanças \textit{swap}, \textit{2-opt} e \textit{oropt-k} utilizadas, dois movimentos são independentes quando são satisfeitas as condições expressas na Tabela~\ref{tab_confict}, desta forma é possível identificar a a independência de movimentos em $\mathcal{O}(1)$ independente da solução base considerada.
+
+\begin{table}[htpb]
+    \small
+    \centering
+    \begin{tabular}{c|c|c|c}
+%                          & \mbf$swap$                      & \mbf$2$-$opt$             & \mbf$oropt$-$k_2$ \\
+%                          & \mbf$(i_2,j_2)$                 & \mbf$(i_2,j_2)$           & \mbf$(i_2,j_2)$ \\
+                          & \mbf$swap(i_2,j_2)$             & \mbf$2$-$opt(i_2,j_2)$    & \mbf$oropt$-$k_2(i_2,j_2)$ \\
+        \hline
+        %\multirow{4}{*}{\mbf$swap(i_1,j_1)$}    
+                          & $(|i_1-i_2| > 1) \land$         & $[(i_1 < i_2-1) \lor$     & $(j_1 < \min(i_2,j_2)-1)\,\,\, \lor  $ \\
+		\mbf$swap$        & $(|i_1-j_2| > 1) \land$  		& $ (i_1 > j_2-1)] \land$   & $(i_1 > \max(i_2,j_2)+k_2) \lor  $ \\
+		\mbf$(i_1,j_1)$   & $(|j_1-i_2| > 1) \land$  		& $[(j_1 < i_2-1) \lor$     & $[(i_1 < \min(i_2,j_2)-1)\,\,\, \land $ \\
+			              & $(|j_1-j_2| > 1) \,\,\,$ 		& $ (j_1 > j_2+1)]\,\,\,\,$ & $\,\,\,(j_1 > \max(i_2,j_2)+k_2)] \,\,\,$ \\
+        \hline 
+        %\multirow{4}{*}{\mbf$2$-$opt(i_1,j_1)$} 
+                          & $[(i_2 < i_1-1) \lor$    		& $(j_1 < i_2 - 1) \lor$   & \\
+		\mbf$2$-$opt$	  & $ (i_2 > j_1+1)] \land$  		& $(i_1 > j_2 + 1) \lor$   & $(i_1 > \max(i_2,j_2)+k_2) \lor$   \\
+		\mbf$(i_1,j_1)$	  & $[(j_2 < i_1-1)] \lor$   		& $(j_2 > i_1 - 1) \lor$   & $(j_1 < \min(i_2,j_2)-1) \,\,\,\,$ \\
+			              & $ (j_2 > j_1+1)]\,\,\,$  		& $(i_2 > j_1 + 1)\,\,\,$  & \\
+        \hline
+        %\multirow{4}{*}{\mbf$oropt$-$k_1(i_1,j_1)$} 
+                          & $(j_2  < \min(i_1,i_2)-1)\,\,\, \lor$	    &   				                & \\
+		\mbf$oropt$-$k_1$ & $(i_2  > \max(i_1,i_2)+k_1) \lor$           & $(j_2 < \min(i_1,j_1)-1) \lor$ & $[\max(i_1,j_1)+k_1 < \min(i_2,j_2)] \lor$ \\
+		\mbf$(i_1,j_1)$	  & $[(i_2 < \min(i_1,i_2)-1)\,\,\land$   	    & $(i_2 > \max(i_1,j_1)+k_1)$  & $[\min(i_1,j_1) > \max(i_2,j_2)+k_2]\,\,\,\,$\\
+			              & $\,\,\,\,(j_2  > \max(i_1,i_2)+k_1)]\,\,\,$ &    	                            &  \\
+    \end{tabular}
+    \caption{Tabela de movimentos independentes (não conflitantes)}
+    \label{tab_confict}
+\end{table}

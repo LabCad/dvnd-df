@@ -1,0 +1,31 @@
+\chapter{Revisão de literatura e conceituação teórica} \label{cap:conceitos}
+
+Este capítulo tem como objetivo introduzir os conceitos teóricos básicos utilizados no documento e bases para apresentar a método.
+
+\input{conceitos/problemaDecisao}
+
+\input{conceitos/problemaOtimizacao}
+
+\input{conceitos/buscaLocal}
+
+\input{conceitos/otimoGlobalLocal}
+
+% \section{Classes de Problemas} \label{sec:classesProblemas}
+
+\section{Meta-heurísticas} \label{sec:metaHeuristicas}
+
+Uma meta-heurísticas diferencia-se de uma heurística por não ser acoplada a um problema específico ou classe de problemas.
+Meta-heurísticas fazem uso de artifícios capazes de encontrar soluções e aprimorar as já encontradas enquanto procuram escapar de mínimos locais.
+Na literatura são utilizadas em trabalhos que tratam de problemas da classe NP-Difícil devido a simplicidade de implementação e a intratabilidade da solução exata de tais problemas.
+Assim, esses algoritmos são ferramentas robustas para serem aplicadas na resolução prática de problemas de otimização combinatória, sendo uma alternativa quando o respectivo algoritmo exato não é conhecido ou exige um alto tempo de execução \cite{glover2006handbook}.
+
+As meta-heurísticas evoluem iterativamente conforme a parametrização fornecida até atingir um \textbf{Critério de Parada}, que pode também estar sujeito aos parâmetros do método.
+O critério de parada, em geral, está associado ao número de iterações, tempo de execução, um parâmetro de qualidade ou número de iterações sem melhora.
+
+% \section{Heurísticas} \label{sec:heuristicas}
+
+\input{conceitos/dataflow/index.tex}
+
+\input{conceitos/rvnd.tex}
+
+\input{conceitos/dvnd.tex}

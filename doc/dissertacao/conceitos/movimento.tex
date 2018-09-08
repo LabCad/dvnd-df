@@ -1,0 +1,97 @@
+\subsection{Movimento} \label{subsec:movimento}
+
+% Seja $S$ o espaço de soluções de um problema de otimização $\Pi$, e $s \in S$ uma solução qualquer, considere a função objetivo $f: S \rightarrow \mathbb{R}$ que atribui um valor para cada solução.
+Considere $m^x: S \rightarrow S$ a função que representa um movimento que leva uma solução $s$ a uma solução $s'$ ou de forma equivalente $s' = m^x \circ s$.
+Designamos então o movimento $m^x \in M^x$ no conjunto de movimentos da vizinhança $x$.
+
+Adicionalmente podemos definir o custo do movimento $m^x(s)$ em relação a solução $s$ como sendo a diferença entre o valor da solução $s'$ gerada ao aplicar este movimento à solução $s$ e o valor da solução $s$, conforme pode ser visto na Equação~\ref{eq:movimentoCusto}, iremos omitir a função $f$ e a vizinhança $x$ quando estiverem claros no contexto. Formalmente, a notação circunflexo representa a função $\widehat{m}: S \rightarrow \mathbb{R}$.
+\begin{equation} \label{eq:movimentoCusto}
+\widehat{m^x_f}(s) = f(s') - f(s)
+\end{equation}
+
+\subsubsection{Movimentos livres de contexto} \label{subsubsec:movimentosLivresDeContexto}
+
+Um movimento $m$ é livre de contexto se ele sempre pode ser aplicado a uma solução $s$ sem gerar uma solução inválida.
+
+\begin{equation} \label{eq:movimentoLivreDeContexto}
+m \ \textrm{é livre de contexto} \  \iff m \circ s \in S, \forall s \in S
+\end{equation}
+
+Quando uma classe de movimentos é livre de contexto para um determinado problema então se pode dizer que a função a representar este movimento é fechada para o conjunto de soluções $S$.
+
+A caracterização de um movimento como livre de contexto depende de suas restrições e da sua representação.
+Desta forma, para o Problema do Caixeiro Viajante em que o grafo com as distâncias entre as cidades é completo, o movimento \textit{Swap} será livre de contexto contudo num grafo incompleto uma aplicação do \textit{Swap} pode gerar uma solução inviável pois pode não existir um determinado percurso após a alteração na solução.
+
+\subsubsection{Movimentos parcialmente independentes} \label{subsubsec:movimentosParcialmenteIndependentes}
+
+Movimentos parcialmente independentes são aqueles que podem ser aplicados simultaneamente a uma solução sem que o valor da solução obtida após a aplicação dos movimentos seja alterado, a independência parcial de movimentos pode ser definida para movimentos de vizinhanças diferentes.
+Formalmente temos que dois movimentos $m_1$ e $m_2$ são parcialmente independentes se e somente se:
+\begin{equation}
+% \begin{align}
+m_1 \textrm{ parcialmente independente } m_2 \iff f(m_1 \circ m_2 \circ s) = f(m_2 \circ m_1 \circ s) \label{eq:movimentosParcialmenteIndependentes}
+% \end{align}
+\end{equation}
+
+\subsubsection{Movimentos independentes} \label{subsubsec:movimentosIndependentes}
+
+Movimentos independentes são aqueles que a aplicação de um não altera o valor do outro, o valor do movimento $m_2$ aplicado à solução $m_1 \circ s$ é igual ao valor deste aplicado à solução $s$, a independência de movimentos pode ser definida para movimentos de vizinhanças diferentes.
+Formalmente temos que dois movimentos $m_1$ e $m_2$ são independentes $m_1 \parallel m_2$ se e somente se:
+\begin{equation}
+% \begin{align}
+m_1 \parallel m_2 \iff \widehat{m_1}(m_2 \circ s) = \widehat{m_2}(s) \land \widehat{m_2}(m_1 \circ s) = \widehat{m_1}(s)
+% \end{align}
+\end{equation}
+
+\begin{theorem}%[Teorema da independência de movimentos]\label{teo:independenciaMovimentos}
+Dois movimentos $m_1$ e $m_s$ são independentes então também são parcialmente independentes.
+\begin{equation}
+m_1 \parallel m_2 \implies m_1 \textrm{ parcialmente independente } m_2
+\end{equation}
+
+\begin{proof}
+    Suponhamos que $m_1$ e $m_2$ sejam independentes mas não parcialmente independentes então $\widehat{m_1}(m_2 \circ s) = \widehat{m_2}(s) \land \widehat{m_2}(m_1 \circ s) = \widehat{m_1}(s)$ mas $f(m_1 \circ m_2 \circ s) \neq f(m_1 \circ m_1 \circ s)$
+    \begin{align*}
+        f(m_1 \circ m_2 \circ s) \neq & f(m_2 \circ m_1 \circ s) & \textrm{ De }(\ref{eq:movimentoCusto}) \\
+        \widehat{m_1}(m_2 \circ s) + f(m_2 \circ s) \neq & \widehat{m_2}(m_1 \circ s) + f(m_1 \circ s) & \textrm{ De }\ (\ref{eq:movimentoCusto}) \\
+        \widehat{m_1}(m_2 \circ s) + \widehat{m_2} + f(s) \neq & \widehat{m_2}(m_1 \circ s) + \widehat{m_1} + f(s) & \textrm{ Como } m_1 \parallel m_2 \\
+        \widehat{m_1}(s) + \widehat{m_2} + f(s) \neq & \widehat{m_2}(s) + \widehat{m_1} + f(s) & \textrm{ Logo uma contradição } \bot
+    \end{align*}
+    
+    Assim, por \textit{reductio ad absurdum}, temos que se $m_1$ e $m_2$ são independentes então também são parcialmente independentes.
+\end{proof}
+\end{theorem}
+
+Outra propriedade interessante pode ser vista a seguir:
+\begin{theorem}[Teorema da independência dos movimentos dois a dois]\label{teo:independenciaMovimentos2a2}
+Se $m_1 \parallel m_2$ então o valor da solução gerada pela aplicação destes movimentos será igual ao valor anterior da solução somado ao valor dos movimentos.
+\begin{equation}
+\label{eq:movimentoCustoSomaDois}
+m_1 \parallel m_2 \implies f(m_1 \circ m_2 \circ s) = \widehat{m_1}(s) + \widehat{m_2}(s) + f(s)
+\end{equation}
+\begin{proof}
+    Suponhamos que $m_1$ e $m_2$ sejam independentes mas $f(m_1 \circ m_2 \circ s) \neq \widehat{m_1}(s) + \widehat{m_2}(s) + f(s)$.
+    \begin{align*}
+        f(m_1 \circ m_2 \circ s) \neq & \widehat{m_1}(s) + \widehat{m_2}(s) + f(s) & \textrm{ De } (\ref{eq:movimentoCusto}) \\
+        \widehat{m_1}(m_2 \circ s) + f(m_2 \circ s) \neq & \widehat{m_1}(s) + \widehat{m_2}(s) + f(s) & \textrm{ De } (\ref{eq:movimentoCusto}) \\
+        \widehat{m_1}(m_2 \circ s) + \widehat{m_2}(s) + f(s) \neq & \widehat{m_1}(s) + \widehat{m_2}(s) + f(s) & \textrm{ Como } m_1 \parallel m_2 \\
+        \widehat{m_1}(s) + \widehat{m_2}(s) + f(s) \neq & \widehat{m_1}(s) + \widehat{m_2}(s) + f(s) & \textrm{ Logo uma contradição } \bot
+    \end{align*}
+    
+    Assim, por \textit{reductio ad absurdum}, temos que se $m_1$ e $m_2$ são independentes então $f(m_1 \circ m_2 \circ s) = \widehat{m_1}(s) + \widehat{m_2}(s) + f(s)$.
+\end{proof}
+\end{theorem}
+
+\subsubsection{Movimentos estritamente independentes} \label{subsubsec:movimentosEstritamenteIndependentes}
+
+Dois movimentos $m_1$ e $m_2$ são estritamente independentes quando são independentes e podem ser aplicados simultaneamente a uma solução sem que a alteração feita por um gere algum conflito na causada pelo outro, a independência de movimentos pode ser definida para movimentos de vizinhanças diferentes.
+Formalmente temos que dois movimentos $m_1$ e $m_2$ são estritamente independentes $m_1 \parallel_e m_2$ se e somente se:
+\begin{equation}  \label{eq:movimentosIndependentes}
+m_1 \parallel_e m_2 \iff m_1(m_2(s)) = m_2(m_1(s)) = m_1 \circ m_2 \circ s = m_2 \circ m_1 \circ s
+\end{equation}
+
+Pela Equação~\ref{eq:movimentosParcialmenteIndependentes} e pela definição de custo do movimento (Equação~\ref{eq:movimentoCusto}) podemos ver que um movimento estritamente independente também será um movimento independente.
+
+A mesma ideia pode ser aplicada para um conjunto de movimentos $M = \{ m_1, m_2, m_3, ...\}$, são ditos estritamente independentes se para uma solução $s$ qualquer e para todo subconjunto não-vazio $M' = \{ m_1, m_2, m_3, \dots, m_k \} \subseteq M$ temos $m_1 \circ m_2 \circ m_3 \circ ...\circ m_k \circ s = m_2 \circ m_1 \circ m_3 \circ ...\circ m_k \circ s$ para qualquer permutação dos movimentos em $M'$.
+% $\widehat{m_1}(s) + \widehat{m_2}(s) + \widehat{m_3}(s) + \dots + \widehat{m_k}(s) = \widehat{m_1}(m_2 \circ m_3 \circ ...\circ m_k \circ s)$. 
+
+Pela Equação~\ref{eq:movimentosIndependentes} pode-se perceber que movimentos estritamente independentes são operações comutativas, pela própria definição.

@@ -1,0 +1,35 @@
+\algrenewcommand\Return{\State \algorithmicreturn{} }%
+\newcommand*\Let[2]{\State #1 $\gets$ #2} %atribuição
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1} %define do-while
+\renewcommand{\algorithmicrequire}{\textbf{Requerimento:}}
+\renewcommand{\algorithmicensure}{\textbf{Observação:}}
+
+\renewcommand{\algorithmicreturn}{\textbf{retorna}}
+\renewcommand{\algorithmicfunction}{\textbf{função}}
+\renewcommand{\algorithmicprocedure}{\textbf{procedimento}}
+\newcommand{\noProcedure}[2]{\Statex{\textbf{procedimento }#1(#2)}}
+\newcommand{\noFunction}[2]{\Statex{\textbf{função }#1(#2)}}
+
+
+%% Miscelânea: inicializadores e terminadores de blocos, comandos diversos
+
+\renewcommand{\algorithmicdo}{\textbf{fa\c{c}a}}
+\renewcommand{\algorithmicend}{\textbf{fim}}
+
+%% Estruturas condicionais
+
+\renewcommand{\algorithmicif}{\textbf{se}}
+\renewcommand{\algorithmicthen}{\textbf{ent\~{a}o}}
+\renewcommand{\algorithmicelse}{\textbf{sen\~{a}o}}
+
+%% Estruturas de repetição
+
+\renewcommand{\algorithmicwhile}{\textbf{enquanto}}
+
+\renewcommand{\algorithmicfor}{\textbf{para}}
+\renewcommand{\algorithmicforall}{\textbf{para todo}}
+
+\renewcommand{\algorithmicloop}{\textbf{loop}}
+
+\renewcommand{\algorithmicrepeat}{\textbf{repita}}
+\renewcommand{\algorithmicuntil}{\textbf{at\'{e}}}

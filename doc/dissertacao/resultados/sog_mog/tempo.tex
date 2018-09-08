@@ -1,0 +1,50 @@
+% \subsection{Tempo}
+
+% A Tabela~\ref{tab:rvndDcDdImp} e as Figuras~\ref{fig:imp_rvndDcDd_in0}-\ref{fig:imp_rvndDcDd_in7} apresentam resultados para execuções utilizando apenas uma máquina ($m = 1$) pois pela construção naturalmente sequencial do RVND não utilizar paralelismo, logo o emprego de mais de uma máquina não traria ganhos em termos de desempenho tampouco no valor da solução.
+
+Para validar a utilização de múltiplas portas de saída em cada nó do grafo dataflow, conforme discutido na Seção~\ref{subsec:multiplasSaidas}, foi realizado um experimento utilizando o dataflow DVND com apenas uma porta de saída (SOG) e comparado com outro experimento com o mesmo algoritmo DVND mas agora implementado utilizando múltiplas portas de saída para os nós (MOG).
+
+O resultado para os tempos no experimento pode ser visto na Tabela~\ref{tab:sogMogDcDdTime}, ao aplicar o teste de Wilcox pode se perceber que exceto para a instância 2 (de tamanho 226) em todas as outras situações houve significância estatística para verificar a diferença entre as amostras.
+
+\tabelaEstatisticasGeral{Tempos comparativos do}{Time}{sogMog}{SOG vs MOG}{onde SOG indica a execução com uma porta de saída e MOG com múltiplas portas de saída.}{
+    \multirow{1}{*}{0} & MOG & 4 & \multirow{1}{*}{52} & 2,43 & 4,028 & 2,698 & 2,811 & 2,928 & 2,953 & 0,429 & 0,0271 \\
+     & SOG & 4 &  & 2,329 & 3,786 & 2,68 & 2,761 & 2,87 & 2,802 & 0,257 &  \\ \hline
+    \multirow{1}{*}{1} & MOG & 4 & \multirow{1}{*}{100} & 1,841 & 4,156 & 2,831 & 2,963 & 3,808 & 3,207 & 0,527 & 0,003571 \\
+     & SOG & 4 &  & 1,858 & 3,982 & 2,781 & 2,876 & 3,018 & 2,911 & 0,305 &  \\ \hline
+    \multirow{1}{*}{2} & MOG & 4 & \multirow{1}{*}{226} & 2,504 & 4,545 & 3,079 & 3,171 & 3,29 & 3,243 & 0,355 & \textbf{0,1708} \\
+     & SOG & 4 &  & 2,643 & 4,481 & 3,021 & 3,263 & 3,405 & 3,242 & 0,299 &  \\ \hline
+    \multirow{1}{*}{3} & MOG & 4 & \multirow{1}{*}{318} & 2,674 & 4,592 & 3,515 & 3,622 & 3,756 & 3,648 & 0,324 & 5,161e-06 \\
+     & SOG & 4 &  & 3,175 & 4,414 & 3,646 & 3,83 & 4,015 & 3,817 & 0,269 &  \\ \hline
+    \multirow{1}{*}{4} & MOG & 4 & \multirow{1}{*}{501} & 3,423 & 5,801 & 4,345 & 4,514 & 4,691 & 4,496 & 0,38 & 4,901e-08 \\
+     & SOG & 4 &  & 3,781 & 6,382 & 4,553 & 4,783 & 4,974 & 4,783 & 0,38 &  \\ \hline
+    \multirow{1}{*}{5} & MOG & 4 & \multirow{1}{*}{657} & 4,17 & 6,604 & 5,246 & 5,464 & 5,682 & 5,49 & 0,441 & 6,173e-07 \\
+     & SOG & 4 &  & 4,566 & 7,11 & 5,559 & 5,775 & 6,007 & 5,778 & 0,421 &  \\ \hline
+    \multirow{1}{*}{6} & MOG & 4 & \multirow{1}{*}{783} & 5,434 & 8,442 & 6,305 & 6,508 & 6,691 & 6,514 & 0,507 & 1,429e-16 \\
+     & SOG & 4 &  & 5,95 & 8,881 & 6,782 & 7,04 & 7,356 & 7,087 & 0,471 &  \\ \hline
+    \multirow{1}{*}{7} & MOG & 4 & \multirow{1}{*}{1001} & 7,871 & 10,88 & 8,836 & 9,09 & 9,493 & 9,164 & 0,566 & 7,009e-10 \\
+     & SOG & 4 &  & 8,253 & 10,96 & 9,352 & 9,626 & 10,05 & 9,693 & 0,565 &  \\ \hline
+    \hline
+}
+
+\multiFigureInstancias{dvnd}{sog_mog}{time}{Tempo do DVND, \textit{SOG} refere-se a uma porta de saída e \textit{MOG} a múltiplas portas de saída, $n$ indica o tamanho.}
+
+% \figureDvndSogMog{box}{time}{1}{Tempos}{100}{DVND}{dvnd}
+
+Nas Figuras~\ref{fig:dvnd_sog_mog_time_in0} e \ref{fig:dvnd_sog_mog_time_in1} podemos ver uma sutil diferença favorecendo a versão sem múltiplas portas de saída (SOG), contudo a situação se inverte na instância 3.
+
+% \figureDvndSogMog{box}{time}{2}{Tempos}{226}{DVND}{dvnd}
+
+% \figureDvndSogMog{box}{time}{3}{Tempos}{318}{DVND}{dvnd}
+
+Na Figura~\ref{fig:dvnd_sog_mog_time_in3} referente à instância 3 (de tamanho 318) se mostra o início da melhoria no tempo pelo uso de múltiplas saídas nos nós do grafo dataflow.
+
+% \figureDvndSogMog{box}{time}{4}{Tempos}{501}{DVND}{dvnd}
+
+O uso de múltiplas portas de saída, uma específica para cada nó de destino se mostra eficiente nas demais instâncias, podendo ser visto nas Figuras~\ref{fig:dvnd_sog_mog_time_in4}-\ref{fig:dvnd_sog_mog_time_in7}.
+A melhoria no tempo inicia-se na instância 3 de tamanho 318 e permance por todas as instâncias seguintes.
+
+% \figureDvndSogMog{box}{time}{5}{Tempos}{657}{DVND}{dvnd}
+
+% \figureDvndSogMog{box}{time}{6}{Tempos}{783}{DVND}{dvnd}
+
+% \figureDvndSogMog{box}{time}{7}{Tempos}{1001}{DVND}{dvnd}
