@@ -82,7 +82,7 @@ Em otimização, uma vizinhança é definida como um conjunto de operações cha
 Estas alterações podem ser, por exemplo, trocar dois elemento na permutação inicial, gerando dessa forma $\mathcal{O}(N^2)$ diferentes soluções (para o caso de uma permutação de tamanho $N$). Existe na literatura muitas dessas vizinhanças (como 2-Opt, OrOpt-1, OrOpt-2, Swap, ..., etc), conquanto por limitações computacionais estes são sempre explorados de forma sequencial, chamados de \emph{Variable Neighborhood Descent} (\emph{VND}).
 Com o objetivo de encontrar um ótimo local para o PML, a ideia principal do DVND é usar GPU para obter operações de grão fino (que em geral são rápidas) e explorar toda a vizinhança $\mathcal{O}(N^2)$ mais rápido que em CPU (como explicado em~\cite{wamca2016}) e combinar as respostas das buscas, escolhendo a nova melhor solução.
 
-\subsection{Exemplo}
+% \subsection{Exemplo}
 
 % \begin{figure}[htpb]
 %     \centering
@@ -104,61 +104,295 @@ Para tanto procura na vizinhança (definida na Seção~\ref{subsec:vizinhanca}) 
 \subsection{Vizinhança} \label{subsec:vizinhanca}
 
 Seja $S$ o espaço de soluções de um problema de otimização $\Pi$, e $s \in S$ uma solução qualquer, considere a função objetivo $f: S \rightarrow \mathbb{R}$ que atribui um valor para cada solução.
-Denotamos então por $N^x(s)$ o conjunto de soluções vizinhas de $s$ para a vizinhança $x$ com $N^x(s) \subset S$, em que as soluções dessa vizinhança podem ser obtidas de $s$ a partir da aplicação de determinadas operações.
+Denotamos então por $N^x(s)$ o conjunto de soluções vizinhas de $s$ para a vizinhança $x$ com $N^x(s) \subseteq S$, em que as soluções dessa vizinhança podem ser obtidas de $s$ a partir da aplicação de determinadas operações.
 Uma solução $s'$ é vizinha de $s$ (isto é $s' \in N^x(s)$) segundo uma vizinhança $s$ se $s'$ é alcançável a partir de $s$ fazendo uso de uma pequena perturbação nesta última.
 
 \subsection{Movimento} \label{subsec:movimento}
 
 % Seja $S$ o espaço de soluções de um problema de otimização $\Pi$, e $s \in S$ uma solução qualquer, considere a função objetivo $f: S \rightarrow \mathbb{R}$ que atribui um valor para cada solução.
-Considere $m^x: S \rightarrow S$ a função que representa um movimento que leva uma solução $s$ a uma solução $s'$ ou de forma equivalente $s' = m^x \circ s$.
-Designamos então o movimento $m^x \in M^x$ no conjunto de movimentos da vizinhança $x$.
+Considere $m^k: S \rightarrow S$ a função que representa um movimento que leva uma solução $s$ a uma solução $s'$ ou de forma equivalente $s' = m^k \circ s$.
+Designamos então o movimento $m^k \in M^k$ no conjunto de movimentos da vizinhança $k$.
 
-Adicionalmente podemos definir o custo do movimento $m^x(s)$ em relação a solução $s$ como sendo a diferença entre o valor da solução $s'$ gerada ao aplicar este movimento à solução $s$ e o valor da solução $s$, conforme pode ser visto na Equação~\ref{eq:movimentoCusto}, iremos omitir a função $f$ e a vizinhança $x$ quando estiverem claros no contexto. Formalmente, a notação circunflexo representa a função $\widehat{m}: S \rightarrow \mathbb{R}$.
+Adicionalmente podemo definir o custo do movimento $m^k(s)$ em relação a solução $s$ como sendo a diferença entre o valor da solução $s'$ gerada ao aplicar este movimento à solução $s$ e o valor da solução $s$, conforme pode ser visto na Equação~\ref{eq:movimentoCusto}, iremos omitir a função $f$ e a vizinhança $k$ quando estiverem claros no contexto, desta forma a podemmos simplificar a notação conforme a Equação~\ref{eq:movimentoCustoSimplificada}.
+Formalmente, a notação circunflexo representa a função $\widehat{m}: S \rightarrow \mathbb{R}$.
 \begin{equation} \label{eq:movimentoCusto}
-\widehat{m^x_f}(s) = f(s') - f(s)
+\widehat{m^k_f}(s) = f(s') - f(s)
 \end{equation}
 
-\subsubsection{Movimentos livres de contexto} \label{subsubsec:movimentosLivresDeContexto}
+\begin{equation} \label{eq:movimentoCustoSimplificada}
+\widehat{m^k_f}(s) = \widehat{m}(s) = f(s') - f(s)
+\end{equation}
 
-Um movimento $m$ é livre de contexto se ele sempre pode ser aplicado a uma solução $s$ sem gerar uma solução inválida.
+Para exemplificar as definições que se seguem tomemos a Tabela~\ref{tab:coordenadasComMatrizDistancias}, consideremos um conjunto de cidades com suas localizações conforme a Tabela~\ref{tab:coordenadasCidades}.
+Para facilitar o acompanhamento considere a matriz de distâncias expressa na Tabela~\ref{tab:distanceMatrix}.
+
+\begin{table}[ht]
+    \centering
+    \begin{subtable}{.3\textwidth}
+    \centering
+    \begin{tabular}{c|cc}
+    	\hline
+    	Cidade & $x$ & $y$ \\
+    	\hline
+    	A &	200 &	200 \\
+    	B &	100 &	400 \\
+    	C &	200 &	800 \\
+    	D &	400 &	900 \\
+    	E &	600 &	700 \\
+    	F &	900 &	600 \\
+    	G &	1000 &	400 \\
+    	H &	700 &	100 \\
+    	I &	500 &	200 \\
+    	\hline
+    \end{tabular}
+    \caption{Coordenadas das cidades.}
+    \label{tab:coordenadasCidades}
+    \end{subtable}% <---- don't forget this %
+    \begin{subtable}{.675\textwidth}
+    \centering
+    \begin{tabular}{c|ccccccccc}
+    	\hline
+    	   &   A&   B&   C&   D&   E&   F&   G&   H&   I\\
+    	\hline
+    	 A &    & 224& 600& 728& 640& 806& 825& 510& 300\\
+    	 B & 224&    & 412& 583& 583& 825& 900& 671& 447\\
+    	 C & 600& 412&    & 224& 412& 728& 894& 860& 671\\
+    	 D & 728& 583& 224&    & 283& 583& 781& 854& 707\\
+    	 E & 640& 583& 412& 283&    & 316& 500& 608& 510\\
+    	 F & 806& 825& 728& 583& 316&    & 224& 539& 566\\
+    	 G & 825& 900& 894& 781& 500& 224&    & 424& 539\\
+    	 H & 510& 671& 860& 854& 608& 539& 424&    & 224\\
+    	 I & 300& 447& 671& 707& 510& 566& 539& 224& \\
+    	 \hline
+    \end{tabular}
+    \caption{Matriz de distâncias euclidianas com valores inteiros arredondados.}
+	\label{tab:distanceMatrix}
+    \end{subtable}
+\caption{Informações de distâncias e localização das cidades para os exemplos apresentados.}
+\label{tab:coordenadasComMatrizDistancias}
+\end{table}
+
+Tomemos como exemplo a solução $s_1$ expressa na Figura~\ref{fig:figuraExemplo_s1}, este apresenta uma solução para o problema apresentado na Tabela~\ref{tab:coordenadasComMatrizDistancias} com valor de função objetivo 2631 para o PCV e 13074 para o PML.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-opt.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  B  C  D  E  F  G  H  I
+\end{Verbatim}
+\begin{gather*}
+    f(s_1): 2631/13074 \ (PCV/PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $s_1$.}
+    \label{fig:figuraExemplo_s1}
+\end{figure}
+
+Ao aplicarmos à solução anterior $s_1$ o movimento $m_1$ 2-opt(1,7), exibido na Figura~\ref{fig:figuraExemplo_m1s1}, este reverte bloco de 1 a 7 (remove implicitamente duas arestas e reconecta a rota), o custo do movimento é $\widehat{m_1}(s_1)$: 509 para o PCV e 3113 para o PML.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-1-7.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:  0  1  2  3  4  5  6  7  8
+cidade: A  \textcolor{red}{H  G  F  E  D  C  B}  I
+\end{Verbatim}
+\begin{gather*}
+f(m_1 \circ s_1) = 3140/16187 \ (PCV/PML) \\ 
+\widehat{m_1}(s_1)+f(s_1) = \\ 
+509 + 2631 = 3140 \ (PCV)\\
+3113 + 13074 = 16187 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_1 \circ s_1$, com $m_1$ sendo 2-opt(1,7).}
+    \label{fig:figuraExemplo_m1s1}
+\end{figure}
+
+Outra opção seria escolher o movimento $m_2$ 2-opt(5,6) para ser aplicado à solução, este reverte bloco de 5 a 6 (remove implicitamente duas arestas e reconecta rota), neste caso o custo do movimento é $\widehat{m_2}(s_1)$: 299/1265 para o PCV e PML respectivamente, em detalhes na Figura~\ref{fig:figuraExemplo_m2s1}.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-5-6.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  B  C  D  E  \textcolor{blue}{G  F}  H  I
+\end{Verbatim}
+\begin{gather*}
+f(m_2 \circ s_1): 2930/14339 \ (PCV/PML) \\
+\widehat{m_2}(s_1)+f(s_1) = \\
+299 + 2631 = 2930 \ (PCV) \\
+1265 + 13074 = 14339 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_2 \circ s_1$, com $m_2$ sendo 2-opt(5,6).}
+    \label{fig:figuraExemplo_m2s1}
+\end{figure}
+
+Adicionalmente se pode ver que a Figura~\ref{fig:figuraExemplo_m3s1} mostra o movimento $m_3$ 2-opt(1,3) sendo aplicado à solução $s_1$, este reverte bloco de 1 a 3 (remove implicitamente duas arestas e reconecta rota) e apresenta um custo de $\widehat{m_3}(s_1)$: 804/6148 para o PCV e PML.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-1-3.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  \textcolor{green}{D  C  B}  E  F  G  H  I
+\end{Verbatim}
+\begin{gather*}
+f(m_3 \circ s_1): 3435/19222 \ (PCV/PML) \\
+\widehat{m_3}(s_1)+f(s_1) = \\
+804 + 2631 = 3435 \ (PCV)\\
+6148 + 13074 = 19222 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_3 \circ s_1$, com $m_3$ sendo 2-opt(1,3).}
+    \label{fig:figuraExemplo_m3s1}
+\end{figure}
+
+\subsubsection{Movimentos livres de estrutura -- \emph{structure-free moves}} \label{subsubsec:movimentosLivresDeContexto}
+
+Quando a estrutura de armazenamento interna utilizada para representar uma solução permite a aplicação de um movimento para qualquer solução temos um movimento livre de estrutura.
+Em outras palavras, um movimento $m$ é livre de estrutura se ele sempre pode ser aplicado a uma solução $s$ sem gerar uma solução inválida.
 
 \begin{equation} \label{eq:movimentoLivreDeContexto}
-m \ \textrm{é livre de contexto} \  \iff m \circ s \in S, \forall s \in S
+m \ \textrm{é livre de estrutura} \  \iff m \circ s \in S, \forall s \in S
 \end{equation}
 
-Quando uma classe de movimentos é livre de contexto para um determinado problema então se pode dizer que a função a representar este movimento é fechada para o conjunto de soluções $S$.
+Quando uma classe de movimentos é livre de estrutura para um determinado problema então se pode dizer que a função a representar este movimento é fechada para o conjunto de soluções $S$.
 
-A caracterização de um movimento como livre de contexto depende de suas restrições e da sua representação.
-Desta forma, para o Problema do Caixeiro Viajante em que o grafo com as distâncias entre as cidades é completo, o movimento \textit{Swap} será livre de contexto contudo num grafo incompleto uma aplicação do \textit{Swap} pode gerar uma solução inviável pois pode não existir um determinado percurso após a alteração na solução.
+A caracterização de um movimento como livre de estrutura depende de suas restrições e da sua representação.
+Desta forma, para o Problema do Caixeiro Viajante em que o grafo com as distâncias entre as cidades é completo, o movimento \textit{Swap} será livre de estrutura contudo num grafo incompleto uma aplicação do \textit{Swap} pode gerar uma solução inviável pois pode não existir um determinado percurso após a alteração na solução.
 
-\subsubsection{Movimentos parcialmente independentes} \label{subsubsec:movimentosParcialmenteIndependentes}
+\subsubsection{Movimentos fracamente independentes -- \emph{weakly independent moves}} \label{subsubsec:movimentosParcialmenteIndependentes}
 
-Movimentos parcialmente independentes são aqueles que podem ser aplicados simultaneamente a uma solução sem que o valor da solução obtida após a aplicação dos movimentos seja alterado, a independência parcial de movimentos pode ser definida para movimentos de vizinhanças diferentes.
-Formalmente temos que dois movimentos $m_1$ e $m_2$ são parcialmente independentes se e somente se:
+Dois movimentos $\{m_2,m_3\} \subseteq \mathcal{I}$ são fracamente independentes quando a aplicação de um deles não altera o custo do outro movimento para apenas um dos movimentos.
+Formalmente temos que dois movimentos $m_1$ e $m_2$ são parcialmente independentes, ou seja $m_1 \parallel_p m_2$, se e somente se:
 \begin{equation}
 % \begin{align}
-m_1 \textrm{ parcialmente independente } m_2 \iff f(m_1 \circ m_2 \circ s) = f(m_2 \circ m_1 \circ s) \label{eq:movimentosParcialmenteIndependentes}
+m_1 \parallel_p m_2 \iff \widehat{m_1}(s) = \widehat{m_1}(m_2 \circ s)
+\label{eq:movimentosParcialmenteIndependentes}
 % \end{align}
 \end{equation}
+
+\begin{corolario}
+Se dois movimentos são parcialmente independentes então o valor da solução resultante será a soma do valor da solução inicial com o custo dos movimentos.
+
+Formalmente temos:
+\begin{equation}
+m_1 \parallel_p m_2 \implies f(m_1 \circ m_2 \circ s) = \widehat{m_1}(s) + \widehat{m_2}(s) + f(s)
+\end{equation}
+
+\begin{proof}
+Pela definição de custo do movimento (Equação~\ref{eq:movimentoCusto}) temos:
+\begin{align*}
+f(m_1 \circ m_2 \circ s) = \widehat{m_1}(m_2 \circ s) + f(m_2 \circ s) & \textrm{ Aplicando Equação~\ref{eq:movimentoCusto}} \\
+f(m_1 \circ m_2 \circ s) = \widehat{m_1}(m_2 \circ s) + \widehat{m_2}(s) + f(s) &
+\end{align*}
+
+Aplicando-se a definição de movimentos parcialmente independentes temos que:
+\begin{align*}
+\widehat{m_1}(m_2 \circ s) = \widehat{m_1}(s) & \textrm{ Logo}\\
+f(m_1 \circ m_2 \circ s) = \widehat{m_1}(s) + \widehat{m_2}(s) + f(s) + f(s) & \\
+\end{align*}
+\end{proof}
+\end{corolario}
+
+Note que a definição não permite comutatividade, logo nada pode ser afirmado para o caso da solução $m_2 \circ m_1 \circ s$.
+
+Acompanhando o exemplo, se movimentos $m_1$ e $m_2$ forem parcialmente independentes temos:
+\begin{gather*}
+(m_1 \circ m_2 \circ s_1) = 3439/17452 \\
+(m_1 \circ m_2 \circ s_1)= \widehat{m_1}(s_1) + \widehat{m_2}(s_1) + f(s_1) = \\ \\
+(m_1 \circ m_2 \circ s_1) = \\
+509 + 299 + 2631 = 3439 \ (PCV)\\
+3113+1265+13074 = 17452 \ (PML)
+\end{gather*}
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-1-7-5-6.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  \textcolor{red}{H  \textcolor{blue}{F  G}  E  D  C  B}  I
+\end{Verbatim}
+\begin{gather*}
+f(m_1 \circ m_2 \circ s_1)= 3439/18211 \ (PCV/PML) \\
+f(m_1 \circ m_2 \circ s_1) = \\
+\widehat{m_1}(m_2 \circ s_1) + \widehat{m_2}(s_1) + f(s_1) = \\
+509 + 299 + 2631 = 3439 \ (PCV) \\
+3872 + 1265 + 13074 = 18211 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_1 \circ m_2 \circ s_1$, com $m_1$ sendo 2-opt(1,7) e $m_2$ sendo 2-opt(5,6).}
+    \label{fig:figuraExemplo_m1m2s1}
+\end{figure}
+
+Conforme supracitado e ilustrado nas Figuras~\ref{fig:figuraExemplo_m1m2s1} e~\ref{fig:figuraExemplo_m2m1s1} podemos ver que a solução $m_2 \circ m_1 \circ s_1$ não verifica as mesmas propriedades pois apenas $m_1$ não é alterado por $m_2$, desta forma estes movimentos são parcialmente independentes.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-5-6-1-7.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  \textcolor{red}{H  G  F  E  \textcolor{blue}{C  D}  B}  I
+\end{Verbatim}
+\begin{gather*}
+f(m_2 \circ m_1 \circ s_1) = 3440/17345 \ (PCV/PML) \\
+f(m_2 \circ m_1 \circ s_1) = \\
+\widehat{m_2}(m_1 \circ s_1) + \widehat{m_1}(s_1) + f(s_1) = \\
+300 + 509 + 2631= 3440 \ (PCV) \\
+1158 + 3113 + 13074 = 17345) \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_2 \circ m_1 \circ s_1$, com $m_2$ sendo 2-opt(5,6) e $m_1$ sendo 2-opt(1,7).}
+    \label{fig:figuraExemplo_m2m1s1}
+\end{figure}
+
+De fato podemos verificar pela Figura~\ref{fig:figuraExemplo_m2m1s1} que $\widehat{m_2}(s_1)$ = 299/1265 é diferente de $\widehat{m_2}(m_1 \circ s_1)$ = 300/1158.
 
 \subsubsection{Movimentos independentes} \label{subsubsec:movimentosIndependentes}
 
 Movimentos independentes são aqueles que a aplicação de um não altera o valor do outro, o valor do movimento $m_2$ aplicado à solução $m_1 \circ s$ é igual ao valor deste aplicado à solução $s$, a independência de movimentos pode ser definida para movimentos de vizinhanças diferentes.
+Em outras palavras movimentos independentes são parcialmente independentes para ambos os lados.
 Formalmente temos que dois movimentos $m_1$ e $m_2$ são independentes $m_1 \parallel m_2$ se e somente se:
 \begin{equation}
 % \begin{align}
-m_1 \parallel m_2 \iff \widehat{m_1}(m_2 \circ s) = \widehat{m_2}(s) \land \widehat{m_2}(m_1 \circ s) = \widehat{m_1}(s)
+m_1 \parallel m_2 \iff \widehat{m_1}(m_2 \circ s) = \widehat{m_1}(s) \;\;\; \land \;\;\; \widehat{m_2}(m_1 \circ s) = \widehat{m_2}(s)
 % \end{align}
 \end{equation}
 
 \begin{theorem}%[Teorema da independência de movimentos]\label{teo:independenciaMovimentos}
-Dois movimentos $m_1$ e $m_s$ são independentes então também são parcialmente independentes.
+Dois movimentos $m_1$ e $m_s$ são independentes então o valor da solução final não se altera ao alternar a ordem de aplicação dos movimentos, ou seja:
 \begin{equation}
-m_1 \parallel m_2 \implies m_1 \textrm{ parcialmente independente } m_2
+m_1 \parallel m_2 \implies f(m_1 \circ m_2 \circ s) = f(m_2 \circ m_1 \circ s)
 \end{equation}
 
 \begin{proof}
-    Suponhamos que $m_1$ e $m_2$ sejam independentes mas não parcialmente independentes então $\widehat{m_1}(m_2 \circ s) = \widehat{m_2}(s) \land \widehat{m_2}(m_1 \circ s) = \widehat{m_1}(s)$ mas $f(m_1 \circ m_2 \circ s) \neq f(m_1 \circ m_1 \circ s)$
+    Suponhamos que $m_1$ e $m_2$ sejam independentes $\widehat{m_1}(m_2 \circ s) = \widehat{m_2}(s) \land \widehat{m_2}(m_1 \circ s) = \widehat{m_1}(s)$ mas $f(m_1 \circ m_2 \circ s) \neq f(m_1 \circ m_1 \circ s)$.
     \begin{align*}
         f(m_1 \circ m_2 \circ s) \neq & f(m_2 \circ m_1 \circ s) & \textrm{ De }(\ref{eq:movimentoCusto}) \\
         \widehat{m_1}(m_2 \circ s) + f(m_2 \circ s) \neq & \widehat{m_2}(m_1 \circ s) + f(m_1 \circ s) & \textrm{ De }\ (\ref{eq:movimentoCusto}) \\
@@ -166,7 +400,7 @@ m_1 \parallel m_2 \implies m_1 \textrm{ parcialmente independente } m_2
         \widehat{m_1}(s) + \widehat{m_2} + f(s) \neq & \widehat{m_2}(s) + \widehat{m_1} + f(s) & \textrm{ Logo uma contradição } \bot
     \end{align*}
     
-    Assim, por \textit{reductio ad absurdum}, temos que se $m_1$ e $m_2$ são independentes então também são parcialmente independentes.
+    Assim, por \textit{reductio ad absurdum}, temos que se $m_1$ e $m_2$ são independentes então $f(m_1 \circ m_2 \circ s) = f(m_2 \circ m_1 \circ s)$.
 \end{proof}
 \end{theorem}
 
@@ -190,36 +424,115 @@ m_1 \parallel m_2 \implies f(m_1 \circ m_2 \circ s) = \widehat{m_1}(s) + \wideha
 \end{proof}
 \end{theorem}
 
-\subsubsection{Movimentos estritamente independentes} \label{subsubsec:movimentosEstritamenteIndependentes}
+\subsubsection{Movimentos fortemente independentes -- \emph{strongly independent moves}} \label{subsubsec:movimentosEstritamenteIndependentes}
 
-Dois movimentos $m_1$ e $m_2$ são estritamente independentes quando são independentes e podem ser aplicados simultaneamente a uma solução sem que a alteração feita por um gere algum conflito na causada pelo outro, a independência de movimentos pode ser definida para movimentos de vizinhanças diferentes.
-Formalmente temos que dois movimentos $m_1$ e $m_2$ são estritamente independentes $m_1 \parallel_e m_2$ se e somente se:
+Dois movimentos $m_1$ e $m_2$ são fortemente independentes quando são independentes e podem ser aplicados simultaneamente a uma solução sem que a alteração feita por um gere conflito na causada pelo outro, a independência de movimentos pode ser definida para movimentos de vizinhanças diferentes.
+Formalmente temos que dois movimentos $m_1$ e $m_2$ são fortemente independentes $m_1 \parallel_e m_2$ se e somente se:
 \begin{equation}  \label{eq:movimentosIndependentes}
 m_1 \parallel_e m_2 \iff m_1(m_2(s)) = m_2(m_1(s)) = m_1 \circ m_2 \circ s = m_2 \circ m_1 \circ s
 \end{equation}
 
-Pela Equação~\ref{eq:movimentosParcialmenteIndependentes} e pela definição de custo do movimento (Equação~\ref{eq:movimentoCusto}) podemos ver que um movimento estritamente independente também será um movimento independente.
-
-A mesma ideia pode ser aplicada para um conjunto de movimentos $M = \{ m_1, m_2, m_3, ...\}$, são ditos estritamente independentes se para uma solução $s$ qualquer e para todo subconjunto não-vazio $M' = \{ m_1, m_2, m_3, \dots, m_k \} \subseteq M$ temos $m_1 \circ m_2 \circ m_3 \circ ...\circ m_k \circ s = m_2 \circ m_1 \circ m_3 \circ ...\circ m_k \circ s$ para qualquer permutação dos movimentos em $M'$.
+% A mesma ideia pode ser aplicada para um conjunto de movimentos $M = \{ m_1, m_2, m_3, ...\}$, são ditos fortemente independentes se para uma solução $s$ qualquer e para todo subconjunto não-vazio $M' = \{ m_1, m_2, m_3, \dots, m_k \} \subseteq M$ temos $m_1 \circ m_2 \circ m_3 \circ ...\circ m_k \circ s = m_2 \circ m_1 \circ m_3 \circ ...\circ m_k \circ s$ para qualquer permutação dos movimentos em $M'$.
 % $\widehat{m_1}(s) + \widehat{m_2}(s) + \widehat{m_3}(s) + \dots + \widehat{m_k}(s) = \widehat{m_1}(m_2 \circ m_3 \circ ...\circ m_k \circ s)$. 
 
-Pela Equação~\ref{eq:movimentosIndependentes} pode-se perceber que movimentos estritamente independentes são operações comutativas, pela própria definição.
+Pela Equação~\ref{eq:movimentosIndependentes} pode-se perceber que movimentos fortemente independentes são operações comutativas, pela própria definição.
 
-Assim podemos estender a definição da vizinhança $x$ para:
+Assim podemos estender a definição da vizinhança $k$ para:
 \begin{equation}  \label{eq:vizinhanca}
-N(s) = \{ m_i \circ s \mid \forall m_i \in M \}
+N^k(s) = \{ m^k_i \circ s \mid \forall m^k_i \in M^k \}
 \end{equation}
 
-Cabe aqui destacar que a independência de movimentos é uma relação dada dois a dois entre os movimentos, logo não existe transitividade na relação de independência de destes, ou seja, se temos dois movimentos independentes $m_1 \parallel m_2$ e outro movimento $m_3$ tal que $m_3 \parallel m_2$ então \textbf{não} implica que $m_1 \parallel m_3$.
+Cabe aqui destacar que a independência de movimentos é uma relação dada dois a dois entre os movimentos, logo não existe transitividade na relação de independência destes, ou seja, se temos dois movimentos independentes $m_1 \parallel m_2$ e outro movimento $m_3$ tal que $m_2 \parallel m_3$ então \textbf{não} implica que $m_1 \parallel m_3$.
 Pode existir um conflito, logo os movimentos $m_1 \nparallel m_3$ ou seja, seriam conflitantes.
 Assim em termos de conflitos entre movimentos podemos escrever:
 \begin{equation}
 m_1 \parallel m_2 \land m_2 \parallel m_3 \centernot\implies m_1 \parallel m_3
 \end{equation}
 
-Tenhamos como exemplo o caso a seguir para a vizinhança de Swap, sendo eles $Swap(2,3), Swap(3,6), Swap(4,5)$, neste caso podemos ver que $Swap(2,3) \parallel Swap(4,5)$ e que $Swap(4,5) \parallel Swap(3,6)$ contudo $Swap(2,3) \nparallel Swap(3,6)$.
+\begin{proof}
+Consideremos o seguinte contraexemplo a seguir para a vizinhança de Swap, sendo os movimentos $Swap(2,3), Swap(3,6), Swap(4,5)$, neste caso podemos ver que $Swap(2,3) \parallel Swap(4,5)$ e que $Swap(4,5) \parallel Swap(3,6)$ contudo $Swap(2,3) \nparallel Swap(3,6)$.
+\end{proof}
 
-Para fins dessa dissertação, por questão de simplificação de notação, deste ponto em diante as referências a \textit{movimentos independentes} estão referenciando \textit{movimentos estritamente independentes}.
+% Para fins dessa dissertação, por questão de simplificação de notação, deste ponto em diante as referências a \textit{movimentos independentes} estão referenciando \textit{movimentos estritamente independentes}.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-1-3-5-6.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  \textcolor{green}{D  C  B}  E  \textcolor{blue}{G  F}  H  I
+\end{Verbatim}
+\begin{gather*}
+f(m_2 \circ m_3 \circ s_1): 3734/20487 \ (PCV/PML) \\
+f(m_3 \circ m_2 \circ s_1): 3734/20487 \ (PCV/PML) \\
+f(m_2 \circ m_3 \circ s_1) = f(m_3 \circ m_2 \circ s_1) \\ \\
+\widehat{m_2}(s_1)+\widehat{m_3}(s_1)+f(s_1) = \\
+299 + 804 + 2631 = 3734 \ (PCV) \\
+1265+6148+13074=20487 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_2 \circ m_3 \circ s_1 = m_3 \circ m_2 \circ s_1$, com $m_2$ sendo 2-opt(5,6) e $m_3$ sendo 2-opt(1,3).}
+    \label{fig:figuraExemplo_m2m3s1}
+\end{figure}
+
+Note, pela Figura~\ref{fig:figuraExemplo_m2m3s1}, que $m_2 \circ m_3$ opera como um movimento 4-opt (quatro arcos são removidos e inseridos), assim a operação de composição do multi-improvement é capaz de lidar com movimentos de dimensões maiores, em uma única iteração.
+
+\subsubsection{Movimentos conflitantes} \label{subsubsec:movimentosConflitantes}
+
+Há movimentos com conflito de escrita na representação (estrutura de dados) da solução, portanto não é possível aplicá-los simultaneamente. Nesse caso, diz-se que eles são dependentes de ordem (order-dependent moves) ou, simplesmente, conflitantes.
+
+Por exemplo, como $m_1$=2opt(1,7) e $m_3$=2opt(1,3) são conflitantes, $m_1 \circ m_3 \circ s_1$ e $m_3 \circ m_1 \circ s_1$ são soluções estruturalmente distintas, conforme pode ser visto na Figura~\ref{fig:figuraExemplo_m1m3s1}.
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-1-7-1-3.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  \textcolor{red}{H  G  F  E  \textcolor{green}{B  C  D}}  I
+\end{Verbatim}
+\begin{gather*}
+f(m_1 \circ m_3 \circ s_1) : 3700/18395 \ (PCV/PML)\\
+\widehat{m_1}(m_3 \circ s_1) + \widehat{m_3}(s_1) + f(s_1) =\\
+265+804+2631=3700 \ (PCV) \\
+827+6148+13074=18395 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_1 \circ m_3 \circ s_1$, com $m_1$ sendo 2-opt(1,7) e $m_3$ sendo 2-opt(1,3).}
+    \label{fig:figuraExemplo_m1m3s1}
+\end{figure}
+
+\begin{figure}[ht]
+    \begin{minipage}{.475\textwidth}
+        \begin{subfigure}[t]{1\textwidth} %
+            \includegraphics[width=1\linewidth]{figuras/pml/exemplo-rodolfo-2opt-1-3-1-7.png}
+        \end{subfigure}
+    \end{minipage}
+    \begin{minipage}{.475\textwidth}
+\begin{Verbatim}[commandchars=\\\{\}]
+index:   0  1  2  3  4  5  6  7  8
+cidade:  A  \textcolor{green}{F  G  H}  \textcolor{red}{E  D  C  B}  I
+\end{Verbatim}
+\begin{gather*}
+f(m_3 \circ m_1 \circ s_1) = 3728/20403 \ (PCV/PML) \\
+\widehat{m_3}(m_1 \circ s_1)+\widehat{m_1}(s_1)+f(s_1) = \\
+588+509+2631=3728 \ (PCV) \\
+4216+3113+13074=20403 \ (PML)
+\end{gather*}
+    \end{minipage}
+    \caption{Solução $m_3 \circ m_1 \circ s_1$, com $m_3$ sendo 2-opt(1,3) e $m_1$ sendo 2-opt(1,7).}
+    \label{fig:figuraExemplo_m3m1s1}
+\end{figure}
+
+Naturalmente, como $m_1$ e $m_3$ são conflitantes (vide Figura~\ref{fig:figuraExemplo_m3m1s1}), $\widehat{m_3}(m_1 \circ s_1) \neq \widehat{m_3}(s_1)$ e $\widehat{m_1}(m_3 \circ s_1) \neq \widehat{m_1}(s_1)$.
+Também é interessante de notar que a composição executa um movimento 3-opt, então mesmo que não seja permitido na composição do 2-opt pode ser alcançado ao utilizar alguma outra vizinhança num processo simultâneo (generalized multi-improvement).
 
 % Estou achadno a prova do teorema muito fraca
 % \input{conceitos/teoremaIndependenciaMovimentos.tex}

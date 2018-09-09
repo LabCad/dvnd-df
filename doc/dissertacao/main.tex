@@ -43,6 +43,9 @@
 \usepackage{ulem}
 
 \newtheorem{theorem}{Teorema}
+\newtheorem{corolario}[theorem]{Corolário}
+\newtheorem{lema}[theorem]{Lema}
+\newtheorem{proposicao}[theorem]{Proposição}
 
 \usepackage{mathtools} % Bonus
 
@@ -53,9 +56,9 @@
 
 \captionsetup[figure]{font=normalsize,labelfont=normalsize} %font 12 em caption
 \captionsetup[table]{font=normalsize,labelfont=normalsize} %font 12 em caption
-% \usepackage[justification=raggedright, singlelinecheck=false,]{subcaption}
-\usepackage[justification=raggedright, singlelinecheck=false,]{subfig}
-\captionsetup[subfigure]{font=normalsize,labelfont=normalsize} %font 10 em subcaption
+\usepackage[justification=raggedright, singlelinecheck=false,]{subcaption}
+% \usepackage[justification=raggedright, singlelinecheck=false,]{subfig}
+% \captionsetup[subfigure]{font=normalsize,labelfont=normalsize} %font 10 em subcaption
  
 \MakeRobust{\Call} %algoritmo
 \input{uerj/algptbr.tex}

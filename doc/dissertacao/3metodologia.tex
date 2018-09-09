@@ -124,7 +124,7 @@ Em modelo dataflow um nó será processado quando todas as suas dependências fo
 Pode ser visto na Figura~\ref{fig:dataflowMo0} que o nó \textit{MO} está conectado a um nó com informação de entrada (nó \textit{prev}) e ligado a três nós de saída (\textit{next 0}, \textit{next 1} e \textit{next 2}).
 
 \begin{figure}[htbp]
-    \centerline{\includegraphics[scale=0.9]{figuras/dataflow/multi_output0.png}}
+    \centerline{\includegraphics[scale=0.6]{figuras/dataflow/multi_output0.png}}
     \caption{Pedaço de um grafo dataflow em que o nó \textit{MO} do datalflow possui múltiplas saídas.}
     \label{fig:dataflowMo0}
 \end{figure}
@@ -135,7 +135,7 @@ Pegando-se o exemplo da Figura~\ref{fig:dataflowMo3}, quando o nó \textit{MO} t
 Cada um desses nós terá então que verificar se a mensagem é destinada a ele antes de processar ou não a informação.
 
 \begin{figure}[htbp]
-    \centerline{\includegraphics[scale=0.9]{figuras/dataflow/multi_output3.png}}
+    \centerline{\includegraphics[scale=0.6]{figuras/dataflow/multi_output3.png}}
     \caption{Quando o nó \textit{MO} termina de processar seu resultado é enviado para todos os nós subsequentes (\textit{next 0}, \textit{next 1} e \textit{next 2}).}
     \label{fig:dataflowMo3}
 \end{figure}
@@ -143,7 +143,7 @@ Cada um desses nós terá então que verificar se a mensagem é destinada a ele 
 Foi implementada a alteração exemplificada na Figura~\ref{fig:dataflowMo1}, nesse caso existe uma porta de saída para cada nó ligado ao nó \textit{MO}, este identifica os destinatários da mensagem e aciona apenas aqueles necessários.
 
 \begin{figure}[htbp]
-    \centerline{\includegraphics[scale=0.9]{figuras/dataflow/multi_output1.png}}
+    \centerline{\includegraphics[scale=0.6]{figuras/dataflow/multi_output1.png}}
     \caption{Quando o nó \textit{MO} termina de processar é possível escolher qual porta de saída será utilizada e assim decidir o destino da informação.}
     \label{fig:dataflowMo1}
 \end{figure}
