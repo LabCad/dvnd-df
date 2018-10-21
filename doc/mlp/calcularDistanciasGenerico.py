@@ -56,10 +56,11 @@ if __name__ == "__main__":
 	dist[3][4] = dist[2][4]
 	dist[1][4] = dist[2][4]
 	# teste igual
-	dist[0][1] = dist[0][2] = dist[0][3] = 1
-	dist[1][2] = dist[1][3] = dist[1][4] = 1
-	dist[2][1] = dist[2][3] = dist[2][4] = 1
-	dist[3][1] = dist[3][2] = dist[3][4] = 1
+	valor_igual = random.randint(0, lastone ** 2)
+	dist[0][1] = dist[0][2] = dist[0][3] = valor_igual
+	dist[1][2] = dist[1][3] = dist[1][4] = valor_igual
+	dist[2][1] = dist[2][3] = dist[2][4] = valor_igual
+	dist[3][1] = dist[3][2] = dist[3][4] = valor_igual
 	assert dist[0][2] + dist[2][1] + dist[1][3] + dist[3][4] == dist[0][3] + dist[3][1] + dist[1][2] + dist[2][4], "^m1(s1) = ^m1(m2(s1))"
 	assert dist[0][1] + dist[1][3] + dist[3][2] + dist[2][4] == dist[0][2] + dist[2][3] + dist[3][1] + dist[1][4], "^m2(s1) = ^m2(m1(s1))"
 
