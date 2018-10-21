@@ -1,7 +1,9 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 import math
 
 
-def calcular_valor(s, name=""):
+def calcular_valor(dist, s, name=""):
 	s_ini = s
 	print "{}={}".format(name, s)
 	s = s.replace(" ", "").upper()
@@ -20,6 +22,22 @@ def subtrair(s, s2, name=""):
 
 def escrever(s):
 	return "{} = {:.0f}/{:.0f}".format(s[3], s[0], s[1])
+
+
+def imprimir_tabela(dist, max_dis, sorted_keys):
+	pading = int(math.floor(math.log(max_dis, 10))) + 1
+	formato = '{:>' + str(pading) + '}&'
+	print "\nTabela"
+	print "   & " + " ".join([formato.format(x) for x in sorted_keys])
+	formato = '{:' + str(pading) + '.0f}'
+	for k in sorted_keys:
+		linha = " %s & " % k
+		for j in sorted_keys:
+			if k == j:
+				linha += " " * pading + "& "
+			else:
+				linha += formato.format(dist[k][j]) + "& "
+		print linha
 
 
 if __name__ == "__main__":
@@ -55,19 +73,7 @@ if __name__ == "__main__":
 			dist[k][j] = round(math.sqrt(x * x + y * y))
 			max_dis = max(max_dis, dist[k][j])
 
-	pading = int(math.floor(math.log(max_dis, 10))) + 1
-	formato = '{:>' + str(pading) + '}&'
-	print "\nTabela"
-	print "   & " + " ".join([formato.format(x) for x in sorted_keys])
-	formato = '{:' + str(pading) + '.0f}'
-	for k in sorted_keys:
-		linha = " %s & " % k
-		for j in sorted_keys:
-			if k == j:
-				linha += " " * pading + "& "
-			else:
-				linha += formato.format(dist[k][j]) + "& "
-		print linha
+	imprimir_tabela(dist, max_dis, sorted_keys)
 
 	print "\nsolucoes "
 	soltext = dict()
@@ -83,7 +89,7 @@ if __name__ == "__main__":
 
 	solvalue = dict()
 	for key, value in soltext.items():
-		solvalue[key] = calcular_valor(value, key)
+		solvalue[key] = calcular_valor(dist, value, key)
 
 	for key in soltext.keys():
 		keyT = key.replace(" ", "")
