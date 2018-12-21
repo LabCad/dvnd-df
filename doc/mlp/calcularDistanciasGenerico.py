@@ -12,14 +12,14 @@ def calc_dist(dist, sol):
 	return sum(pacos), sum([(lpacos - i) * pacos[i] for i in xrange(lpacos)])
 
 
-def imprimir_tabela(dist, max_dis, sorted_keys):
+def imprimir_tabela(dist, max_dis, sorted_keys, use_letters=True):
 	pading = int(math.floor(math.log(max_dis, 10))) + 1
 	formato = '{:>' + str(pading) + '}&'
 	print "\nTabela"
-	print "   & " + " ".join([formato.format(x) for x in sorted_keys])
+	print "   & " + " ".join([((' ' * (pading - 1)) + chr(ord('A') + x) + '&') if use_letters else formato.format(x) for x in sorted_keys])
 	formato = '{:' + str(pading) + '.0f}'
 	for k in sorted_keys:
-		linha = " %s & " % k
+		linha = " %s & " % chr(ord('A') + k) if use_letters else k
 		for j in sorted_keys:
 			if k == j:
 				linha += " " * pading + "& "
@@ -28,14 +28,14 @@ def imprimir_tabela(dist, max_dis, sorted_keys):
 		print linha
 
 
-def print_sol_value(dist, name, sol):
-	print "%s - %s = %s" % (sol, name, calc_dist(dist, sol))
+def print_sol_value(dist, name, sol, use_letters=True):
+	print "%s : %s = %s" % ("  ".join([(chr(ord('A') + x) if use_letters else x) for x in sol]), name, calc_dist(dist, sol))
 
 
 if __name__ == "__main__":
 	dist = dict()
 
-	lastone = 10
+	lastone = 9
 	assert lastone > 4, "Troca até a posição 4"
 	for x in xrange(lastone):
 		dist[x] = dict()
@@ -76,6 +76,9 @@ if __name__ == "__main__":
 
 	sols["m2(s1)"] = [x for x in xrange(lastone)]
 	sols["m2(s1)"][2], sols["m2(s1)"][3] = sols["m2(s1)"][3], sols["m2(s1)"][2]
+
+	sols["m3(s1)"] = [x for x in xrange(lastone)]
+	sols["m3(s1)"][lastone - 2], sols["m3(s1)"][lastone - 1] = sols["m3(s1)"][lastone - 1], sols["m3(s1)"][lastone - 2]
 
 	sols["m2 o m1(s1)"] = [x for x in xrange(lastone)]
 	sols["m2 o m1(s1)"][1], sols["m2 o m1(s1)"][2] = sols["m2 o m1(s1)"][2], sols["m2 o m1(s1)"][1]
