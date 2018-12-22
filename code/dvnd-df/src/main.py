@@ -72,7 +72,8 @@ if __name__ == '__main__':
 		else:
 			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
 
-	print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
+	if not param.only_compile:
+		print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 	is_use_metadata = True
 
 	solver = None
@@ -111,8 +112,9 @@ if __name__ == '__main__':
 				lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata,
 				use_multiple_output=not param.single_output_gate)
 
-	print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
-	start_time = time.time()
-	solver.run(param.workers, ini_solution, neigh_op,
-		lambda args, metadata, inisol=ini_solution:
-			print_final_solution(args, inisol, start_time, metadata))
+	if not param.only_compile:
+		print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
+		start_time = time.time()
+		solver.run(param.workers, ini_solution, neigh_op,
+			lambda args, metadata, inisol=ini_solution:
+				print_final_solution(args, inisol, start_time, metadata))
