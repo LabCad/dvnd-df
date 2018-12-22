@@ -6,7 +6,7 @@ import unittest
 if os.environ.has_key('DVND_HOME'):
 	sys.path.append(os.environ['DVND_HOME'])
 
-from solution import *
+# from solution import *
 
 
 # class SolutionTest(unittest.TestCase):

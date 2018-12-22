@@ -11,9 +11,9 @@ clean:
 	rm src/*.pyc src/*.log src/*.so
 
 .PHONY: test
-test:
-	export DVND_HOME=`cd src && pwd`
-	export PYDF_HOME=`cd /home/rodolfo/git/Sucuri && pwd`
+test: all
+	#export DVND_HOME=`cd src && pwd`
+	#export PYDF_HOME=`cd /home/rodolfo/git/Sucuri && pwd`
 	# cd test
 	python2 -m unittest discover
 
