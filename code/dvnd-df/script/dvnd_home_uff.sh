@@ -17,4 +17,3 @@ rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '.git' ~/git/simple
 echo "--- Syncing WAMCA2016 ---"
 rsync -ravhz --progress --delete --exclude '.git' ~/git/wamca2016/source/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/wamca2016/source
 rsync -ravhz --progress --delete --exclude '.git' ~/git/wamca2016/instances/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/wamca2016/instances
-

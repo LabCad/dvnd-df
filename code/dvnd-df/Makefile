@@ -24,7 +24,18 @@ syncHomeUff:
 exec_dvnd_4_24: all
 	nohup script/runexp.sh 4 24 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w24h1_4dc2opin0_7.txt 2>&1 &
 
+exec_rest: all
+	rm -f dvnd_n4w24h1_4dc2opin5_7.txt
+	rm -f ../../doc/results/dvnd_n4w24in5*
+	nohup script/runexp.sh 4 24 1_4 dvnd "5 6 7" > dvnd_n4w24h1_4dc2opin5_7.txt 2>&1 &
+
 stop:
-	pkill runexp.sh
-	pkill mpirun
-	pkill python
+	pkill -ec runexp.sh
+	pkill -ec mpirun
+	pkill -ec python
+
+stopCluster: stop
+	ssh gpu01 pkill -ec python
+	ssh gpu02 pkill -ec python
+	ssh gpu03 pkill -ec python
+	ssh gpu04 pkill -ec python
