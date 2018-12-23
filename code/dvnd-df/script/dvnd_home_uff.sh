@@ -2,11 +2,11 @@
 # rsync -ravhz --progress --delete --exclude 'build' suggarC imcoelho@sol.ic.uff.br:/home/imcoelho/Rodolfo/
 
 # rsync -ravhz --progress --delete ~/git/dvnd-df/code/dvnd-df imcoelho@sol.ic.uff.br:/home/imcoelho/Rodolfo/dvnd-df/code/
-echo "--- Syncing DVNS src ---"
+echo "--- Syncing DVND src ---"
 rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '*.so' --exclude '.git' ~/git/dvnd-df/code/dvnd-df/src/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/dvnd-df/code/dvnd-df/src
 rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '*.so' --exclude '.git' ~/git/dvnd-df/code/dvnd-df/test/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/dvnd-df/code/dvnd-df/test
 rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '*.so' --exclude '.git' ~/git/dvnd-df/code/dvnd-df/script/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/dvnd-df/code/dvnd-df/script
-rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '*.so' --exclude '.git' ~/git/dvnd-df/code/dvnd-df/*.sh rodolfo@sol.ic.uff.br:/home/rodolfo/git/dvnd-df/code/dvnd-df/
+rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '*.so' --exclude '.git' --exclude '.idea' ~/git/dvnd-df/code/dvnd-df/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/dvnd-df/code/dvnd-df/
 
 echo "--- Syncing SUCURI pyDF ---"
 rsync -ravhz --progress --delete --exclude '*.pyc' --exclude '.git' ~/git/Sucuri/pyDF/ rodolfo@sol.ic.uff.br:/home/rodolfo/git/Sucuri/pyDF

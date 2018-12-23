@@ -7,7 +7,7 @@ from cmdparam import CommandParams
 
 if __name__ == '__main__':
 	# Command line parameters
-	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True)
+	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True, number_of_moves=24)
 	print "param: {}".format(param)
 
 	def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -27,7 +27,7 @@ if __name__ == '__main__':
 		fin_value = final_solution.value
 		print "Final time: {}s - Best: {}".format(elapsed_time, final_solution)
 		imp_value = None
-		if abs(fin_value * 1.0) > 0.00001:
+		if abs(fin_value * 1.0) > 1e-5:
 			imp_value = 1.0 * ini_value / fin_value
 		print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
 		# linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
@@ -68,9 +68,10 @@ if __name__ == '__main__':
 		ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
 
 		if "gdvnd" == param.solver:
-			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves) for mv in xrange(5)]
+			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves)
+				for mv in xrange(param.number_of_moves)]
 		else:
-			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
+			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(param.number_of_moves)]
 
 	if not param.only_compile:
 		print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
