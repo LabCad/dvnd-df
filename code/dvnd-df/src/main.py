@@ -4,10 +4,29 @@
 from dataflow_opt import *
 from wraper_wamca2016 import WamcaWraper
 from cmdparam import CommandParams
+import traceback
+
+
+def sig_handler(signum, frame):
+	print("---\n")
+	print("---\n")
+	print("---\nsignal: " + str(signum))
+	traceback.print_stack(frame)
+	print("local vars")
+	for key, value in frame.f_locals.iteritems():
+		print("{0}:{1}".format(key, value))
+	print("---\n")
+	print("---\n")
+	print("---\n")
+	raise Exception('signal: ' + str(signum))
+	# sys.exit(signum)
+
 
 if __name__ == '__main__':
+	# signal.signal(signal.SIGSEGV, sig_handler)
+
 	# Command line parameters
-	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True, number_of_moves=24)
+	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True, number_of_moves=12)
 	print "param: {}".format(param)
 
 	def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):

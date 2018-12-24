@@ -72,6 +72,10 @@ class WamcaWraper(object):
 		self.__mylib.bestNeighborSimple.restype = ctypes.c_uint
 		self.__mylib.bestNeighborSimple.argtypes = [ctypes.c_void_p, util.array_1d_int, ctypes.c_uint, ctypes.c_int]
 
+		# print "before segfault"
+		# self.__mylib.segFault()
+		# print "after segfault"
+
 	def __apply_moves(self, solint=[], cids=None, ciis=None, cjjs=None, ccosts=None):
 		resto_time = -time.time()
 		lenmovs = len(cids)
