@@ -10,7 +10,7 @@ run: all
 clean:
 	rm src/*.pyc src/*.log src/*.so
 
-.PHONY: test syncHomeUff exec_dvnd_4_24 stop
+.PHONY: test syncHomeUff exec_dvnd_4_4 exec_dvnd_4_8 exec_dvnd_4_12 exec_dvnd_4_24 stop
 
 test: all
 	#export DVND_HOME=`cd src && pwd`
@@ -20,6 +20,15 @@ test: all
 
 syncHomeUff:
 	sh script/dvnd_home_uff.sh
+
+exec_dvnd_4_11: all
+	nohup script/runexp.sh 4 11 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w11h1_4dc2opin0_7.txt 2>&1 &
+
+exec_dvnd_4_8: all
+	nohup script/runexp.sh 4 8 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w8h1_4dc2opin0_7.txt 2>&1 &
+
+exec_dvnd_4_12: all
+	nohup script/runexp.sh 4 12 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w12h1_4dc2opin0_7.txt 2>&1 &
 
 exec_dvnd_4_24: all
 	nohup script/runexp.sh 4 24 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w24h1_4dc2opin0_7.txt 2>&1 &
