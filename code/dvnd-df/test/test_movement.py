@@ -6,7 +6,10 @@ import unittest
 if os.environ.has_key('DVND_HOME'):
 	sys.path.append(os.environ['DVND_HOME'])
 
-from movement import *
+if os.path.abspath(".").endswith("test"):
+	from movement import *
+else:
+	from src.movement import *
 
 
 class MovementTest(unittest.TestCase):

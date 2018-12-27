@@ -23,6 +23,7 @@ class CommandParams(object):
 		self.solver = getparam("s", "solver", solver).lower()
 		self.mpi_enabled = hasparam("mpi")
 		self.workers = int(getparam("n", None, workers))
+		self.only_compile = hasparam("c", "compile")
 
 		self.use_dataflow = not self.solver.endswith("_do_df")
 		tempmap = {"vnd": SolverType.VND, "rvnd": SolverType.RVND,

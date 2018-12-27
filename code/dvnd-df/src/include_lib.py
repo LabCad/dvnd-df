@@ -5,7 +5,7 @@ import os.path
 
 pydf_home_uff = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df"
 pydf_home_local = "/home/rodolfo/git/Sucuri"
-# simple_pycuda_home_uff = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
+simple_pycuda_home_uff = "/home/imcoelho/Rodolfo/dvnd-df/code/dvnd-df/simple-pycuda"
 simple_pycuda_home_local = "/home/rodolfo/git/simple-pycuda"
 
 

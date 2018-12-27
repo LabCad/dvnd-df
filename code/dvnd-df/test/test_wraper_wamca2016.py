@@ -3,14 +3,16 @@ import sys
 import os
 import unittest
 import ctypes
-# import numpy
 from wraper_wamca2016 import WamcaWraper
 from wraper_wamca2016 import get_file_name, wamca_solution_instance_file, from_list_to_tuple
 
 if os.environ.has_key('DVND_HOME'):
 	sys.path.append(os.environ['DVND_HOME'])
 
-from solution import *
+if os.path.abspath(".").endswith("test"):
+	from solution import *
+else:
+	from src.solution import *
 
 
 class WraperWamca2016Test(unittest.TestCase):

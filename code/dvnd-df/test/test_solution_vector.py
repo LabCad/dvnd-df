@@ -3,13 +3,15 @@ import sys
 import os
 import unittest
 import ctypes
-# import numpy
 
 
 if os.environ.has_key('DVND_HOME'):
 	sys.path.append(os.environ['DVND_HOME'])
 
-from solution import *
+if os.path.abspath(".").endswith("test"):
+	from solution import *
+else:
+	from src.solution import *
 
 
 class SolutionVectorValueTest(unittest.TestCase):

@@ -4,10 +4,29 @@
 from dataflow_opt import *
 from wraper_wamca2016 import WamcaWraper
 from cmdparam import CommandParams
+import traceback
+
+
+def sig_handler(signum, frame):
+	print("---\n")
+	print("---\n")
+	print("---\nsignal: " + str(signum))
+	traceback.print_stack(frame)
+	print("local vars")
+	for key, value in frame.f_locals.iteritems():
+		print("{0}:{1}".format(key, value))
+	print("---\n")
+	print("---\n")
+	print("---\n")
+	raise Exception('signal: ' + str(signum))
+	# sys.exit(signum)
+
 
 if __name__ == '__main__':
+	# signal.signal(signal.SIGSEGV, sig_handler)
+
 	# Command line parameters
-	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True)
+	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True, number_of_moves=12)
 	print "param: {}".format(param)
 
 	def print_final_solution(solutions=[], ini_sol=None, initial_time=0, metadata=None):
@@ -27,7 +46,7 @@ if __name__ == '__main__':
 		fin_value = final_solution.value
 		print "Final time: {}s - Best: {}".format(elapsed_time, final_solution)
 		imp_value = None
-		if abs(fin_value * 1.0) > 0.00001:
+		if abs(fin_value * 1.0) > 1e-5:
 			imp_value = 1.0 * ini_value / fin_value
 		print "Value - initial: {}, final: {}, improveup: {}".format(ini_value, fin_value, imp_value)
 		# linha = "data-line;i;{};f;{};t;{};c;{};fv;{};cv;{};imp;{}".format(
@@ -56,23 +75,27 @@ if __name__ == '__main__':
 	if "tt" == param.problem_name:
 		from wraper_ttp import create_initial_solution, neigh_gpu, get_file_name
 		file_name = get_file_name(param.solution_index)
-		ini_solution = create_initial_solution(param.solution_index)
+		if not param.only_compile:
+			ini_solution = create_initial_solution(param.solution_index)
 
-		neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
+			neigh_op = [lambda ab, y=mv: neigh_gpu(ab, file_name, y) for mv in xrange(5)]
 		goal = True
 	elif "ml" == param.problem_name:
 		from wraper_wamca2016 import get_file_name
 
 		file_name = get_file_name(param.solution_index)
 		mylib = WamcaWraper(file_name, useMultipleGpu=param.multi_gpu, deviceCount=param.device_count)
-		ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
+		if not param.only_compile:
+			ini_solution = mylib.create_initial_solution(param.solution_index, param.solver, param.solution_instance_index)
 
-		if "gdvnd" == param.solver:
-			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves) for mv in xrange(5)]
-		else:
-			neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(5)]
+			if "gdvnd" == param.solver:
+				neigh_op = [lambda ab, y=mv: mylib.neigh_gpu_moves(ab, y, param.number_of_moves)
+					for mv in xrange(param.number_of_moves)]
+			else:
+				neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(param.number_of_moves)]
 
-	print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
+	if not param.only_compile:
+		print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
 	is_use_metadata = True
 
 	solver = None
@@ -111,8 +134,9 @@ if __name__ == '__main__':
 				lambda sol1, sol2: combine_solutions(sol1, sol2), use_metadata=is_use_metadata,
 				use_multiple_output=not param.single_output_gate)
 
-	print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
-	start_time = time.time()
-	solver.run(param.workers, ini_solution, neigh_op,
-		lambda args, metadata, inisol=ini_solution:
-			print_final_solution(args, inisol, start_time, metadata))
+	if not param.only_compile:
+		print "Solver: {}, number of workers: {}".format(param.solver.upper(), param.workers)
+		start_time = time.time()
+		solver.run(param.workers, ini_solution, neigh_op,
+			lambda args, metadata, inisol=ini_solution:
+				print_final_solution(args, inisol, start_time, metadata))

@@ -65,7 +65,7 @@ if [ $# -gt 3 ]; then
 		for i in {0..99}
 		do
 			file_name=$solver_name"_n"$num_proc"w"$num_workes"in"$filei"_"$i
-			echo $file_name
+			echo "file_name="$file_name
 			if [ "$solver_name" = "dvnd_sog" -o "$solver_name" = "gdvnd_sog" ]
 			then
 				echo "SOG-"$solver_name
