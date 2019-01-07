@@ -1,14 +1,14 @@
 library(ggplot2)
 library(tidyverse)
 
-folder_path = "C:/rdf/my/ms/dvnd-df/figurasDissertacao"
-# folder_path = "/home/rodolfo/git/dvnd-df/doc/results/gdvnd"
+# folder_path = "C:/rdf/my/ms/dvnd-df/figurasDissertacao"
+folder_path = "~/git/dvnd-df/doc/results/figurasDissertacao"
 setwd(folder_path)
 
 titulos = list()
-titulos["imp"] = "Melhoria na solução"
-titulos["time"] = "Tempo (s)"
-titulos["count"] = "Iterações"
+titulos["imp"] = "Solution improvement"
+titulos["time"] = "Time (s)"
+titulos["count"] = "Iterations"
 
 tamanhoInstancia = c(52, 100, 226, 318, 501, 657, 783, 1001,
   1060, 1084,

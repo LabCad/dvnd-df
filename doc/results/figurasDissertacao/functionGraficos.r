@@ -1,3 +1,7 @@
+labels = list()
+labels["method"] = "Method"
+labels["sample"] = "Sample"
+
 desenharDispersao = function(folder_name, prefix, data_src, iniMethod, coluna, draw_inum) {
   if (length(data_src$sample) > 0) {
     x_axis_value = rep(1:100, length(data_src$sample) / 100)
@@ -21,9 +25,9 @@ desenharDispersao = function(folder_name, prefix, data_src, iniMethod, coluna, d
     mychart = mychart +
       geom_line(aes(color=df_mac)) +
       geom_point(aes(color=df_mac)) +
-      # scale_x_discrete(name ="Amostra", limits=c(1, 100), breaks=waiver()) +
-      # scale_x_discrete(name ="sample") +
-      labs(color='Método', x="Amostra", y=titulos[coluna])
+      # scale_x_discrete(name =labels["sample"]", limits=c(1, 100), breaks=waiver()) +
+      # scale_x_discrete(name =labels["sample"]) +
+      labs(color=labels["method"], x=labels["sample"], y=titulos[coluna])
     
     # geom_text(check_overlap = T,# automatically reduce overlap (deletes some labels)
     #           vjust = "bottom", # adjust the vertical orientation
@@ -55,12 +59,12 @@ desenharBoxplot = function(folder_name, prefix, data_src, iniMethod, coluna, dra
     
     mychart = mychart +
       geom_boxplot() +
-      labs(color='Método', fill = "Método") +
+      labs(color=labels["method"], fill = labels["method"]) +
       # theme(legend.position="bottom") +
-      labs(color='Método', x="Método", y=titulos[coluna]) +
+      labs(color=labels["method"], x=labels["method"], y=titulos[coluna]) +
       theme(legend.position="none", text=element_text(size = 25))
-    # scale_y_discrete(name ="Método")
-    # scale_x_discrete(name ="sample") +
+    # scale_y_discrete(name =labels["method"])
+    # scale_x_discrete(name =labels["sample"]) +
     # ggtitle(paste(iniMethod, " initial - Time in", draw_inum, "n", draw_n, "w", draw_w, sep=""))
     ggsave(paste("chart/", prefix, "/", folder_name, "/box/", prefix, "_box", iniMethod, "_", coluna, "_in", draw_inum, ".png", sep=""), plot = mychart, device="png")
   }
