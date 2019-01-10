@@ -1,8 +1,8 @@
 library(ggplot2)
 library(tidyverse)
 
-mypath = "C:/rdf/my/ms/dvnd-df/parco"
-# mypath = "/home/rodolfo/git/dvnd-df/doc/results/parco"
+# mypath = "C:/rdf/my/ms/dvnd-df/parco"
+mypath = "/home/rodolfo/git/dvnd-df/doc/results/parco"
 setwd(mypath)
 
 parcoData = read.csv(file="n4w1_8ng12.csv", header=TRUE, sep=";")
@@ -25,7 +25,7 @@ for (inum_i in 0:7) {
     ylab("Time (s)") +
     guides(fill=guide_legend(title="Solver")) +
     # ggtitle(paste("Instance", inum_i)) + 
-    theme(plot.title = element_text(hjust = 0.5))
+    theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size=25))
   file_name = paste(paste(chart_path, time_path, "/", sep="/"), prefix, "_box", "_in", inum_i, ".png", sep="")
   print(file_name)
   ggsave(file_name, plot = mychart, device="png")
@@ -44,7 +44,7 @@ for (inum_i in 0:7) {
     ylab("Solution improvement") +
     guides(fill=guide_legend(title="Solver")) +
     # ggtitle(paste("Instance", inum_i)) + 
-    theme(plot.title = element_text(hjust = 0.5))
+    theme(plot.title = element_text(hjust = 0.5), axis.text = element_text(size=25))
   file_name = paste(paste(chart_path, imp_path, "/", sep="/"), prefix, "_box", "_in", inum_i, ".png", sep="")
   print(file_name)
   ggsave(file_name, plot = mychart, device="png")
