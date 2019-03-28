@@ -5,7 +5,7 @@ import unittest
 import ctypes
 
 
-if os.environ.has_key('DVND_HOME'):
+if 'DVND_HOME' in os.environ:
 	sys.path.append(os.environ['DVND_HOME'])
 
 if os.path.abspath(".").endswith("test"):

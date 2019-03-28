@@ -3,7 +3,7 @@ import sys
 import os
 import unittest
 
-if os.environ.has_key('DVND_HOME'):
+if 'DVND_HOME' in os.environ:
 	sys.path.append(os.environ['DVND_HOME'])
 
 # from solution import *

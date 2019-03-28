@@ -6,7 +6,7 @@ import ctypes
 from wraper_wamca2016 import WamcaWraper
 from wraper_wamca2016 import get_file_name, wamca_solution_instance_file, from_list_to_tuple
 
-if os.environ.has_key('DVND_HOME'):
+if 'DVND_HOME' in os.environ:
 	sys.path.append(os.environ['DVND_HOME'])
 
 if os.path.abspath(".").endswith("test"):
