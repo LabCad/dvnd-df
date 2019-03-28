@@ -192,7 +192,7 @@ imprimirTabela = function(data_src) {
   }
 }
 
-# imprimirTabela(dvndGdvndData_time)
+imprimirTabela(dvndGdvndData_time)
 # imprimirTabela(dvndGdvndData_imp)
 
 plotarDvnd = FALSE
