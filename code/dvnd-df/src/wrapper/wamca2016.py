@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 import ctypes
 import numpy
-import util
 import random
 import os.path
 import time
 # from movement import *
 from solution import SolutionVectorValue, SolutionMovementTuple
-from util import compilelib
-
+from util import compilelib, util
 
 wamca2016path_uff = "/home/imcoelho/Rodolfo/wamca2016/"
 wamca2016path_local = "/home/rodolfo/git/wamca2016/"

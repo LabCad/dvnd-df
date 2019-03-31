@@ -1,10 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import ctypes
-import numpy
-import util
-from solution import SolutionTTP
-from util import gethostcode, array_1d_int, compilelib
 
 
 # # os.getenv('KEY_THAT_MIGHT_EXIST', default_value)

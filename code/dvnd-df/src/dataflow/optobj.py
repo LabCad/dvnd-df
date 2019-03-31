@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from include_lib import include_dvnd, include_pydf
+from util.include_lib import include_dvnd, include_pydf
+
 include_dvnd()
 include_pydf()
 from pyDF import Node, Oper
@@ -9,6 +10,7 @@ class DecisionNode(Node):
 	"""
 	Decision node is a generalization of the default node that lets decide to process or not its input.
 	"""
+
 	def __init__(self, f=lambda x: None, inputn=1, should_run=lambda x: True, keep_going=lambda x, y: True):
 		"""
 		:param f: Function to be called for processing.
@@ -51,6 +53,7 @@ class OptMessage(object):
 	"""
 	History for the DVND.
 	"""
+
 	def __init__(self, solmap={}, source=0, target=[], not_improved=[], maximize=False):
 		"""
 		:param solmap: Map os solutions (node code, actual solution).
@@ -64,8 +67,8 @@ class OptMessage(object):
 		self.__not_improved = not_improved
 		self.__maximize = maximize
 		self.metadata = Metadata()
-		self.metadata.counts = [0 for x in target]
-		self.metadata.combine_count = [0 for x in target]
+		self.metadata.counts = [0 for _ in target]
+		self.metadata.combine_count = [0 for _ in target]
 
 	def __getitem__(self, item=0):
 		return self.__solmap[item] if item < len(self) else self.get_best()

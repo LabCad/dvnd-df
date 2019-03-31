@@ -9,9 +9,9 @@ if 'DVND_HOME' in os.environ:
 	sys.path.append(os.environ['DVND_HOME'])
 
 if os.path.abspath(".").endswith("test"):
-	from solution import *
+	from wrapper.solution import *
 else:
-	from src.solution import *
+	from wrapper.solution import *
 
 
 class SolutionVectorValueTest(unittest.TestCase):

@@ -15,7 +15,8 @@ class Movement(object):
 		self.k = k
 
 	def __str__(self):
-		return "{ type: %s, x: %d, y: %d%s }" % (self.movtype, self.x, self.y, (", k: %d" % self.k) if self.k is not None else "")
+		return "{ type: %s, x: %d, y: %d%s }" %\
+			(self.movtype, self.x, self.y, (", k: %d" % self.k) if self.k is not None else "")
 
 	def __eq__(self, other=None):
 		if isinstance(other, self.__class__):
