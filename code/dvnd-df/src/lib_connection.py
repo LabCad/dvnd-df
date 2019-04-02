@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from wrapper.wamca2016 import WamcaWraper
 
 
 def create_lib_connection(param):
 	mylib = None
+	goal = False
 	if "tt" == param.problem_name:
 		from wrapper.ttp import create_initial_solution, neigh_gpu, get_file_name
 		file_name = get_file_name(param.solution_index)
@@ -26,4 +28,4 @@ def create_lib_connection(param):
 			else:
 				neigh_op = [lambda ab, y=mv: mylib.neigh_gpu(ab, y) for mv in xrange(param.number_of_moves)]
 
-	return mylib
+	return mylib, ini_solution, neigh_op, goal

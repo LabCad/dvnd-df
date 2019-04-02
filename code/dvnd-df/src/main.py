@@ -14,9 +14,7 @@ if __name__ == '__main__':
 	param = CommandParams(solver="dvnd", solution_index=0, single_output_gate=True, number_of_moves=12)
 	print "param: {}".format(param)
 
-	neigh_op = []
-	ini_solution = None
-	mylib = create_lib_connection(param)
+	mylib, ini_solution, neigh_op, goal = create_lib_connection(param)
 
 	if not param.only_compile:
 		print "\nValue - initial: {} - {}".format(ini_solution, ini_solution.value)
