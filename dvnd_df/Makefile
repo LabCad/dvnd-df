@@ -5,7 +5,7 @@ dvnd_df/wamca2016lib.so: /home/rodolfo/git/wamca2016/source/*.cu /home/rodolfo/g
 	python dvnd_df/main.py -c
 
 run: all
-	python dvnd_df/main.py
+	python main.py
 
 clean:
 	rm dvnd_df/*.pyc dvnd_df/*.log dvnd_df/*.so
