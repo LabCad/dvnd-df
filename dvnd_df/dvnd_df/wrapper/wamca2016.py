@@ -9,11 +9,11 @@ import time
 from dvnd_df.wrapper.solution import SolutionVectorValue, SolutionMovementTuple
 from dvnd_df.util import compilelib, util
 
-wamca2016path_uff = "/home/imcoelho/Rodolfo/wamca2016/"
-wamca2016path_local = "/home/rodolfo/git/wamca2016/"
-wamca2016_input_file_path = "/home/rodolfo/git/dvnd-df/doc/"
-localpath_uff = "/home/imcoelho/Rodolfo/dvnd-df/dvnd_df/dvnd_df/"
-localpath_local = "/home/rodolfo/git/dvnd-df/dvnd_df/dvnd_df/"
+wamca2016path_uff = "/home/rodolfo/parco/dvnd-df/wamca2016/"
+wamca2016path_local = "/home/rodolfo/parco/dvnd-df/wamca2016/"
+wamca2016_input_file_path = "/home/rodolfo/parco/dvnd-df"
+localpath_uff = "/home/rodolfo/parco/dvnd-df/dvnd_df/dvnd_df/"
+localpath_local = "/home/rodolfo/parco/dvnd-df/dvnd_df/dvnd_df/"
 
 wamca2016path = wamca2016path_uff if os.path.isdir(wamca2016path_uff) else wamca2016path_local
 localpath = localpath_uff if os.path.isdir(localpath_uff) else localpath_local
@@ -307,32 +307,67 @@ def get_file_name(solution_index=0):
 
 
 wamca_intance_path = wamca2016path + "instances/"
+# http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/
 wamca_solution_instance_file = [
+	("eil51.tsp", 51),
 	("01_berlin52.tsp", 52),
+	("st70.tsp", 70),
+	("eil76.tsp", 76),
+	("pr76.tsp", 76),
+	# 05
+	("rat99.tsp", 99),
 	("02_kroD100.tsp", 100),
+	("rd100.tsp", 100),
+	("kroC100.tsp", 100),
+	("kroE100.tsp", 100),
+	# 10
+	("kroB100.tsp", 100),
+	("kroA100.tsp", 100),
+	("eil101.tsp", 101),
+	("lin105.tsp", 105),
+	("pr107.tsp", 107),
+	# 15
+	("pr124.tsp", 124),
+	("ch130.tsp", 130),
+	("pr136.tsp", 136),
+	("pr144.tsp", 144),
+	("ch150.tsp", 150),
+	# 20
+	("kroB150.tsp", 150),
+	("kroA150.tsp", 150),
+	("pr152.tsp", 152),
+	("u159.tsp", 159),
+	("rat195.tsp", 195),
+	# 25
+	("d198.tsp", 198),
+	("kroA200.tsp", 200),
+	("kroB200.tsp", 200),
+	("ts225.tsp", 225),
+	("tsp225.tsp", 225),
+	# 30
 	("03_pr226.tsp", 226),
+	("gil262.tsp", 262),
+	("pr264.tsp", 264),
+	("a280.tsp", 280),
+	("pr299.tsp", 299),	
+	# 35
 	("04_lin318.tsp", 318),
+	("rd400.tsp", 400),
+	("fl417.tsp", 417),
+	("pr439.tsp", 439),
+	("pcb442.tsp", 442),
+	# 40
+	("d493.tsp", 493),
 	("05_TRP-S500-R1.tsp", 501),
+	("u574.tsp", 574),
+	("rat575.tsp", 575),
+	("p654.tsp", 654),
+	# 45
 	("06_d657.tsp", 657),
+	("u724.tsp", 724),
+	("rat783.tsp", 783),
 	("07_rat784.tsp", 783),
 	("08_TRP-S1000-R1.tsp", 1001),
-	# http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/
-	# 08
-	("u1060.tsp", 1060),
-	("vm1084.tsp", 1084),
-	# 10
-	("u1432.tsp", 1432),
-	("vm1748.tsp", 1748),
-	("u1817.tsp", 1817),
-	("rl1889.tsp", 1889),
-	("u2152.tsp", 2152),
-	# 15
-	("u2319.tsp", 2319),
-	("fnl4461.tsp", 4461),
-	("rl5915.tsp", 5915),
-	("rl5934.tsp", 5934),
-	("rl11849.tsp", 11849),
-	# 20
-	("usa13509.tsp", 13509),
-	("d18512.tsp", 18512)
+	# 50
+	("pr1002.tsp", 1002),
 ]
