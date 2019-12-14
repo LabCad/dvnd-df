@@ -7,7 +7,7 @@ import socket
 import numpy
 import ctypes
 import sys
-from dvnd_df.util.include_lib import include_simple_pycuda
+from include_lib import include_simple_pycuda
 include_simple_pycuda()
 from simplepycuda import SimpleSourceModule, SimplePyCuda
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dvnd_df.dataflow.vnd import *
+from dataflow.vnd import *
 
 
 def create_solver(param, mylib, is_use_metadata):

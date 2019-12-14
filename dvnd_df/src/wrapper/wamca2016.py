@@ -3,20 +3,13 @@
 import ctypes
 import numpy
 import random
-import os.path
 import time
 # from movement import *
-from dvnd_df.wrapper.solution import SolutionVectorValue, SolutionMovementTuple
-from dvnd_df.util import compilelib, util
+from solution import SolutionVectorValue, SolutionMovementTuple
+from ..util import compilelib, util
 
-wamca2016path_uff = "/home/rodolfo/parco/dvnd-df/wamca2016/"
-wamca2016path_local = "/home/rodolfo/parco/dvnd-df/wamca2016/"
-wamca2016_input_file_path = "/home/rodolfo/parco/dvnd-df"
-localpath_uff = "/home/rodolfo/parco/dvnd-df/dvnd_df/dvnd_df/"
-localpath_local = "/home/rodolfo/parco/dvnd-df/dvnd_df/dvnd_df/"
-
-wamca2016path = wamca2016path_uff if os.path.isdir(wamca2016path_uff) else wamca2016path_local
-localpath = localpath_uff if os.path.isdir(localpath_uff) else localpath_local
+wamca2016path = "wamca2016/"
+localpath = "dvnd_df/"
 
 print("wamca2016path: {}".format(wamca2016path))
 print("localpath: {}".format(localpath))

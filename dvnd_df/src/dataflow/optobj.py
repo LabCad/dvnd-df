@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dvnd_df.util.include_lib import include_dvnd, include_pydf
+from ..util.include_lib import include_dvnd, include_pydf
 
 include_dvnd()
 include_pydf()
