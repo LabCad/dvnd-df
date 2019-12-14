@@ -1,6 +1,6 @@
 all: dvnd_df/wamca2016lib.so
 
-dvnd_df/wamca2016lib.so: /home/rodolfo/git/wamca2016/source/*.cu /home/rodolfo/git/wamca2016/source/*.cpp
+dvnd_df/wamca2016lib.so: ~/parco/dvnd-df/wamca2016/source/*.cu ~/parco/dvnd-df/wamca2016/source/*.cpp
 	rm -f dvnd_df/wamca2016lib.so
 	python dvnd_df/main.py -c
 
@@ -20,6 +20,9 @@ test: all
 
 syncHomeUff:
 	sh script/dvnd_home_uff.sh
+
+exec_dvnd_4_4: all
+	nohup script/runexp.sh 4 4 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w4h1_4dc2opin0_7.txt 2>&1 &
 
 exec_dvnd_4_11: all
 	nohup script/runexp.sh 4 11 1_4 dvnd "0 1 2 3 4 5 6 7" > dvnd_n4w11h1_4dc2opin0_7.txt 2>&1 &
@@ -74,6 +77,7 @@ exec_7: all
 stop:
 	pkill -ec runexp.sh
 	pkill -ec mpirun
+	pkill -ec mpirun.mpich
 	pkill -ec python
 
 stopCluster: stop
