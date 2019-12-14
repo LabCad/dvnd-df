@@ -1,0 +1,3 @@
+[submodule "simple-pycuda"]
+	path = simple-pycuda
+	url = git@github.com:LabCad/simple-pycuda.git
