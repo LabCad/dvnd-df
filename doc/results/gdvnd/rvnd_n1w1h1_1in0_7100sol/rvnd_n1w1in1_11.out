@@ -1,0 +1,40 @@
+pydf_home: /home/rodolfo/git/Sucuri
+simple_pycuda_home: /home/rodolfo/git/simple-pycuda
+wamca2016path: /home/rodolfo/git/wamca2016/
+localpath: /home/rodolfo/git/dvnd-df/code/dvnd-df/src/
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+param: {solution_index:1, solution_instance_index:11, multi_gpu:True, goal:False, problem_name:ml, number_of_moves:10, device_count:2, solver:rvnd, mpi_enabled:True, workers:1}
+Using already created file:  wamca2016lib.so
+Size: 100 - file name: 02_kroD100.tsp
+
+Value - initial: 7697469-[74 72 45 83 62 48 27 87 97  6 57 78 54 33 81 99  8 98 69 16 84 63 42 91 79
+ 25 37 17 43 60 51 40 70 76 19 11  2 66 56 67 92 18 28 71 34  1 13 46 58  0
+ 64 30  3 15 95 82 47 35 55 77 52  4 80 68 24 21  7 10 96 20 49 94 86 88 73
+ 85 50 23 22 41 12 90  9 65 93 59 61 53 26 39  5 38 36 31 14 89 44 32 75 29] - 7697469
+Solver: RVND, number of workers: 1
+Setting feeder affinity
+I am the master. There are 1 mpi processes. (hostname = gpu01)
+Roots [<pyDF.nodes.Feeder object at 0x7fc14fba0ad0>]
+Starting 0
+Main loop
+I am worker 0
+GPU0
+set random seed!
+Initial: 7697469-[74 72 45 83 62 48 27 87 97  6 57 78 54 33 81 99  8 98 69 16 84 63 42 91 79
+ 25 37 17 43 60 51 40 70 76 19 11  2 66 56 67 92 18 28 71 34  1 13 46 58  0
+ 64 30  3 15 95 82 47 35 55 77 52  4 80 68 24 21  7 10 96 20 49 94 86 88 73
+ 85 50 23 22 41 12 90  9 65 93 59 61 53 26 39  5 38 36 31 14 89 44 32 75 29]
+Final time: 2.32267308235s - Best: 1001385-[74 66  6 73 60 45 51  7 65 37 80 33 49  0 12 78 87 26 23 40 83 14 68 75 79
+ 77 30 98 44 32 67 13 64 85 95 15 62 53 90 76 42 63 58 84 17  5 39 82  2  4
+ 61 36 18 50 34 29 99  1 47 91 54 86 25 94 55 20 27 11 46 24 19  9  8 52 59
+ 43 92  3 70 38 72 93 31 96 97 48 69 88 89 16 10 22 41 21 57 28 35 71 56 81]
+Value - initial: 7697469, final: 1001385, improveup: 7.68682275049
+
+data-line;i;7697469;f;1001385;t;2.32267308235;c;-2;fv;[1001385L];cv;-1;imp;7.68682275049;type;rvnd;inum;1;w;1
+
+time;2.32267308235;man_time;0;neigh_time;0
+man_time;0;man_merge_sol;0;man_best_sol;0;man_combine_sol;0
+
+Waiting [0]
+Terminating workers True 0 0
+MPI TERMINATING

@@ -1,0 +1,26 @@
+pydf_home: /home/rodolfo/git/Sucuri
+simple_pycuda_home: /home/rodolfo/git/simple-pycuda
+wamca2016path: /home/rodolfo/git/wamca2016/
+localpath: /home/rodolfo/git/dvnd-df/code/dvnd-df/src/
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+Using already created file:  wamca2016lib.so
+Size: 226 - file name: 03_pr226.tsp
+ns:  [<function <lambda> at 0x7facc4b3d0c8>, <function <lambda> at 0x7facc4b3d140>, <function <lambda> at 0x7facc4b3d1b8>, <function <lambda> at 0x7facc4b3d230>, <function <lambda> at 0x7facc4b3d2a8>]
+ns:  [<function <lambda> at 0x7facc4b3d2a8>, <function <lambda> at 0x7facc4b3d230>, <function <lambda> at 0x7facc4b3d0c8>, <function <lambda> at 0x7facc4b3d1b8>, <function <lambda> at 0x7facc4b3d140>]
+197642140-[135 219 157 218 172 132  27 209 196 171 199  38 168  46 163  51 114  14
+  62  89  52 202 159  26 217 125  86  45 113 165 106  25  53 155  20 181
+  87 149 129  58  95  73 153   0  24  94 192 222  60 141 216  23  68  99
+ 150  34 148 103   4 175  30 131 186 107 115  49  66   2 130 198 142 190
+  17  55 220 225  40 156  69   3 138 152   1  63  19 161  59 144  61 176
+ 101 127 193 170 183 124 200  35 169 211  83 208 100 188  15 122  39 191
+ 147  88 136 204  96 118  75  28 187 134  18 117 158  44 121 110  79 140
+   6  84  33  32 119  76  80  98  85  22  72  70   8 213 126  10  64  91
+ 185 167  54 197 207 210  71 139 214  29 104 177  97  47  92 128 174  67
+ 123 194 137 105 179  48 182 116  57  77 146 189   9  31 221 173 112  90
+ 178  81 224 212  93  50  11 215 164 203 160  41 108 151 166  16 162   5
+  13  56 223  43 120 154  82 201 111 102  74 180  12 143  42 145 205 206
+  36 195 109 184  78  65  37   7 133  21]
+GPU0
+set random seed!
+finished RVND in 3.34721088409s
+data-line;initial_solution;197642140;final_solution;6804968;time;3.34721088409;counts;712;fv;[];cv;[643, 47, 20, 1, 1];imp;29.0438015285

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from dvnd_df.dataflow.vnd import *
-from dvnd_df.util.cmdparam import CommandParams
-from dvnd_df.print_data import print_final_solution
-from dvnd_df.solver import create_solver
-from dvnd_df.lib_connection import create_lib_connection
+from src.dataflow.vnd import *
+from src.util.cmdparam import CommandParams
+from src.print_data import print_final_solution
+from src.solver import create_solver
+from src.lib_connection import create_lib_connection
 
 
 if __name__ == '__main__':

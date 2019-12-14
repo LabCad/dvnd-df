@@ -1,0 +1,14 @@
+pydf_home: /home/rodolfo/git/Sucuri
+simple_pycuda_home: /home/rodolfo/git/simple-pycuda
+wamca2016path: /home/rodolfo/git/wamca2016/
+localpath: /home/rodolfo/git/dvnd-df/code/dvnd-df/src/
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+Using already created file:  wamca2016lib.so
+Size: 1001 - file name: 08_TRP-S1000-R1.tsp
+ns:  [<function <lambda> at 0x7f8f37b710c8>, <function <lambda> at 0x7f8f37b71140>, <function <lambda> at 0x7f8f37b711b8>, <function <lambda> at 0x7f8f37b71230>, <function <lambda> at 0x7f8f37b712a8>]
+ns:  [<function <lambda> at 0x7f8f37b710c8>, <function <lambda> at 0x7f8f37b711b8>, <function <lambda> at 0x7f8f37b712a8>, <function <lambda> at 0x7f8f37b71140>, <function <lambda> at 0x7f8f37b71230>]
+130212782-[461 617 821 ..., 162 402 200]
+GPU0
+set random seed!
+finished RVND in 24.9093141556s
+data-line;initial_solution;130212782;final_solution;5615125;time;24.9093141556;counts;1338;fv;[];cv;[762, 370, 186, 17, 3];imp;23.1896497407

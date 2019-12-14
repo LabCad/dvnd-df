@@ -1,0 +1,31 @@
+pydf_home: /home/rodolfo/git/Sucuri
+simple_pycuda_home: /home/rodolfo/git/simple-pycuda
+wamca2016path: /home/rodolfo/git/wamca2016/
+localpath: /home/rodolfo/git/dvnd-df/code/dvnd-df/src/
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+param: {solution_index:7, solution_instance_index:81, multi_gpu:True, goal:False, problem_name:ml, number_of_moves:10, device_count:2, solver:rvnd, mpi_enabled:True, workers:1}
+Using already created file:  wamca2016lib.so
+Size: 1001 - file name: 08_TRP-S1000-R1.tsp
+
+Value - initial: 131143348-[662 305 901 ..., 538 746 401] - 131143348
+Solver: RVND, number of workers: 1
+Setting feeder affinity
+I am the master. There are 1 mpi processes. (hostname = gpu01)
+Roots [<pyDF.nodes.Feeder object at 0x7f35e50d3ad0>]
+Starting 0
+Main loop
+I am worker 0
+GPU0
+set random seed!
+Initial: 131143348-[662 305 901 ..., 538 746 401]
+Final time: 24.4086689949s - Best: 5601754-[662 610 290 ..., 602 347 518]
+Value - initial: 131143348, final: 5601754, improveup: 23.4111223021
+
+data-line;i;131143348;f;5601754;t;24.4086689949;c;-2;fv;[5601754L];cv;-1;imp;23.4111223021;type;rvnd;inum;7;w;1
+
+time;24.4086689949;man_time;0;neigh_time;0
+man_time;0;man_merge_sol;0;man_best_sol;0;man_combine_sol;0
+
+Waiting [0]
+Terminating workers True 0 0
+MPI TERMINATING

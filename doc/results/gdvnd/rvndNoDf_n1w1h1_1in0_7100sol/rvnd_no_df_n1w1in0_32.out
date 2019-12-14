@@ -1,0 +1,16 @@
+pydf_home: /home/rodolfo/git/Sucuri
+simple_pycuda_home: /home/rodolfo/git/simple-pycuda
+wamca2016path: /home/rodolfo/git/wamca2016/
+localpath: /home/rodolfo/git/dvnd-df/code/dvnd-df/src/
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+Using already created file:  wamca2016lib.so
+Size: 52 - file name: 01_berlin52.tsp
+ns:  [<function <lambda> at 0x7f69ff0a90c8>, <function <lambda> at 0x7f69ff0a9140>, <function <lambda> at 0x7f69ff0a91b8>, <function <lambda> at 0x7f69ff0a9230>, <function <lambda> at 0x7f69ff0a92a8>]
+ns:  [<function <lambda> at 0x7f69ff0a90c8>, <function <lambda> at 0x7f69ff0a91b8>, <function <lambda> at 0x7f69ff0a9140>, <function <lambda> at 0x7f69ff0a9230>, <function <lambda> at 0x7f69ff0a92a8>]
+835314-[11  1 10 24 26 31 33 29 36 44 39  3 20 38 27 40 42 34  9 17 46  2 15  6 47
+ 41 18 13  8 23 35  4 43 30 21 49  5 51 50 14 22 28 45 12  7 16 19 37 32 25
+ 48  0]
+GPU0
+set random seed!
+finished RVND in 1.22546505928s
+data-line;initial_solution;835314;final_solution;151018;time;1.22546505928;counts;90;fv;[];cv;[52, 25, 8, 3, 2];imp;5.5312214438

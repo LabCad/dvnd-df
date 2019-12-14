@@ -1,0 +1,37 @@
+pydf_home: /home/rodolfo/git/Sucuri
+simple_pycuda_home: /home/rodolfo/git/simple-pycuda
+wamca2016path: /home/rodolfo/git/wamca2016/
+localpath: /home/rodolfo/git/dvnd-df/code/dvnd-df/src/
+WAMCAPATH:/home/rodolfo/git/wamca2016/
+param: {solution_index:0, solution_instance_index:76, multi_gpu:True, goal:False, problem_name:ml, number_of_moves:10, device_count:2, solver:rvnd, mpi_enabled:True, workers:1}
+Using already created file:  wamca2016lib.so
+Size: 52 - file name: 01_berlin52.tsp
+
+Value - initial: 789056-[ 0  3 50 37 13 29 36 25 22 28 32 24  7 14 44 15 38  1 46 20 41 47 39  5  8
+ 27 49 33  4 48 12 11 31 21 42 40 10 23 17  9 26 18 45 30 34  6 43 16  2 19
+ 51 35] - 789056
+Solver: RVND, number of workers: 1
+Setting feeder affinity
+I am the master. There are 1 mpi processes. (hostname = gpu01)
+Roots [<pyDF.nodes.Feeder object at 0x7fe6f7c15ad0>]
+Starting 0
+Main loop
+I am worker 0
+GPU0
+set random seed!
+Initial: 789056-[ 0  3 50 37 13 29 36 25 22 28 32 24  7 14 44 15 38  1 46 20 41 47 39  5  8
+ 27 49 33  4 48 12 11 31 21 42 40 10 23 17  9 26 18 45 30 34  6 43 16  2 19
+ 51 35]
+Final time: 1.41597795486s - Best: 151585-[ 0 48 35 34 33 36 37 47 23  4  5 24  3 14 39 38 31 44 18  7  9  8 40  2 17
+ 30 21 43 45 15 49 19 22 20 16 41  6  1 29 28 46 25 26 27 11 50 32 42 10 12
+ 13 51]
+Value - initial: 789056, final: 151585, improveup: 5.20536992446
+
+data-line;i;789056;f;151585;t;1.41597795486;c;-2;fv;[151585L];cv;-1;imp;5.20536992446;type;rvnd;inum;0;w;1
+
+time;1.41597795486;man_time;0;neigh_time;0
+man_time;0;man_merge_sol;0;man_best_sol;0;man_combine_sol;0
+
+Waiting [0]
+Terminating workers True 0 0
+MPI TERMINATING
