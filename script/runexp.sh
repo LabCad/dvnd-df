@@ -39,7 +39,7 @@ if [[ $# -gt 3 ]]; then
 	else
 		file_numbers="inicio $5 fim"
 		# Códigos das instâncias
-		for i in {0..21}
+		for i in {0..50}
 		do
 			if [[ ${file_numbers} = *" $i "* ]]; then
 				file_list+=($i)

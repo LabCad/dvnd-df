@@ -1,4 +1,4 @@
-gpu01 slots=3
-gpu02 slots=3
-gpu03 slots=3
-gpu04 slots=3
+gpu01.labic slots=3
+gpu02.labic slots=3
+gpu03.labic slots=3
+gpu04.labic slots=3
