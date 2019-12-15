@@ -12,3 +12,18 @@ https://bitbucket.org/flatlabs/sucuri-free
 
 
 https://github.com/igormcoelho/simple-pycuda
+
+
+## DEPENDENCIES
+
+Get submodules:
+
+`git submodule update --init --recursive`
+
+`git pull --recurse-submodules`
+
+Install numpy:
+
+`pip install numpy`
+
+
