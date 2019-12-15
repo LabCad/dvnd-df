@@ -1,14 +1,22 @@
 all: dvnd_df/wamca2016lib.so
 
-dvnd_df/wamca2016lib.so: ~/parco/dvnd-df/wamca2016/source/*.cu ~/parco/dvnd-df/wamca2016/source/*.cpp
+dvnd_df/wamca2016lib.so: wamca2016/source/*.cu wamca2016/source/*.cpp
 	rm -f dvnd_df/wamca2016lib.so
 	python dvnd_df/main.py -c
 
 run: all
-	python main.py
+	python dvnd_df/main.py
+
+clean_sucuri:
+	find dvnd_df -type f -name '*.pyc' -delete
+
+clean_simple_pycuda:
+	find simple-pycuda -type f -name '*.pyc' -delete
 
 clean:
-	rm dvnd_df/*.pyc dvnd_df/*.log dvnd_df/*.so
+	find dvnd_df -type f -name '*.pyc' -delete
+	find dvnd_df -type f -name '*.log' -delete
+	find dvnd_df -type f -name '*.so' -delete
 
 .PHONY: test syncHomeUff exec_dvnd_4_4 exec_dvnd_4_8 exec_dvnd_4_12 exec_dvnd_4_24 stop
 

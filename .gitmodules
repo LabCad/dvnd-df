@@ -1,0 +1,9 @@
+[submodule "simple-pycuda"]
+	path = simple-pycuda
+	url = https://github.com/LabCad/simple-pycuda.git
+[submodule "wamca2016"]
+	path = wamca2016
+	url = https://github.com/LabIC-UFF/wamca-gpu-mi.git
+[submodule "Sucuri"]
+	path = Sucuri
+	url = https://github.com/LabCad/Sucuri-mog.git

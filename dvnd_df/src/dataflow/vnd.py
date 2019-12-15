@@ -9,7 +9,7 @@ from pyDF import DFGraph, Feeder, Scheduler, SelectOutputNode, Node
 
 
 class Solver(object):
-	def run(self, number_of_workers=1, initial_solution=None, oper_funtions=[], result_callback=lambda x, y: True):
+	def run(self, number_of_workers=1, initial_solution=None, oper_functions=[], result_callback=lambda x, y: True):
 		raise NotImplementedError()
 
 

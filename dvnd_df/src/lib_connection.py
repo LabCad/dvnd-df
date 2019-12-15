@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from dvnd_df.wrapper.wamca2016 import WamcaWraper
+from wrapper.wamca2016 import WamcaWraper
 
 
 def create_lib_connection(param):
