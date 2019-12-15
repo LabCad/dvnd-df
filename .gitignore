@@ -1,5 +1,7 @@
 *.log
 *.so
 *.pyc
+*.out
+
 .Rhistory
 .idea

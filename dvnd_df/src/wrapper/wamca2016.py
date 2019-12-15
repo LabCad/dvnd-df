@@ -18,7 +18,7 @@ print "WAMCAPATH:" + wamca2016path
 
 
 class WamcaWraper(object):
-	def __init__(self, instancefile, mylibname='wamca2016lib', options=["-lgomp"], compiler_options=["-fopenmp"],
+	def __init__(self, instancefile, mylibname='wamca2016lib', options=["-lgomp"], compiler_options=["-fopenmp", "-O3"],
 			verbose=True, useMultipleGpu=False, deviceCount=1, libpath=wamca2016path):
 		assert instancefile is not None, "The file is mandatory"
 		self.__file = instancefile
