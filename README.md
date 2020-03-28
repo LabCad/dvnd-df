@@ -37,4 +37,26 @@ Install numpy:
 
 `pip install numpy`
 
+## Citation
 
+Cite this in your paper as:
+
+```bibtex
+@conference {dvnddf-ipdps2018,
+    author={Rodolfo Pereira Araujo and Igor Machado Coelho and Leandro A. J. Marzulo},
+    title={A {DVND} local search implemented on a dataflow architecture for the Minimum Latency Problem},
+    booktitle={7th Worksohp on Parallel Programming Models (32nd IEEE International Parallel and Distributed Processing Symposium - IPDPS 2018)},
+    year={2018}
+}
+
+@mastersthesis{dvnddf-uerj2018,
+  author       = {Rodolfo Pereira Araujo},
+  title        = {Estratégias de exploração de vizinhança com {GPU} para problemas de otimização},
+  year         = 2018,
+  address      = {Rio de Janeiro, RJ, Brasil},
+  school       = {Instituto de Matemática e Estatística, Universidade do Estado do Rio de Janeiro},
+  Month        = oct,
+  keywords     = "Dataflow, Busca Local, Meta-heurística, Graphics Processing Unit, Variable Neighborhood Descent, Meta-heuristics, Local Search",
+  howpublished = {\url{http://www.bdtd.uerj.br/tde_busca/arquivo.php?codArquivo=14632}}
+}
+```
