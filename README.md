@@ -1,4 +1,14 @@
-# DVND dataflow
+DVND dataflow
+=============
+
+<p align="center">
+  <a href="https://github.com/LabCad/dvnd-df">
+    <img src="https://tokei.rs/b1/github/LabCad/dvnd-df?category=lines" alt="Current total lines.">
+  </a>
+  <a href="https://github.com/LabCad/dvnd-df/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License.">
+  </a>
+</p>
 
 ## Usefull llinks
 
