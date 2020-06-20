@@ -42,7 +42,7 @@ Install numpy:
 Cite this in your paper as:
 
 ```bibtex
-@article{ARAUJO2020102661,
+@article{dvnd-parco2020,
 	title = "A multi-improvement local search using dataflow and GPU to solve the minimum latency problem",
 	journal = "Parallel Computing",
 	pages = "102661",
