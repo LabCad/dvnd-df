@@ -42,6 +42,18 @@ Install numpy:
 Cite this in your paper as:
 
 ```bibtex
+@article{ARAUJO2020102661,
+	title = "A multi-improvement local search using dataflow and GPU to solve the minimum latency problem",
+	journal = "Parallel Computing",
+	pages = "102661",
+	year = "2020",
+	issn = "0167-8191",
+	doi = "https://doi.org/10.1016/j.parco.2020.102661",
+	url = "http://www.sciencedirect.com/science/article/pii/S0167819120300545",
+	author = "Rodolfo Pereira Araujo and Igor Machado Coelho and Leandro Augusto Justen Marzulo",
+	keywords = "Dataflow, Graphics processing unit, Metaheuristics, Local search, Variable neighborhood descent"
+}
+
 @conference {dvnddf-ipdps2018,
     author={Rodolfo Pereira Araujo and Igor Machado Coelho and Leandro A. J. Marzulo},
     title={A {DVND} local search implemented on a dataflow architecture for the Minimum Latency Problem},
