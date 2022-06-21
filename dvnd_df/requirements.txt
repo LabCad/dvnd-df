@@ -1,4 +1,4 @@
-numpy==1.15.4
+numpy==1.22.0
 mpi4py==3.0.0
 # Can use simpepycuda as lib but I may have to make some changes
 # simplepycuda==0.0.1
